@@ -5,16 +5,16 @@ import { Menu, X } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import Link from 'next/link';
 import { useLockBody } from '@/hooks/useLockBody';
+import { TzolkinLogo } from './TzolkinLogo';
 
 type MenuItem = { label: string; href: string; badge?: string };
 
 const menuItems: MenuItem[] = [
-  { label: 'Serviços', href: '/#services' },
-  { label: 'Produtos', href: '/#products' },
-  { label: 'Ferramentas', href: '/ferramentas' },
-  { label: 'Educacional', href: '/educacional', badge: 'Em breve' },
-  { label: 'Cases', href: '/#cases' },
-  { label: 'Institucional', href: '/#about' },
+  { label: 'Serviços', href: '/servicos' },
+  { label: 'Soluções', href: '/#products' },
+  // { label: 'Enterprise', href: '/enterprise' },     // Em breve
+  // { label: 'Educacional', href: '/educacional' },   // Em breve
+  // { label: 'Soluções', href: '/solucoes' },         // Em breve
 ];
 
 const mobileMenuItems: MenuItem[] = [
@@ -43,8 +43,6 @@ export function Header() {
     };
   }, []);
 
-  // Trava o scroll do body enquanto o menu mobile está aberto
-  // (restaura automaticamente ao fechar ou ao desmontar o componente)
   useLockBody(isMenuOpen);
 
   const toggleMenu = useCallback(() => {
@@ -63,9 +61,12 @@ export function Header() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center group z-50 relative flex-shrink-0"
+            className="flex items-center gap-3 group z-50 relative flex-shrink-0"
           >
-            <span className="text-xl font-semibold leading-6 uppercase text-foreground">TZOLKIN</span>
+            <TzolkinLogo size={32} />
+            <span className="text-xl font-bold leading-6 uppercase text-foreground tracking-wider group-hover:text-brand transition-colors">
+              TZOLKIN
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -86,7 +87,7 @@ export function Header() {
             ))}
             <Link
               href="/forms"
-              className="rounded-full bg-foreground text-background hover:bg-foreground/90 transition-all duration-500 hover:scale-105 text-sm font-medium px-5 py-2"
+              className="rounded-full bg-foreground text-background hover:bg-foreground/90 transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
             >
               Iniciar projeto
             </Link>
@@ -100,7 +101,7 @@ export function Header() {
             <ModeToggle />
             <button
               onClick={toggleMenu}
-              className="text-foreground p-2 -mr-2 hover:bg-foreground/5 rounded-full transition-colors"
+              className="text-foreground p-2 -mr-2 hover:bg-foreground/5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               aria-label="Alternar menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -136,7 +137,7 @@ export function Header() {
           <Link
             href="/forms"
             onClick={toggleMenu}
-            className={`mt-4 rounded-full px-8 py-3 bg-foreground text-background hover:bg-foreground/90 text-lg font-medium transition-all duration-500 hover:scale-105 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            className={`mt-4 rounded-full px-8 py-3.5 bg-foreground text-background hover:bg-foreground/90 text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
             style={{ transitionDelay: `${mobileMenuItems.length * 100 + 200}ms` }}
           >
@@ -144,8 +145,7 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* Background decorative element */}
-        <div className="absolute underline bottom-10 left-0 w-full text-center text-muted-foreground/20 text-sm tracking-[0.5em] uppercase">
+        <div className="absolute bottom-10 left-0 w-full text-center text-muted-foreground/20 text-sm tracking-[0.5em] uppercase">
           &copy; {new Date().getFullYear()} TZOLKIN.
         </div>
       </div >

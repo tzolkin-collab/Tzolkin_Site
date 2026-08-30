@@ -5,16 +5,19 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { Button } from '@/client/shared/ui/Button';
 import Link from 'next/link';
+import { appendTzolkinUtm } from '@/client/shared/utils/utm';
 
 export interface PricingCardProps {
   title: string;
   slug: string;
   dropPrice?: string;
-  price: string;
+  price?: string;
   paymentText?: string;
   description: string;
   features: string[];
   popular?: boolean;
+  ctaText?: string;
+  ctaHref?: string;
   maintenance?: {
     percent: string;
     tagline: string;
@@ -22,27 +25,41 @@ export interface PricingCardProps {
   };
 }
 
-export function PricingCard({ title, slug, dropPrice, price, paymentText, description, features, popular, maintenance }: PricingCardProps) {
+export function PricingCard({
+  title,
+  slug,
+  dropPrice,
+  price,
+  paymentText,
+  description,
+  features,
+  popular,
+  ctaText,
+  ctaHref,
+  maintenance,
+}: PricingCardProps) {
   const [withMaintenance, setWithMaintenance] = useState(false);
   const segmentId = useId();
+  const destinationHref = appendTzolkinUtm(ctaHref || `/servicos/${slug}`);
+  const isExternal = destinationHref.startsWith('http');
 
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className={`relative flex flex-col p-8 md:p-10 rounded-3xl border w-[85vw] max-w-[340px] md:max-w-none md:w-[420px] shrink-0 ${popular
-        ? 'bg-brand/5 border-brand/50'
+      className={`relative flex flex-col h-full p-6 sm:p-8 md:p-10 rounded-3xl border w-[85vw] max-w-[340px] md:max-w-none md:w-[420px] shrink-0 ${popular
+        ? 'bg-brand/5 border-brand/50 shadow-lg shadow-brand/5'
         : 'bg-card border-border/50 hover:border-brand/30'
         }`}
     >
       {popular && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-brand border border-brand/50 text-brand-foreground text-xs font-bold uppercase tracking-widest rounded-full whitespace-nowrap">
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-brand border border-brand/50 text-brand-foreground text-xs font-bold uppercase tracking-widest rounded-full whitespace-nowrap shadow-sm">
           Mais Procurado
         </div>
       )}
 
       <div className="mb-8">
         <h3 className="text-2xl font-bold text-foreground mb-2">{title}</h3>
-        <p className="text-sm text-muted-foreground min-h-[40px]">{description}</p>
+        <p className="text-sm text-muted-foreground min-h-[40px] leading-relaxed">{description}</p>
       </div>
 
       {maintenance && (
@@ -80,32 +97,34 @@ export function PricingCard({ title, slug, dropPrice, price, paymentText, descri
         </div>
       )}
 
-      <div className="mb-8">
-        <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase mb-2">A partir de</span>
-        <div className="flex items-end gap-3 mb-3">
-          {dropPrice && (
-            <span className="text-2xl font-bold text-muted-foreground/40 line-through decoration-brand/50 mb-1">{dropPrice}</span>
+      {price && (
+        <div className="mb-8">
+          <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase mb-2">A partir de</span>
+          <div className="flex items-end gap-3 mb-3">
+            {dropPrice && (
+              <span className="text-2xl font-bold text-muted-foreground/40 line-through decoration-brand/50 mb-1">{dropPrice}</span>
+            )}
+            <span className="text-3xl font-black tracking-tight text-foreground">{price}</span>
+          </div>
+          {paymentText && (
+            <p className="inline-block px-2 py-0.5 bg-foreground text-xs font-bold text-background uppercase tracking-wider rounded-sm">{paymentText}</p>
           )}
-          <span className="text-3xl font-black tracking-tight text-foreground">{price}</span>
+          <AnimatePresence initial={false}>
+            {withMaintenance && maintenance && (
+              <motion.p
+                key="maintenance-fee"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="block w-fit mt-2 px-2 py-0.5 bg-brand text-xs font-bold text-brand-foreground uppercase tracking-wider rounded-sm"
+              >
+                + {maintenance.percent} por transação
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
-        {paymentText && (
-          <p className="inline-block px-1.5 py-0.5 bg-foreground text-xs font-bold text-background uppercase tracking-wider">{paymentText}</p>
-        )}
-        <AnimatePresence initial={false}>
-          {withMaintenance && maintenance && (
-            <motion.p
-              key="maintenance-fee"
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.2 }}
-              className="block w-fit mt-2 px-1.5 py-0.5 bg-brand text-xs font-bold text-brand-foreground uppercase tracking-wider"
-            >
-              + {maintenance.percent} por transação
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </div>
+      )}
 
       <AnimatePresence initial={false}>
         {withMaintenance && maintenance && (
@@ -144,16 +163,19 @@ export function PricingCard({ title, slug, dropPrice, price, paymentText, descri
         ))}
       </div>
 
-      <div className="mt-auto">
-        <Link href={`/servicos/${slug}`}>
+      <div className="mt-auto pt-2">
+        <Link
+          href={destinationHref}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
+          className="block"
+        >
           <Button
-            variant="primary"
-            className={`w-full rounded-full h-14 text-sm tracking-wide uppercase font-bold transition-all ${popular
-              ? 'bg-brand text-brand-foreground hover:bg-brand/90'
-              : 'bg-foreground text-background hover:bg-brand hover:text-brand-foreground'
-              }`}
+            variant={popular ? 'brand' : 'primary'}
+            size="lg"
+            className="w-full text-sm hover:scale-[1.02]"
           >
-            Tenho Interesse
+            {ctaText || 'Tenho Interesse'}
           </Button>
         </Link>
       </div>

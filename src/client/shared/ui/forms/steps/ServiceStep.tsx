@@ -1,15 +1,18 @@
 'use client';
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useRef, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { useFormContext, FormData } from '../FormContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/client/shared/ui/Button';
 import { ArrowLeft, Loader2, Sparkles, Send } from 'lucide-react';
 import { pricingData } from '@/client/shared/data/pricingData';
+import { trackEvent } from '@/client/shared/utils/analytics';
 
 export function ServiceStep() {
+  const [submitError, setSubmitError] = useState('');
+  const submission = useRef<{ payload: string; key: string } | null>(null);
   const searchParams = useSearchParams();
   const serviceFromQuery = searchParams.get('service');
   const interesseFromQuery = searchParams.get('interesse');
@@ -24,7 +27,7 @@ export function ServiceStep() {
   const preset = interesseFromQuery ? INTERESSE_PRESETS[interesseFromQuery] : undefined;
 
   const { formData, updateData, resetForm } = useFormContext();
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormData>({
     defaultValues: {
       ...formData,
       service: serviceFromQuery || preset?.service || formData.service,
@@ -32,7 +35,7 @@ export function ServiceStep() {
     }
   });
   const router = useRouter();
-  const selectedService = watch('service');
+  const selectedService = useWatch({ control, name: 'service' });
 
   const onSubmit = async (data: FormData) => {
     updateData({
@@ -42,15 +45,30 @@ export function ServiceStep() {
 
     const finalData = { ...formData, ...data };
 
-    // Simulate API submission (log apenas fora de produção para não vazar dados do formulário)
-    if (process.env.NODE_ENV !== 'production') {
-      console.log("Submitting forms data:", finalData);
+    setSubmitError('');
+    const payload = JSON.stringify(finalData);
+    if (!submission.current || submission.current.payload !== payload) {
+      submission.current = { payload, key: crypto.randomUUID() };
     }
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    alert('Mensagem enviada com sucesso! Nossa equipe responde em até 1 dia útil.');
-    resetForm();
-    router.push('/');
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': submission.current.key },
+        body: payload,
+        signal: AbortSignal.timeout(20000),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        setSubmitError(result.message || 'Não foi possível enviar. Tente novamente.');
+        return;
+      }
+      trackEvent('lead', { eventName: 'lead_form_saved' });
+      alert('Recebemos sua solicitação. Obrigado pelo contato!');
+      resetForm();
+      router.push('/');
+    } catch {
+      setSubmitError('Não foi possível confirmar o envio. Seus dados foram mantidos; tente novamente.');
+    }
   };
 
   return (
@@ -70,7 +88,7 @@ export function ServiceStep() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={(event) => { void handleSubmit(onSubmit)(event); }} className="space-y-8">
         <div className="group/field">
           <label className="block text-sm font-bold uppercase tracking-widest text-foreground/70 mb-2 group-focus-within/field:text-brand transition-colors">Qual serviço você busca?</label>
           <select
@@ -79,7 +97,7 @@ export function ServiceStep() {
           >
             <option value="" disabled>Selecione uma opção</option>
             {pricingData.map((plan) => (
-              <option key={plan.title} value={plan.title}>{plan.title} (A Partir de {plan.price})</option>
+              <option key={plan.title} value={plan.title}>{plan.title}{plan.price ? ` (${plan.price})` : ''}</option>
             ))}
             <option value="Ferramentas TZOLKIN">Ferramentas TZOLKIN (SaaS, PWAs e NaaS)</option>
             <option value="Educacional TZOLKIN">Educacional TZOLKIN</option>
@@ -108,6 +126,7 @@ export function ServiceStep() {
           {errors.message && <span className="text-red-500 text-xs mt-1 block">{errors.message.message}</span>}
         </div>
 
+        {submitError && <p role="alert" className="text-red-500 text-sm">{submitError}</p>}
         <div className="pt-6 flex justify-between items-center">
           <button
             type="button"

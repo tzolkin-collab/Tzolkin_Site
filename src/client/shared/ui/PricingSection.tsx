@@ -48,12 +48,6 @@ export function PricingSection() {
 
   return (
     <section id="products" className="py-12 md:py-32 bg-background border-t border-border/50 relative overflow-hidden">
-
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-30">
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-brand/5 rounded-full blur-[100px]" />
-      </div>
-
       <div className="container mx-auto px-6 md:px-12 relative z-10 mb-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -64,33 +58,33 @@ export function PricingSection() {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-foreground/5 mb-6 text-sm font-medium tracking-wider uppercase text-brand">
             <Sparkles size={14} />
-            <span>Transparência TZOLKIN</span>
+            <span>Serviços e entregas</span>
           </div>
 
           <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6 text-foreground">
-            Produtos de software,<br /> <span className="text-brand">valores claros.</span>
+            O que você precisa<br /> <span className="text-brand">resolver agora?</span>
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground">
-            Soluções white-label e personalizadas — do site institucional ao sistema de mensalidades. Escolha o formato: ele chega com a sua marca, as suas regras e escopo fechado. Preço na página, sem surpresa na fatura.
+            Compare sites, lojas, tracking e integrações. Os valores exibidos se referem aos escopos descritos; personalizações e custos recorrentes devem ser conferidos antes da contratação. Serviços por projeto não são assinaturas de SaaS.
           </p>
         </motion.div>
       </div>
 
       {/* Carousel */}
-      <div className="w-full relative z-10 pl-6 md:pl-12 pb-12 py-2 overflow-hidden pr-6 md:pr-12" ref={emblaRef}>
+      <div className="w-full relative z-10 pl-6 md:pl-12 py-2 overflow-hidden pr-6 md:pr-12" ref={emblaRef}>
         <div
-          className="flex gap-6 pb-8 pt-4 cursor-grab active:cursor-grabbing touch-pan-y"
+          className="flex gap-6 pb-6 pt-4 cursor-grab active:cursor-grabbing touch-pan-y items-stretch"
           style={{ willChange: 'transform' }}
         >
           {pricingData.map((plan: PricingCardProps) => (
-            <div key={plan.title}>
+            <div key={plan.title} className="flex h-full">
               <PricingCard {...plan} />
             </div>
           ))}
 
           {/* Special Last Card for More Products/Services */}
           <div
-            className="group relative flex flex-col p-8 md:p-10 rounded-3xl border transition-all duration-300 w-[85vw] max-w-[340px] md:max-w-none md:w-[420px] shrink-0 text-foreground justify-center items-center text-center hover:bg-foreground-invert border-transparent"
+            className="group relative flex flex-col h-full p-6 sm:p-8 md:p-10 rounded-3xl border transition-all duration-300 w-[85vw] max-w-[340px] md:max-w-none md:w-[420px] shrink-0 text-foreground justify-center items-center text-center hover:bg-foreground-invert border-transparent bg-card/40"
           >
             <Link href="/catalogo" className="absolute inset-0 z-10" aria-label="Ver soluções personalizadas" />
             <Sparkles className="w-12 h-12 mb-6 opacity-70 group-hover:scale-110 transition-transform duration-300 pointer-events-none" />
@@ -112,7 +106,7 @@ export function PricingSection() {
         <button
           onClick={scrollPrev}
           disabled={prevBtnDisabled}
-          className="w-12 h-12 rounded-full border border-border flex items-center justify-center bg-background hover:bg-foreground/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          className="w-12 h-12 rounded-full border border-border flex items-center justify-center bg-background hover:bg-foreground/5 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           aria-label="Anterior"
         >
           <ChevronLeft className="w-6 h-6 text-foreground" />
@@ -120,7 +114,7 @@ export function PricingSection() {
         <button
           onClick={scrollNext}
           disabled={nextBtnDisabled}
-          className="w-12 h-12 rounded-full border border-border flex items-center justify-center bg-background hover:bg-foreground/5 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          className="w-12 h-12 rounded-full border border-border flex items-center justify-center bg-background hover:bg-foreground/5 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           aria-label="Próximo"
         >
           <ChevronRight className="w-6 h-6 text-foreground" />
@@ -128,22 +122,26 @@ export function PricingSection() {
       </div>
 
       {/* Sob Demanda CTA */}
-      <div className="container mx-auto px-6 md:px-12 relative z-10 mt-12">
+      <div className="container mx-auto px-6 md:px-12 relative z-10 mt-6 md:mt-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-foreground text-background rounded-3xl p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 border border-background/10"
+          className="bg-foreground text-background rounded-3xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 border border-background/10"
         >
           <div className="max-w-xl text-center md:text-left">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4">Funções sob demanda</h3>
+            <h3 className="text-3xl md:text-4xl font-bold mb-4">Sua operação precisa de algo próprio?</h3>
             <p className="text-background/70 text-lg leading-relaxed">
-              Precisa de algo mais complexo? Integrações avançadas, aplicativos customizados ou um fluxo corporativo próprio? Vamos desenhar do zero.
+              Se o problema envolve vários sistemas ou regras específicas, começamos pelo processo. Depois definimos o que integrar, o que desenvolver e em quais etapas entregar.
             </p>
           </div>
           <div className="shrink-0 w-full md:w-auto mt-6 md:mt-0">
             <Link href="/forms?interesse=personalizado">
-              <Button size="lg" className="w-full md:w-auto h-16 px-10 rounded-full bg-brand text-brand-foreground hover:bg-brand/90 text-lg tracking-wide uppercase font-bold flex items-center justify-center gap-3">
+              <Button
+                variant="brand"
+                size="lg"
+                className="w-full md:w-auto px-10 flex items-center justify-center gap-3 hover:scale-105"
+              >
                 Solicitar orçamento
                 <ArrowRight className="w-5 h-5" />
               </Button>

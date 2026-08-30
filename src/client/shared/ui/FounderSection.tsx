@@ -17,18 +17,18 @@ export function FounderSection() {
           className="max-w-3xl mx-auto"
         >
           <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-8">
-            Quem puxa o <span className="text-brand">movimento</span> da TZOLKIN.
+            Quem está <span className="text-brand">por trás</span> da TZOLKIN.
           </h2>
 
           <div className="space-y-6 text-lg text-foreground leading-relaxed">
             <p>
-              Não acreditamos em fórmulas mágicas ou gurus de palco. Acreditamos em trabalho duro, estratégia fundamentada e execução impecável.
+              Gustavo e Lucas são os sócios da TZOLKIN. Nosso trabalho começa entendendo o que sua empresa vende, como atende e onde a operação encontra dificuldade.
             </p>
             <p>
-              Nossa missão é garantir que cada projeto que sai da TZOLKIN — um serviço, um produto, uma ferramenta ou uma trilha educacional — não seja apenas &quot;bonito&quot;, mas um motor de crescimento para o seu negócio.
+              A partir daí, definimos a entrega: uma página, uma loja, o tracking do funil ou um sistema próprio. O tamanho do projeto acompanha o problema que precisa ser resolvido.
             </p>
             <p>
-              Unimos design e engenharia de dados para construir software que não apenas vai ao ar — mede, evolui e sustenta o crescimento do seu negócio.
+              Serviços, produtos de software e conteúdo educacional têm propostas distintas dentro da TZOLKIN. Você contrata a solução adequada ao seu momento, sem precisar adotar todo o ecossistema.
             </p>
           </div>
 
@@ -45,7 +45,7 @@ export function FounderSection() {
           {/* CTA discreto */}
           <div className="mt-12">
             <Link href="/forms?interesse=consultoria">
-              <Button variant="outline" size="lg" className="rounded-full px-8">
+              <Button variant="outline" size="lg" className="px-8 hover:scale-105">
                 Conversar com a TZOLKIN
               </Button>
             </Link>

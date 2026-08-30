@@ -1,13 +1,13 @@
 import { PricingCardProps } from '../ui/PricingCard';
+import { appendTzolkinUtm } from '../utils/utm';
 
 export const pricingData: PricingCardProps[] = [
   {
     title: 'Landing Pages de Conversão',
     slug: 'landing-pages-de-conversao',
-    dropPrice: 'R$ 1.925',
-    price: 'R$ 1.350',
-    paymentText: 'Em até 3x no cartão ou Pix R$ 1.050 à vista',
-    description: 'Páginas exclusivas desenhadas para altíssima conversão de leads vindos de tráfego pago.',
+    ctaText: 'Acessar sites.tzolkin.cloud',
+    ctaHref: appendTzolkinUtm('https://sites.tzolkin.cloud'),
+    description: 'Landing pages para apresentar uma oferta e orientar o visitante até o formulário, WhatsApp ou checkout.',
     features: [
       'Hospedagem GRATUITA',
       'Entrega em até 3 dias úteis',
@@ -16,16 +16,15 @@ export const pricingData: PricingCardProps[] = [
       'Formulário Personalizado | Checkout Transparente',
       'Copywriting Direto e Persuasivo',
       'Design Mobile-First Exclusivo',
-      'Carregamento Super Otimizado (<1s)',
+      'Otimização de carregamento e experiência mobile',
       'Bônus: Tagueamento (GA4 e Pixels de Base)'
     ]
   },
   {
     title: 'Sites Institucionais',
     slug: 'sites-institucionais',
-    dropPrice: 'R$ 6.000',
-    price: 'R$ 4.500',
-    paymentText: 'Em até 6x no cartão de crédito',
+    ctaText: 'Acessar sites.tzolkin.cloud',
+    ctaHref: appendTzolkinUtm('https://sites.tzolkin.cloud'),
     description: 'O hub central da sua marca, feito para transmitir autoridade e confiança instantânea ao mercado.',
     features: [
       'Suporte primeiro mês gratuito',
@@ -41,6 +40,8 @@ export const pricingData: PricingCardProps[] = [
   {
     title: 'E-commerce global',
     slug: 'e-commerces-globais',
+    ctaText: 'Acessar ecom.tzolkin.cloud',
+    ctaHref: appendTzolkinUtm('https://ecom.tzolkin.cloud'),
     dropPrice: 'R$ 10.000',
     price: 'R$ 8.000',
     paymentText: 'Entrada de 50% + 50% na entrega',
@@ -58,19 +59,19 @@ export const pricingData: PricingCardProps[] = [
     ]
   },
   {
-    title: 'Tagueamento de Fluxo',
+    title: 'Tracking de Funil',
     slug: 'tagueamento-de-fluxo',
     dropPrice: 'R$ 3.000',
     price: 'R$ 2.500',
     paymentText: 'Em até 3x no cartão de crédito',
-    description: 'Mapeamento meticuloso de eventos para rastrear cada centavo que entra na sua operação.',
+    description: 'Conecte origem, contato, etapas comerciais e venda. O tracking web é uma camada; CRM, eventos offline e pagamentos ampliam a leitura conforme o escopo.',
     features: [
       'Auditoria de Eventos: De ViewContent a Purchase',
       'Configuração Server-Side (GTM Cloud)',
-      'Meta Conversions API (CAPI) Anti-AdBlock',
+      'Integração com Meta Conversions API (CAPI)',
       'Tagueamento Avançado para Google e TikTok Ads',
       'Sincronização de Dados Off-line via Webhooks',
-      'Redução da Perda de Atribuição em até 95%',
+      'Validação de eventos e diagnóstico de perdas de atribuição',
       'Monitoramento de Fluxo em Tempo Real',
       'Configuração Profissional UTMify / GTM'
     ]
@@ -125,7 +126,7 @@ export const pricingData: PricingCardProps[] = [
     slug: 'api-pix',
     price: 'R$ 1.500',
     paymentText: 'Em até 3x no cartão de crédito',
-    description: 'Fuja das taxas em território nacional. Integração direta com API Pix para cobranças instantâneas, QR Codes dinâmicos e confirmação automática de pagamento.',
+    description: 'Integração com API Pix para gerar cobranças, QR Codes e confirmações de pagamento. Tarifas e condições dependem da instituição contratada.',
     maintenance: {
       percent: '6%',
       tagline: 'Assistência contínua da equipe técnica em tudo que envolve pagamentos.',
@@ -137,13 +138,13 @@ export const pricingData: PricingCardProps[] = [
       ]
     },
     features: [
-      'Taxa por Transação ZERO (Custo Operacional Mínimo)',
+      'Integração com a instituição de pagamento contratada',
       'Geração de QR Codes Dinâmicos em Tempo Real',
-      'Webhook de Confirmação com Baixa em < 3 Segundos',
+      'Webhook de confirmação para baixa de pagamentos',
       'Conciliação com Bancos (EFÍ, Itaú, BB, Inter)',
       'Automação de Liberação de Acesso Pós-Pagamento',
       'Dashboard Operacional de Vendas Instantâneas',
-      'Redução de até 48% no Churn de Boletos',
+      'Acompanhamento de cobranças pendentes e pagas',
       'Integração via API REST nativa'
     ]
   },
@@ -185,8 +186,8 @@ export const pricingData: PricingCardProps[] = [
       'Painel Administrativo Customizado',
       'Suporte Técnico Dedicado',
       'Foco Total em Regras de Negócio Únicas',
-      'Escalabilidade Horizontal Infinita',
-      'Segurança de Dados de Nível Bancário'
+      'Planejamento de capacidade conforme a demanda',
+      'Controles de acesso e proteção de dados definidos no projeto'
     ]
   }
 ];

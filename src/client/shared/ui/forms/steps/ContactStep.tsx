@@ -22,12 +22,8 @@ export function ContactStep() {
       whatsapp: data.whatsapp
     });
     
-    // Tracking UTMify + GTM (Lead Qualificado Inicial)
-    trackEvent('lead', { 
-      email: data.email, 
-      phone: data.whatsapp, 
-      eventName: 'lead_form_started' 
-    });
+    // Progress is not a persisted lead. Do not send personal data to analytics.
+    trackEvent('form_started', { eventName: 'lead_form_started' });
     
     const query = new URLSearchParams();
     ['service', 'interesse'].forEach((key) => {

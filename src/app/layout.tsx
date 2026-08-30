@@ -34,11 +34,10 @@ export const metadata: Metadata = {
     "Software de alto padrão: consultoria, produtos white-label e sob medida, e ferramentas próprias — de IA a cybersecurity, do desenvolvimento ao educacional.",
   icons: {
     icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/logotzolkin.svg', type: 'image/svg+xml', media: '(prefers-color-scheme: light)' },
-      { url: '/logotzolkin-white.svg', type: 'image/svg+xml', media: '(prefers-color-scheme: dark)' },
     ],
-    shortcut: '/favicon.ico',
+    shortcut: '/favicon.svg',
     apple: '/apple-touch-icon.png',
   },
   openGraph: {

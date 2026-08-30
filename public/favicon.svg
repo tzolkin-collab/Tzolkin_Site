@@ -1,0 +1,72 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --bg: #0A0A0A;
+      --fg: #FAFAF7;
+      --brand: #40BB21;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #0A0A0A;
+        --fg: #FAFAF7;
+      }
+    }
+    .base-squircle {
+      fill: var(--bg);
+      transform-origin: center;
+      animation: squircleIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .orbit-ring {
+      fill: none;
+      stroke: var(--fg);
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-dasharray: 90;
+      stroke-dashoffset: 90;
+      transform-origin: 26px 32px;
+      animation: drawRing 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards, subtleOrbit 6s ease-in-out 2s infinite alternate;
+    }
+    .core-node {
+      fill: var(--fg);
+      transform-origin: 38px 32px;
+      transform: scale(0);
+      animation: popCore 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards, pulseGlow 4s ease-in-out 2s infinite alternate;
+    }
+    .eclipse-glow {
+      fill: var(--brand);
+      opacity: 0;
+      filter: blur(4px);
+      transform-origin: 32px 32px;
+      animation: flarePulse 3s ease-in-out 1.2s infinite alternate;
+    }
+    @keyframes squircleIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes drawRing {
+      0% { stroke-dashoffset: 90; transform: rotate(-90deg); }
+      100% { stroke-dashoffset: 0; transform: rotate(0deg); }
+    }
+    @keyframes popCore {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes subtleOrbit {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(15deg); }
+    }
+    @keyframes pulseGlow {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+    @keyframes flarePulse {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 0.35; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+  </style>
+  <rect class="base-squircle" x="0" y="0" width="64" height="64" rx="14" ry="14" />
+  <circle class="eclipse-glow" cx="32" cy="32" r="16" />
+  <circle class="orbit-ring" cx="26" cy="32" r="14" />
+  <circle class="core-node" cx="38" cy="32" r="14" />
+</svg>

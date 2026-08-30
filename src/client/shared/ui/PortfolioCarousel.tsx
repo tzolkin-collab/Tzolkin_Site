@@ -35,22 +35,6 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
               className="flex-[0_0_100%] sm:flex-[0_0_350px] md:flex-[0_0_400px] min-w-0 pl-4 relative pt-28"
             >
               <div className="group cursor-pointer relative">
-                {/* Decorative Background Element */}
-                <div className={`absolute -top-32 -right-8 w-48 h-48 md:w-64 md:h-64 ${project.rotation} pointer-events-none select-none z-0`}>
-                  <div
-                    className="w-full h-full bg-brand"
-                    style={{
-                      maskImage: `url(${project.decoration})`,
-                      maskSize: 'contain',
-                      maskRepeat: 'no-repeat',
-                      maskPosition: 'center',
-                      WebkitMaskImage: `url(${project.decoration})`,
-                      WebkitMaskSize: 'contain',
-                      WebkitMaskRepeat: 'no-repeat',
-                      WebkitMaskPosition: 'center'
-                    }}
-                  />
-                </div>
 
                 {showEmbeds && project.instagramPostUrl ? (
                   <div className="mb-6 relative z-10 transition-transform duration-500 group-hover:-translate-y-2">
@@ -68,6 +52,8 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
                             src={project.logo}
                             alt={`Logo de ${project.name}`}
                             fill
+                            loading="lazy"
+                            quality={75}
                             sizes="(max-width: 640px) 85vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
                             className={`object-contain transition-transform duration-500 ${project.bright ? 'brightness-0' : ''} ${project.invert ? 'invert dark:invert-0' : ''}`}
                           />
@@ -82,6 +68,8 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
                           src={project.logo}
                           alt={`Logo de ${project.name}`}
                           fill
+                          loading="lazy"
+                          quality={75}
                           sizes="(max-width: 640px) 85vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
                           className={`object-contain transition-transform duration-500 ${project.bright ? 'brightness-0' : ''} ${project.invert ? 'invert dark:invert-0' : ''}`}
                         />

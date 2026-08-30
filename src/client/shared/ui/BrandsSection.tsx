@@ -68,7 +68,7 @@ export function BrandsSection() {
 
               <div className="pt-8">
                 <Link href="/forms?interesse=consultoria">
-                  <Button variant="primary" size="lg" className="rounded-full px-8 h-14 text-lg bg-foreground text-background hover:bg-foreground/90 group w-full md:w-auto">
+                  <Button variant="primary" size="lg" className="px-8 group w-full md:w-auto hover:scale-105">
                     Centralizar minha operação
                     <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </Button>
@@ -178,7 +178,7 @@ export function BrandsSection() {
               </div>
 
               <div className="mt-8 relative z-10">
-                <Button variant="primary" onClick={closeModal} className="w-full rounded-full h-12 bg-foreground text-background">
+                <Button variant="primary" size="md" onClick={closeModal} className="w-full">
                   Entendi
                 </Button>
               </div>

@@ -14,11 +14,7 @@ function PartnershipCardMedia({ project }: { project: Project }) {
   const showLogo = Boolean(project.logo) && !logoFailed;
 
   return (
-    <div className="aspect-[16/10] bg-neutral-950 dark:bg-white mb-8 overflow-hidden relative flex items-center justify-center p-8 md:p-16 transition-all duration-700 rounded-3xl group-hover:-translate-y-4 z-10 shadow-2xl border border-white/5 dark:border-black/5 group-hover:border-brand/30">
-
-      {/* Gradient Overlay on Hover */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-brand/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
-
+    <div className="aspect-[16/10] bg-neutral-950 dark:bg-white mb-8 overflow-hidden relative flex items-center justify-center p-8 md:p-16 transition-all duration-500 rounded-3xl group-hover:-translate-y-2 z-10 shadow-xl border border-white/5 dark:border-black/5 group-hover:border-brand/30">
       {/* Fallback visual: logo ausente ou falha de carregamento */}
       {!showLogo && (
         <div className="absolute inset-0 z-[5] flex items-center justify-center bg-muted">
@@ -30,11 +26,13 @@ function PartnershipCardMedia({ project }: { project: Project }) {
 
       {/* Main Content - Project Logo */}
       {showLogo && (
-        <div className="relative w-full h-full z-10 transition-transform duration-700 group-hover:scale-105">
+        <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105">
           <Image
             src={project.logo}
             alt={`Logo ${project.name}`}
             fill
+            loading="lazy"
+            quality={75}
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-contain brightness-0 invert dark:invert-0"
             onError={() => setLogoFailed(true)}
@@ -53,7 +51,7 @@ export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           className="mb-16 md:mb-24 items-start"
         >
           <h2 className="text-[8vw] md:text-[4vw] leading-[0.9] font-bold tracking-tight text-foreground uppercase mix-blend-normal">
@@ -69,31 +67,12 @@ export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
           {partnerships.map((project, index) => (
             <motion.div
               key={project.name}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
               className={`group cursor-pointer relative ${index % 2 !== 0 ? 'md:mt-24' : ''}`}
             >
-              {/* Decorative Background Element - Larger and more subtle for partnerships */}
-              {project.decoration && (
-                <div className={`absolute -top-16 -right-16 w-48 h-48 md:-top-32 md:-right-32 md:w-96 md:h-96 ${project.rotation || ''} pointer-events-none select-none z-0 opacity-20 group-hover:opacity-60 transition-opacity duration-700 ease-in-out`}>
-                  <div
-                    className="w-full h-full bg-brand"
-                    style={{
-                      maskImage: `url(${project.decoration})`,
-                      maskSize: 'contain',
-                      maskRepeat: 'no-repeat',
-                      maskPosition: 'center',
-                      WebkitMaskImage: `url(${project.decoration})`,
-                      WebkitMaskSize: 'contain',
-                      WebkitMaskRepeat: 'no-repeat',
-                      WebkitMaskPosition: 'center'
-                    }}
-                  />
-                </div>
-              )}
-
               {/* Card Container */}
               <PartnershipCardMedia project={project} />
 

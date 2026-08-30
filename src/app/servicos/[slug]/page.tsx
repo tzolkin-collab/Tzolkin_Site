@@ -4,7 +4,6 @@ import { notFound, redirect } from 'next/navigation';
 import { servicesData } from '@/client/shared/data/servicesData';
 import { ServiceGithub } from '@/client/shared/ui/ServiceGithub';
 import { MermaidDiagram } from '@/client/shared/ui/MermaidDiagram';
-import { Antigravity } from '@/client/shared/ui/Antigravity';
 import { PrismBackground } from '@/client/shared/ui/PrismBackground';
 import CardSwap, { Card } from '@/client/shared/ui/CardSwap';
 import { Marquee } from '@/client/shared/ui/Marquee';
@@ -72,9 +71,9 @@ export default async function ServicePage(props: Params) {
 
 
         <div className="container mx-auto px-6 md:px-12 relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-foreground transition-colors mb-6">
+          <Link href="/servicos" className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-brand transition-colors mb-6">
             <ChevronLeft className="w-4 h-4" />
-            Voltar para a home
+            Voltar para serviços
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -92,8 +91,8 @@ export default async function ServicePage(props: Params) {
 
             <div className="relative w-full h-[400px] hidden lg:block">
               <CardSwap>
-                <Card className="bg-brand/20 backdrop-blur-md border-brand/40" />
-                <Card className="bg-brand/40 backdrop-blur-md border-brand/50" />
+                <Card className="bg-brand/20 border-brand/40" />
+                <Card className="bg-brand/40 border-brand/50" />
                 <Card className="bg-brand border-brand" />
               </CardSwap>
             </div>
@@ -101,7 +100,7 @@ export default async function ServicePage(props: Params) {
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 group/spotlight lg:pr-[30%]">
             {service.heroMetrics.map((metric, idx) => (
-              <SpotlightCard key={idx} className="p-6 md:p-8 rounded-3xl border border-border/50 bg-white/5 dark:bg-neutral-900/50 backdrop-blur-sm" spotlightColor="rgba(64, 187, 33, 0.15)">
+              <SpotlightCard key={idx} className="p-6 md:p-8 rounded-3xl border border-border/50 bg-card" spotlightColor="rgba(64, 187, 33, 0.15)">
                 <p className="text-sm font-bold tracking-widest uppercase text-foreground mb-2">{metric.label}</p>
                 <div className="flex items-end gap-3">
                   <span className="text-3xl md:text-4xl font-black text-foreground">{metric.value}</span>
@@ -187,31 +186,24 @@ export default async function ServicePage(props: Params) {
         // Sessão final (dados de mercado) → grid de cards em bg invertido
         if (isLastSection && !hasChart) {
           return (
-            <section key={idx} className="py-28  text-foreground relative overflow-hidden">
-              <div className="absolute inset-0 z-0 opacity-100 pointer-events-none hidden md:block">
-                <Antigravity color="var(--background)" count={1700} />
-              </div>
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand via-brand/50 to-transparent z-10" />
-              <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand/10 rounded-full blur-[140px] pointer-events-none z-10" />
+            <section key={idx} className="py-24 text-foreground relative overflow-hidden border-t border-border/50">
               <div className="container mx-auto px-6 md:px-12 relative z-10">
                 <div className="max-w-3xl mx-auto text-center mb-16">
-                  <div className="relative inline-block mb-8">
-                    <div className="absolute inset-0 bg-background/60 blur-[40px] rounded-full" />
-                    <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-background/40 backdrop-blur-md">
+                  <div className="relative inline-block mb-6">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-foreground/5">
                       <div className="w-2 h-2 rounded-full bg-brand animate-pulse" />
                       <span className="text-xs font-bold tracking-widest uppercase text-foreground/80">Dados reais de mercado</span>
                     </div>
                   </div>
-                  <div className="relative inline-block">
-                    <div className="absolute inset-0 bg-background/60 blur-[100px] rounded-full" />
-                    <h2 className="relative z-10 text-3xl md:text-5xl backdrop-blur-md bg-background/40 border border-white/5 rounded-full p-2 font-black tracking-tight leading-tight">
+                  <div>
+                    <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
                       {section.headline}
                     </h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto group/spotlight">
                   {section.content.map((item, iIdx) => (
-                    <SpotlightCard key={iIdx} className="group p-8 rounded-2xl border border-brand/10 bg-white dark:bg-black hover:bg-white/[0.06] transition-all duration-300 backdrop-blur-sm" spotlightColor="rgba(161, 33, 187, 0.15)">
+                    <SpotlightCard key={iIdx} className="group p-8 rounded-2xl border border-border bg-card hover:border-brand/40 transition-all duration-300" spotlightColor="rgba(161, 33, 187, 0.15)">
                       <div className="w-8 h-[3px] bg-brand mb-6 group-hover:w-12 transition-all duration-300" />
                       <p className="text-lg text-foreground font-medium leading-relaxed">{item}</p>
                     </SpotlightCard>
@@ -222,11 +214,10 @@ export default async function ServicePage(props: Params) {
           );
         }
 
-        // Sessão sem gráfico → texto centralizado com brilho decorativo
+        // Sessão sem gráfico → texto centralizado
         if (!hasChart) {
           return (
-            <section key={idx} className={`py-15 relative overflow-hidden ${isEven ? 'bg-background dark:bg-background/90' : 'bg-neutral-50 dark:bg-neutral-950/80 border-y border-border/20'}`}>
-              <div className={`absolute ${isEven ? 'top-[-10%] right-[-10%]' : 'bottom-[-10%] left-[-10%]'} w-[500px] h-[500px] bg-brand/5 rounded-full blur-[140px] pointer-events-none`} />
+            <section key={idx} className={`py-20 relative overflow-hidden ${isEven ? 'bg-background' : 'bg-neutral-50 dark:bg-neutral-950/80 border-y border-border/20'}`}>
               <div className="container mx-auto px-6 md:px-12 relative z-10">
                 <div className="max-w-3xl mx-auto text-center">
                   <div className="w-12 h-[3px] bg-foreground dark:bg-brand/90 mx-auto mb-10" />
@@ -236,8 +227,7 @@ export default async function ServicePage(props: Params) {
                   ))}
                   {section.copyAction && (
                     <div className="mt-14 relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-brand/10 via-brand/5 to-brand/10 rounded-2xl blur-xl" />
-                      <div className="relative bg-background border border-brand/20 rounded-2xl px-10 py-8">
+                      <div className="bg-card border border-border rounded-2xl px-10 py-8 shadow-sm">
                         <p className="text-xl font-bold text-foreground leading-relaxed">&ldquo;{section.copyAction}&rdquo;</p>
                       </div>
                     </div>
@@ -261,9 +251,7 @@ export default async function ServicePage(props: Params) {
         // Sessão COM gráfico → side-by-side alternando direção + carrossel como quebra
         return (
           <React.Fragment key={idx}>
-            <section className={`py-12 relative overflow-hidden ${isEven ? 'bg-background' : 'bg-neutral-50 dark:bg-neutral-950/80 border-y border-border/20'}`}>
-              <div className={`absolute ${isEven ? 'top-[-5%] right-[-5%]' : 'bottom-[-5%] left-[-5%]'} w-[500px] h-[500px] bg-brand/5 rounded-full blur-[140px] pointer-events-none`} />
-
+            <section className={`py-20 relative overflow-hidden ${isEven ? 'bg-background' : 'bg-neutral-50 dark:bg-neutral-950/80 border-y border-border/20'}`}>
               <div className="container mx-auto px-6 md:px-12 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
@@ -299,7 +287,7 @@ export default async function ServicePage(props: Params) {
 
                   {/* Gráfico */}
                   <div className={`${!isEven ? 'lg:order-1' : ''}`}>
-                    <div className="rounded-3xl border border-border/40 bg-white/[0.02] dark:bg-neutral-900/40 p-8 px-2 md:p-10 backdrop-blur-sm">
+                    <div className="rounded-3xl border border-border bg-card p-8 px-2 md:p-10 shadow-sm">
                       <div className="flex items-center gap-3 mb-8 pb-5 border-b border-border/30">
                         <div className="w-9 h-9 rounded-full bg-brand/10 flex items-center justify-center">
                           <BarChart3 className="w-4 h-4 text-brand" />
@@ -324,7 +312,6 @@ export default async function ServicePage(props: Params) {
       {/* CTA Standalone */}
       {service.contentSections && service.contentSections.length > 0 && (
         <section className="py-20 bg-brand relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(0,0,0,0.05),transparent_70%)]" />
           <div className="container mx-auto px-6 md:px-12 relative z-10 text-center">
             <h2 className="text-3xl md:text-5xl font-black text-white dark:text-white tracking-tight mb-6 leading-tight">Pronto para escalar?</h2>
             <p className="text-lg text-white/90 dark:text-white font-medium max-w-2xl mx-auto mb-10">Sua operação merece uma infraestrutura de software que sustenta escala — sem retrabalho e sem improviso.</p>
@@ -355,7 +342,6 @@ export default async function ServicePage(props: Params) {
             </div>
 
             <div className="col-span-1 lg:col-span-7 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent z-10 pointer-events-none w-12" />
               <ServiceGithub integrations={service.githubIntegrations} />
             </div>
           </div>

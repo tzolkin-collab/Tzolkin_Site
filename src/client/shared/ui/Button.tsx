@@ -1,7 +1,7 @@
 import React from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'brand' | 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
 }
 
@@ -12,19 +12,20 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none cursor-pointer active:scale-95";
+  const baseStyles = "inline-flex items-center justify-center rounded-full font-bold uppercase tracking-wider transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none cursor-pointer active:scale-[0.98] select-none";
 
   const variants = {
-    primary: "bg-primary/90 text-primary-foreground hover:bg-primary hover:text-white dark:hover:text-black hover:shadow-lg hover:shadow-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:shadow-lg hover:shadow-secondary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    outline: "border-2 border-border bg-transparent hover:bg-accent hover:text-accent-foreground hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    ghost: "hover:bg-accent/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    brand: "bg-brand text-white hover:bg-brand/90 hover:shadow-lg hover:shadow-brand/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    primary: "bg-foreground text-background hover:bg-foreground/90 hover:shadow-lg hover:shadow-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    secondary: "bg-foreground/5 text-foreground hover:bg-foreground/10 border border-border/60 hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    outline: "border border-border bg-transparent text-foreground hover:bg-foreground/5 hover:border-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    ghost: "text-foreground/80 hover:text-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   };
 
   const sizes = {
-    sm: "h-9 px-4 text-sm",
-    md: "h-11 px-6 text-base",
-    lg: "h-14 px-8 text-lg",
+    sm: "h-9 px-4 text-xs",
+    md: "h-11 px-6 text-sm",
+    lg: "h-14 px-8 text-base",
   };
 
   return (
@@ -36,3 +37,4 @@ export function Button({
     </button>
   );
 }
+

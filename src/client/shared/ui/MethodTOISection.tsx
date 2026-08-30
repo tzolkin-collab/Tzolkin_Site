@@ -59,7 +59,7 @@ export function MethodTOISection() {
 
                 <div className="pt-8">
                   <Link href="/forms?interesse=consultoria">
-                    <Button variant="primary" size="lg" className="rounded-full px-8 h-14 text-lg bg-foreground text-background hover:bg-foreground/90 group">
+                    <Button variant="primary" size="lg" className="px-8 group hover:scale-105">
                       Quero aplicar o Método GT™
                       <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                     </Button>
@@ -78,9 +78,6 @@ export function MethodTOISection() {
               viewport={{ once: true, margin: "-100px" }}
               className="relative w-full max-w-[500px] min-h-[600px] md:min-h-[700px] flex flex-col items-center justify-center py-12"
             >
-              {/* Background Glow */}
-              <div className="absolute inset-0 bg-brand/5 rounded-full blur-3xl" />
-
               {/* Central Concept - The Method */}
               <div className="relative w-full h-full px-8 flex flex-col justify-center items-center gap-6">
 

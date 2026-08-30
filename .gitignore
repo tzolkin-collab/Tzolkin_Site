@@ -42,3 +42,6 @@ next-env.d.ts
 
 # artefatos internos de QA (screenshots/scripts de revisao)
 critica/
+
+# configuracoes locais de ferramenta, por maquina
+.claude/settings.local.json

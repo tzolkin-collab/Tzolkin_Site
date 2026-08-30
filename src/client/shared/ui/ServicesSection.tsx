@@ -1,6 +1,6 @@
 'use client';
 
-import { Compass, Handshake, Code2, ArrowRight, LucideIcon } from 'lucide-react';
+import { Zap, BarChart3, Palette, LucideIcon } from 'lucide-react';
 import { useCallback } from 'react';
 import Link from 'next/link';
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
@@ -8,47 +8,36 @@ import { Button } from './Button';
 
 const services = [
   {
-    icon: Compass,
-    title: "Consultoria em software",
-    subtitle: "Decisão de tecnologia é decisão de negócio. A TZOLKIN entra como parceira técnica para diagnosticar, arquitetar e priorizar — antes de qualquer linha de código.",
-    description: "Diagnóstico da operação, arquitetura de sistemas, escolha de stack, auditoria de código e de segurança, roadmap de produto. Você sai com escopo fechado, prioridades claras e estimativas realistas — mesmo que a execução fique com outro time.",
+    icon: Zap,
+    title: "Apresente sua oferta. Facilite a compra.",
+    subtitle: "TZOLKIN Sites e Commerce: páginas, sites e lojas com um caminho claro até o contato ou o pedido.",
+    description: "Organizamos conteúdo, navegação e experiência mobile em torno da decisão do seu cliente. Formulários, checkout e integrações entram conforme o escopo da entrega.",
+    highlights: ["Sites e landing pages", "Lojas e checkout", "Experiência mobile"],
     glow: "from-brand/10 via-transparent to-transparent",
     iconGradient: "from-brand to-brand2",
     color: "var(--brand)"
   },
   {
-    icon: Handshake,
-    title: "Assessoria contínua",
-    subtitle: "Um time sênior de software ao lado do seu, mês após mês — sem precisar montar um departamento inteiro de tecnologia.",
-    description: "Evolução de produto, monitoramento e observabilidade, correções prioritárias, revisão de arquitetura e suporte às decisões técnicas do negócio. A TZOLKIN opera como o seu braço de engenharia, com escopo mensal e prioridades transparentes.",
+    icon: BarChart3,
+    title: "Entenda onde o funil perde vendas.",
+    subtitle: "Tracking de funil vai além do pixel: conecta a origem do contato às etapas comerciais e aos resultados registrados.",
+    description: "Mapeamos eventos, UTMs, CRM e pagamentos conforme as ferramentas da sua operação. Do tracking web ao server-side e aos eventos offline, o escopo define o que pode ser medido — sem prometer rastreamento sem perdas.",
+    highlights: ["Origem e eventos do site", "Etapas do CRM", "Vendas e pagamentos"],
     glow: "from-brand2/10 via-transparent to-transparent",
     iconGradient: "from-brand2 to-brand",
     color: "var(--brand2)"
   },
   {
-    icon: Code2,
-    title: "Desenvolvimento sob medida",
-    subtitle: "Do MVP ao sistema completo: sites, plataformas, integrações e produtos white-label ou personalizados, construídos com o método TZOLKIN.",
-    description: "Discovery, arquitetura e sprints incrementais, com observabilidade desde o primeiro deploy. Cada entrega valida uma hipótese com dados reais antes de escalar — e o código, o design e a documentação ficam com você.",
-    linkText: "Veja o que construímos no catálogo",
-    linkHref: "/catalogo",
+    icon: Palette,
+    title: "Conecte o que hoje depende de trabalho manual.",
+    subtitle: "Software sob medida para processos que não cabem nas ferramentas prontas que você já usa.",
+    description: "Integramos sistemas e desenhamos fluxos para a sua rotina: do cadastro à cobrança, do pedido ao acompanhamento. A proposta define integrações, responsabilidades e etapas de entrega.",
+    highlights: ["Integrações entre sistemas", "Automações de processos", "Desenvolvimento sob medida"],
     glow: "from-brand/10 via-transparent to-transparent",
     iconGradient: "from-brand to-brand2",
     color: "var(--brand)"
   }
 ];
-
-interface ServiceItem {
-  icon: LucideIcon;
-  title: string;
-  subtitle: React.ReactNode;
-  description: React.ReactNode;
-  linkText?: string;
-  linkHref?: string;
-  glow: string;
-  iconGradient: string;
-  color: string;
-}
 
 const areas = [
   {
@@ -61,13 +50,24 @@ const areas = [
   },
   {
     title: "Web design & desenvolvimento",
-    description: "Sites, sistemas e PWAs com performance sub-segundo."
+    description: "Sites, sistemas e PWAs com navegação clara e atenção ao desempenho."
   },
   {
     title: "Dados & integrações",
     description: "APIs, webhooks e analytics conectando cada ponta da sua operação."
   }
 ];
+
+interface ServiceItem {
+  icon: LucideIcon;
+  title: string;
+  subtitle: string;
+  description: string;
+  highlights: string[];
+  glow: string;
+  iconGradient: string;
+  color: string;
+}
 
 function ServiceCard({ service, index }: { service: ServiceItem, index: number }) {
   const mouseX = useMotionValue(0);
@@ -107,58 +107,43 @@ function ServiceCard({ service, index }: { service: ServiceItem, index: number }
           }}
         />
 
-        {/* LED Border Animation - Mobile (Auto Reflection) */}
-        <div className="absolute inset-0 opacity-100 md:hidden pointer-events-none">
-          <div
-            className="absolute inset-[-50%] animate-[spin_8s_linear_infinite] w-[200%] h-[200%] left-[-50%] top-[-50%]"
-            style={{
-              backgroundImage: `conic-gradient(from 0deg, transparent 0 140deg, ${service.color} 160deg, transparent 180deg 320deg, ${service.color} 340deg, transparent 360deg)`,
-              willChange: 'transform'
-            }}
-          />
-        </div>
+        {/* Inner Card */}
+        <div className="relative h-full bg-card border border-border rounded-[22px] p-8 md:p-12 flex flex-col md:flex-row gap-8 md:gap-14 items-center z-10 overflow-hidden">
 
-        {/* Inner Card Background & Content */}
-        <div className="relative h-full bg-card border border-border rounded-[22px] p-7 md:p-12 flex flex-col md:flex-row gap-8 md:gap-16 items-start z-10 overflow-hidden">
-
-          {/* Dynamic Internal Gradient/Glow */}
           <div className={`absolute inset-0 bg-gradient-to-br ${service.glow} opacity-50 pointer-events-none`} />
-
-          {/* Top Highlight (Reflection) */}
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent opacity-50" />
 
-
-          {/* Content Container */}
-          <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16 w-full">
+          <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-14 w-full items-start md:items-center">
             {/* Left Side */}
-            <div className="flex-1 space-y-6">
-              {/* Icon */}
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.iconGradient} flex items-center justify-center shadow-lg shadow-brand/20`}>
-                <service.icon size={32} strokeWidth={1.5} className="text-brand-foreground drop-shadow-md" />
+            <div className="flex-1 space-y-5">
+              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.iconGradient} flex items-center justify-center shadow-lg shadow-brand/20`}>
+                <service.icon size={28} strokeWidth={1.75} className="text-brand-foreground drop-shadow-md" />
               </div>
 
               <div>
-                <h3 className="text-3xl md:text-4xl font-bold text-card-foreground mb-4 tracking-tight">{service.title}</h3>
-                <p className="text-muted-foreground font-medium leading-relaxed text-lg">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-card-foreground mb-3 tracking-tight">{service.title}</h3>
+                <p className="text-muted-foreground font-medium leading-relaxed text-base md:text-lg">
                   {service.subtitle}
                 </p>
               </div>
             </div>
 
             {/* Right Side */}
-            <div className="flex-1 flex flex-col justify-center h-full gap-4">
-              <p className="text-lg md:text-xl text-card-foreground leading-relaxed border-l-2 border-border pl-4 bg-foreground/5 rounded-r-xl py-2 pr-2">
+            <div className="flex-1 space-y-6 w-full">
+              <p className="text-base md:text-lg text-card-foreground/90 leading-relaxed">
                 {service.description}
               </p>
-              {service.linkText && service.linkHref && (
-                <Link
-                  href={service.linkHref}
-                  className="group inline-flex items-center self-start text-brand font-semibold hover:underline underline-offset-4"
-                >
-                  {service.linkText}
-                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              )}
+
+              <div className="flex flex-wrap gap-2.5 pt-2">
+                {service.highlights.map((highlight, hIdx) => (
+                  <span
+                    key={hIdx}
+                    className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs md:text-sm font-medium bg-foreground/5 border border-border text-foreground"
+                  >
+                    {highlight}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -169,15 +154,15 @@ function ServiceCard({ service, index }: { service: ServiceItem, index: number }
 
 export function ServicesSection() {
   return (
-    <section className="w-full bg-background pb-20 relative z-10" id="services">
+    <section className="w-full bg-background py-20 md:py-32 relative z-10" id="services">
       <div className="container mx-auto px-6 md:px-12">
-        <div className="mb-24 space-y-6">
+        <div className="mb-20 space-y-6">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tighter max-w-4xl text-foreground">
-            Serviços de software, <span className="text-brand"><br />do diagnóstico</span>{' '}
-            à operação
+            Vender, medir e operar.<br className="hidden md:inline" />
+            <span className="text-brand">Por onde começar?</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Três formas de trabalhar com a TZOLKIN: consultoria, assessoria contínua e desenvolvimento sob medida. Um único método, um único padrão.
+            Você não precisa contratar tudo de uma vez. Escolha a frente que resolve sua prioridade; cada projeto tem entregas e limites definidos.
           </p>
         </div>
 
@@ -187,7 +172,7 @@ export function ServicesSection() {
           ))}
         </div>
 
-        {/* Faixa Áreas de atuação */}
+        {/* Áreas de atuação */}
         <div className="mt-4 space-y-8 relative z-20">
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -196,7 +181,7 @@ export function ServicesSection() {
             transition={{ duration: 0.5 }}
             className="text-xl md:text-2xl font-bold text-foreground"
           >
-            De IA a cybersecurity: <span className="text-brand">um só time, todo o espectro do software.</span>
+            A tecnologia entra <span className="text-brand">quando o processo pede.</span>
           </motion.p>
 
           <div className="flex flex-wrap gap-4">
@@ -216,45 +201,21 @@ export function ServicesSection() {
           </div>
         </div>
 
-        {/* CTA Button with Glow and Border Effect */}
+        {/* CTA */}
         <div className="flex flex-col items-center mt-16 relative z-20 space-y-6">
-          <div className="relative group transition-transform duration-300 hover:scale-105 active:scale-95">
-            {/* Background Blur Glow */}
-            <div className="absolute -inset-1 bg-brand/50 rounded-full blur-xl opacity-50 group-hover:opacity-100 transition duration-500" />
-
-            {/* Border Container */}
-            <div className="relative rounded-full p-[2px] overflow-hidden">
-              {/* Spinning Border Animation - Responsive Square */}
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] aspect-square animate-[spin_8s_linear_infinite]"
-                style={{
-                  backgroundImage: `conic-gradient(from 0deg, transparent 0 140deg, var(--brand) 160deg, transparent 180deg 320deg, var(--brand) 340deg, transparent 360deg)`,
-                  willChange: 'transform'
-                }}
-              />
-
-              {/* Button Content */}
-              <Link href="/forms?interesse=consultoria" className="relative z-10 block">
-                <Button
-                  size="lg"
-                  className="h-14! px-12! rounded-full! bg-brand! text-brand-foreground! font-bold! text-lg tracking-wide uppercase shadow-2xl"
-                >
-                  Quero um diagnóstico do meu projeto
-                </Button>
-              </Link>
-            </div>
-          </div>
+          <Link href="/forms" className="block">
+            <Button
+              variant="brand"
+              size="lg"
+              className="px-12 shadow-xl hover:scale-105 transition-transform"
+            >
+              Conversar sobre meu projeto
+            </Button>
+          </Link>
 
           <p className="text-sm text-muted-foreground text-center">
-            Responda 4 perguntas rápidas — retorno em até 1 dia útil. Sem compromisso.
+            Conte o que precisa resolver e quais ferramentas sua empresa já usa.
           </p>
-
-          <Link
-            href="/catalogo"
-            className="group inline-flex items-center text-brand font-semibold hover:underline underline-offset-4"
-          >
-            Ou veja o catálogo completo de soluções
-            <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
         </div>
       </div>
     </section>
