@@ -26,6 +26,10 @@ try {
   const home = await (await fetch(origin)).text();
   assert.match(home, /Software para vender, medir e operar\./);
   assert.match(home, /Vender\./);
+  const header = home.match(/<header\b[\s\S]*?<\/header>/)?.[0];
+  assert.ok(header, 'Header precisa estar presente');
+  assert.match(header, /src="\/logotzolkin\.svg"/);
+  assert.doesNotMatch(header, /<svg[^>]*aria-label="TZOLKIN Logo"/);
   for (const path of ['/forms', '/forms/contato', '/forms/empresa', '/forms/redes', '/forms/servico']) {
     const response = await fetch(origin + path);
     assert.equal(response.status, 200);

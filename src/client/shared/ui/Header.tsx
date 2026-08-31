@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLockBody } from '@/hooks/useLockBody';
-import { TzolkinLogo } from './TzolkinLogo';
 
 type MenuItem = { label: string; href: string; badge?: string };
 
@@ -63,7 +63,7 @@ export function Header() {
             href="/"
             className="flex items-center gap-3 group z-50 relative flex-shrink-0"
           >
-            <TzolkinLogo size={32} />
+            <Image src="/logotzolkin.svg" alt="" width={32} height={32} priority className="shrink-0" />
             <span className="text-xl font-bold leading-6 uppercase text-foreground tracking-wider group-hover:text-brand transition-colors">
               TZOLKIN
             </span>
