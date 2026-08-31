@@ -1,10 +1,12 @@
 import { readLimitedJson, validateLead } from '@/server/leads/validation.mjs';
-import { saveLead } from '@/server/leads/repository';
+import { LEAD_SUBMISSIONS_ENABLED, LEAD_SUBMISSIONS_PAUSED_MESSAGE } from '@/lib/lead-submissions.mjs';
 
 export const runtime = 'nodejs';
 const reply = (status: number, message: string) => Response.json({ message }, { status, headers: { 'Cache-Control': 'no-store' } });
 
 export async function POST(request: Request) {
+  // Antes de ler o corpo ou carregar o repositório: não acessar o banco na pausa.
+  if (!LEAD_SUBMISSIONS_ENABLED) return reply(503, LEAD_SUBMISSIONS_PAUSED_MESSAGE);
   const origin = request.headers.get('origin');
   if (!origin || origin !== new URL(request.url).origin) return reply(403, 'Origem não permitida.');
   if (request.headers.get('content-type')?.split(';')[0].trim() !== 'application/json') return reply(415, 'Envie dados em JSON.');
@@ -17,6 +19,7 @@ export async function POST(request: Request) {
       ? reply(413, 'Formulário muito extenso.') : reply(400, 'Revise os dados de contato e os campos do formulário.');
   }
   try {
+    const { saveLead } = await import('@/server/leads/repository');
     await saveLead(data, key);
     return reply(200, 'Recebemos sua solicitação.');
   } catch (error) {

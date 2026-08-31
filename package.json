@@ -10,6 +10,7 @@
     "test": "node --test scripts/leads.test.mjs scripts/email-worker.test.mjs",
     "test:integration": "node scripts/leads-integration.mjs && node scripts/email-integration.mjs",
     "typecheck": "tsc --noEmit",
+    "test:presentation": "node scripts/presentation-smoke.mjs",
     "email:check": "node scripts/email-worker.mjs"
   },
   "dependencies": {
