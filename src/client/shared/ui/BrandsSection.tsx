@@ -4,10 +4,28 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/client/shared/ui/Button';
 import Link from 'next/link';
-import { ArrowRight, Plus, X, Network } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Plus, X, Network, QrCode, FileText, Box, Activity } from 'lucide-react';
 
-const integrations = [
-  "Meta", "Utmify", "Google", "TikTok", "Stripe", "Shopify", "API do Pix", "API NFe", "Ideris", "Vercel", "Cloudflare"
+interface IntegrationItem {
+  name: string;
+  svg?: string;
+  svgDark?: string;
+  icon?: React.ElementType;
+}
+
+const integrations: IntegrationItem[] = [
+  { name: "Meta", svg: "/integrations/meta.svg" },
+  { name: "Utmify", icon: Activity },
+  { name: "Google", svg: "/integrations/google.svg" },
+  { name: "TikTok", svg: "/integrations/tiktok-light.svg", svgDark: "/integrations/tiktok.svg" },
+  { name: "Stripe", svg: "/integrations/stripe.svg" },
+  { name: "Shopify", svg: "/integrations/shopify.svg" },
+  { name: "API do Pix", icon: QrCode },
+  { name: "API NFe", icon: FileText },
+  { name: "Ideris", icon: Box },
+  { name: "Vercel", svg: "/integrations/vercel.svg", svgDark: "/integrations/vercel-dark.svg" },
+  { name: "Cloudflare", svg: "/integrations/cloudflare.svg" },
 ];
 
 export function BrandsSection() {
@@ -54,22 +72,22 @@ export function BrandsSection() {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
-                Integração é engenharia, <span className="text-brand">não improviso.</span>
+                Sua operação conectada de ponta a ponta. <span className="text-brand">Sem gambiarras.</span>
               </h2>
 
               <div className="space-y-6 text-lg md:text-xl text-muted-foreground leading-relaxed">
                 <p>
-                  A TZOLKIN constrói pipelines robustos com as plataformas líderes que você já usa — ou que vai precisar.
+                  Seu tráfego, CRM, gateway de pagamento e ERP precisam falar a mesma língua em tempo real.
                 </p>
                 <p>
-                  O resultado: <span className="text-foreground font-semibold">um ecossistema fluido, rastreável e voltado para conversão e controle de dados.</span>
+                  A TZOLKIN constrói a ponte que conecta suas ferramentas com estabilidade: <span className="text-foreground font-semibold">sem travar seu sistema, sem lentidão e sem risco de perda de pedidos.</span>
                 </p>
               </div>
 
               <div className="pt-8">
                 <Link href="/forms?interesse=consultoria">
                   <Button variant="primary" size="lg" className="px-8 group w-full md:w-auto hover:scale-105">
-                    Centralizar minha operação
+                    Conectar as ferramentas da minha empresa
                     <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
@@ -82,16 +100,66 @@ export function BrandsSection() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {integrations.map((integration, index) => (
                 <motion.div
-                  key={integration}
+                  key={integration.name}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="aspect-square min-w-0 bg-card rounded-2xl flex items-center justify-center p-4 md:p-6 hover:bg-brand/10 dark:hover:bg-brand/20 transition-colors group relative overflow-hidden border border-transparent hover:border-brand/40"
+                  className="aspect-square min-w-0 bg-card rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 hover:bg-brand/10 dark:hover:bg-brand/20 transition-all duration-300 group relative overflow-hidden border border-border/40 hover:border-brand/40 shadow-sm"
                 >
-                  <span className="font-extrabold text-center text-foreground uppercase tracking-wider md:tracking-widest text-sm md:text-xl break-words transform group-hover:scale-110 transition-transform duration-300">
-                    {integration}
-                  </span>
+                  {integration.svg ? (
+                    <div className="flex flex-col items-center justify-center gap-3 w-full h-full">
+                      <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                        {integration.svgDark ? (
+                          <>
+                            <Image
+                              src={integration.svg}
+                              alt={`Logo ${integration.name}`}
+                              width={56}
+                              height={56}
+                              className="object-contain max-h-12 w-auto dark:hidden"
+                            />
+                            <Image
+                              src={integration.svgDark}
+                              alt={`Logo ${integration.name}`}
+                              width={56}
+                              height={56}
+                              className="object-contain max-h-12 w-auto hidden dark:block"
+                            />
+                          </>
+                        ) : (
+                          <Image
+                            src={integration.svg}
+                            alt={`Logo ${integration.name}`}
+                            width={56}
+                            height={56}
+                            className="object-contain max-h-12 w-auto"
+                          />
+                        )}
+                      </div>
+                      <span className="font-bold text-center text-muted-foreground group-hover:text-foreground text-xs md:text-sm tracking-wide uppercase transition-colors">
+                        {integration.name}
+                      </span>
+                    </div>
+                  ) : integration.icon ? (
+                    <div className="flex flex-col items-center justify-center gap-3 w-full h-full">
+                      <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 text-muted-foreground group-hover:text-foreground">
+                        <integration.icon className="w-10 h-10 md:w-12 md:h-12" strokeWidth={1.5} />
+                      </div>
+                      <span className="font-bold text-center text-muted-foreground group-hover:text-foreground text-xs md:text-sm tracking-wide uppercase transition-colors">
+                        {integration.name}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-2 p-2">
+                      <span className="font-extrabold text-center text-foreground uppercase tracking-wider text-sm md:text-lg break-words transform group-hover:scale-105 transition-transform duration-300">
+                        {integration.name}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold border border-border px-2 py-0.5 rounded-full">
+                        Integração
+                      </span>
+                    </div>
+                  )}
                 </motion.div>
               ))}
 
@@ -168,12 +236,12 @@ export function BrandsSection() {
 
               <div id="microsservicos-modal-desc" className="space-y-4 text-muted-foreground leading-relaxed relative z-10">
                 <p>
-                  Desenvolvemos integrações via <strong className="text-foreground">webhooks, mensageria (Redis pub/sub, RabbitMQ) e automações assíncronas</strong> — trânsito de dados estável, sem travar a thread da sua aplicação principal.
+                  <strong className="text-foreground">Engenharia de Alta Concorrência:</strong> suportamos picos de vendas e tráfego pesado através de mensageria assíncrona (Redis pub/sub, RabbitMQ) e webhooks inteligentes.
                 </p>
                 <ul className="list-disc pl-5 space-y-2 mt-4 text-sm md:text-base">
-                  <li>Filas assíncronas</li>
-                  <li>Arquitetura orientada a eventos</li>
-                  <li>Sincronização em tempo real entre a loja e o back-office</li>
+                  <li>Filas assíncronas que nunca derrubam a aplicação principal</li>
+                  <li>Arquitetura orientada a eventos para respostas em milissegundos</li>
+                  <li>Sincronização em tempo real entre checkout, ERP e back-office</li>
                 </ul>
               </div>
 

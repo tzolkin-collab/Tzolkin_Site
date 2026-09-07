@@ -32,7 +32,7 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
           return (
             <div
               key={`${project.name}-${index}`}
-              className="flex-[0_0_100%] sm:flex-[0_0_350px] md:flex-[0_0_400px] min-w-0 pl-4 relative pt-28"
+              className="flex-[0_0_100%] sm:flex-[0_0_350px] md:flex-[0_0_400px] min-w-0 pl-4 relative"
             >
               <div className="group cursor-pointer relative">
 
@@ -47,7 +47,30 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
                     <Link href={projectUrl} target="_blank" rel="noopener noreferrer" className="block mb-6 relative z-10 transition-transform duration-500 group-hover:-translate-y-2">
                       <div className="aspect-square md:rounded-[240px] bg-white/100 overflow-hidden relative flex items-center justify-center p-12 shadow-2xl rounded-sm">
                         {/* Main Content - Project Logo */}
-                        <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105">
+                        <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105 flex items-center justify-center">
+                          {project.logo ? (
+                            <Image
+                              src={project.logo}
+                              alt={`Logo de ${project.name}`}
+                              fill
+                              loading="lazy"
+                              quality={75}
+                              sizes="(max-width: 640px) 85vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
+                              className={`object-contain transition-transform duration-500 ${project.bright ? 'brightness-0' : ''} ${project.invert ? 'invert dark:invert-0' : ''}`}
+                            />
+                          ) : (
+                            <span className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-neutral-500 dark:text-neutral-400 text-center px-4">
+                              {project.name}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="aspect-square md:rounded-[240px] bg-neutral-950 dark:bg-white mb-6 overflow-hidden relative flex items-center justify-center p-12 transition-transform duration-500 group-hover:-translate-y-2 z-10 shadow-2xl rounded-sm">
+                      {/* Main Content - Project Logo */}
+                      <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105 flex items-center justify-center">
+                        {project.logo ? (
                           <Image
                             src={project.logo}
                             alt={`Logo de ${project.name}`}
@@ -57,22 +80,11 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
                             sizes="(max-width: 640px) 85vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
                             className={`object-contain transition-transform duration-500 ${project.bright ? 'brightness-0' : ''} ${project.invert ? 'invert dark:invert-0' : ''}`}
                           />
-                        </div>
-                      </div>
-                    </Link>
-                  ) : (
-                    <div className="aspect-square md:rounded-[240px] bg-neutral-950 dark:bg-white mb-6 overflow-hidden relative flex items-center justify-center p-12 transition-transform duration-500 group-hover:-translate-y-2 z-10 shadow-2xl rounded-sm">
-                      {/* Main Content - Project Logo */}
-                      <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105">
-                        <Image
-                          src={project.logo}
-                          alt={`Logo de ${project.name}`}
-                          fill
-                          loading="lazy"
-                          quality={75}
-                          sizes="(max-width: 640px) 85vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
-                          className={`object-contain transition-transform duration-500 ${project.bright ? 'brightness-0' : ''} ${project.invert ? 'invert dark:invert-0' : ''}`}
-                        />
+                        ) : (
+                          <span className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-neutral-500 dark:text-neutral-400 text-center px-4">
+                            {project.name}
+                          </span>
+                        )}
                       </div>
                     </div>
                   )

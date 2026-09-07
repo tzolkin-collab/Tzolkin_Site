@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import Link from 'next/link';
-import Image from 'next/image';
+import { TzolkinLogo } from './TzolkinLogo';
 import { useLockBody } from '@/hooks/useLockBody';
 
 type MenuItem = { label: string; href: string; badge?: string };
@@ -52,19 +52,19 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed w-full z-50 transition-[top,padding,background-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${scrolled
-          ? 'top-0 py-4 shadow-sm bg-background/80 backdrop-blur-md'
+        className={`fixed w-full z-50 transition-[top,padding,background-color,backdrop-filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${scrolled
+          ? 'top-0 py-1 pt-2.5 bg-background backdrop-blur-md'
           : 'top-0 bg-transparent py-6'
           }`}
       >
         <div className="px-6 md:px-12 max-w-[1400px] mx-auto flex justify-between items-center gap-8">
-          {/* Logo */}
+          {/* Logo — Futuristic Geometric Monolith */}
           <Link
             href="/"
-            className="flex items-center gap-3 group z-50 relative flex-shrink-0"
+            className="flex items-center gap-2.5 group z-50 relative flex-shrink-0 select-none"
           >
-            <Image src="/logotzolkin.svg" alt="" width={32} height={32} priority className="shrink-0" />
-            <span className="text-xl font-bold leading-6 uppercase text-foreground tracking-wider group-hover:text-brand transition-colors">
+            <TzolkinLogo size={26} className="transition-transform duration-300 group-hover:scale-105" />
+            <span style={{ fontFamily: 'var(--font-brand)' }} className="text-[17px] md:text-[18px] font-semibold tracking-[0.5px] uppercase text-foreground group-hover:text-foreground/90 transition-colors leading-none">
               TZOLKIN
             </span>
           </Link>
@@ -87,7 +87,7 @@ export function Header() {
             ))}
             <Link
               href="/forms"
-              className="rounded-full bg-foreground text-background hover:bg-foreground/90 transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
+              className="rounded-full bg-foreground text-background hover:bg-brand hover:text-white transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
             >
               Iniciar projeto
             </Link>

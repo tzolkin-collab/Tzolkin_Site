@@ -12,9 +12,9 @@
 
   --border: oklch(0.922 0 0);
 
-  --brand: #4a21bb;            /* TZOLKIN highlight — fills, bg, ícones, glows (violeta) */
-  --brand-ink: #5660f1;        /* violeta p/ TEXTO/links sobre fundo claro (AA 4.8:1) */
-  --brand2: #454dbe;           /* accent secundário / chart-2 */
+  --brand: #c90000;            /* TZOLKIN highlight — fills, bg, ícones, glows (violeta) */
+  --brand-ink: #f15656;        /* violeta p/ TEXTO/links sobre fundo claro (AA 4.8:1) */
+  --brand2: #be4545;           /* accent secundário / chart-2 */
   --brand-foreground: #ffffff; /* texto SOBRE preenchimentos brand (branco = 9.4:1; preto reprova) */
 
   /* Animation Bezier */
@@ -63,9 +63,9 @@
 
   --border: oklch(1 0 0 / 10%);
 
-  --brand: #8670ff;            /* TZOLKIN highlight — fills, bg, ícones, glows (violeta) */
+  --brand: #c50d0d;            /* TZOLKIN highlight — fills, bg, ícones, glows (violeta) */
   --brand-ink: #8670ff;        /* no escuro o violeta claro já é AA (4.9:1); o escuro reprovava */
-  --brand2: #454dbe;
+  --brand2: #330000;
   --brand-foreground: #ffffff; /* texto SOBRE brand SEMPRE BRANCO */
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -118,6 +118,7 @@
   --color-brand-foreground: var(--brand-foreground);
 
   --font-sans: var(--font-sans);
+  --font-brand: var(--font-brand);
   --font-montserrat: var(--font-montserrat), "Montserrat", sans-serif;
 
   --ease-sophisticated: var(--ease-sophisticated);

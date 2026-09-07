@@ -55,11 +55,11 @@ export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
           className="mb-16 md:mb-24 items-start"
         >
           <h2 className="text-[8vw] md:text-[4vw] leading-[0.9] font-bold tracking-tight text-foreground uppercase mix-blend-normal">
-            Grandes <br />
-            <span className="text-brand">Parcerias</span>
+            Estrutura validada por quem <br />
+            <span className="text-brand">não pode ter erro</span>
           </h2>
           <p className="mt-8 text-lg text-foreground max-w-xl">
-            Mais que referências de mercado, são empresas que confiaram em nossa estrutura para escalar seus negócios.
+            De operações com alto volume de vendas a gigantes globais como o Instituto Vale: quando a tecnologia precisa funcionar sem falhas, é na TZOLKIN que eles apoiam suas soluções.
           </p>
         </motion.div>
 

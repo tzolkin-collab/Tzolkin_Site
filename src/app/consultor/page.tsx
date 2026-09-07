@@ -1,7 +1,7 @@
 'use client';
 
-import { ChatWindow } from '@/client/pages/consultor/ChatWindow';
+import { ProjectConversionPage } from '@/client/pages/forms/ProjectConversionPage';
 
 export default function ConsultorPage() {
-  return <ChatWindow />;
+  return <ProjectConversionPage />;
 }

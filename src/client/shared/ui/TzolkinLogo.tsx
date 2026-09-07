@@ -27,11 +27,17 @@ export function TzolkinLogo({
     ? 'fill-[#0A0A0A]'
     : 'fill-[#FAFAF7]';
 
-  const fgColor = isAdaptive
-    ? 'stroke-background fill-background dark:stroke-foreground dark:fill-foreground'
+  const strokeColor = isAdaptive
+    ? 'stroke-background dark:stroke-foreground'
     : isDark
-    ? 'stroke-[#FAFAF7] fill-[#FAFAF7]'
-    : 'stroke-[#0A0A0A] fill-[#0A0A0A]';
+    ? 'stroke-[#FAFAF7]'
+    : 'stroke-[#0A0A0A]';
+
+  const fillColor = isAdaptive
+    ? 'fill-background dark:fill-foreground'
+    : isDark
+    ? 'fill-[#FAFAF7]'
+    : 'fill-[#0A0A0A]';
 
   // Variantes de animação de entrada com Framer Motion
   const squircleVariants: Variants = {
@@ -60,9 +66,9 @@ export function TzolkinLogo({
       },
     },
     hover: {
-      rotate: 30,
+      x: 12,
       scale: 1.06,
-      transition: { duration: 0.4, ease: 'easeInOut' },
+      transition: { type: 'spring', stiffness: 300, damping: 20 },
     },
   };
 
@@ -79,9 +85,9 @@ export function TzolkinLogo({
       },
     },
     hover: {
-      scale: 1.12,
-      x: 1,
-      transition: { duration: 0.3, ease: 'easeInOut' },
+      x: -12,
+      scale: 1.06,
+      transition: { type: 'spring', stiffness: 300, damping: 20 },
     },
   };
 
@@ -148,7 +154,7 @@ export function TzolkinLogo({
         fill="none"
         strokeWidth="2.6"
         strokeLinecap="round"
-        className={fgColor}
+        className={strokeColor}
         style={{ originX: '26px', originY: '32px' }}
         variants={ringVariants}
       />
@@ -158,7 +164,7 @@ export function TzolkinLogo({
         cx="38"
         cy="32"
         r="14"
-        className={fgColor}
+        className={fillColor}
         style={{ originX: '38px', originY: '32px' }}
         variants={coreVariants}
       />

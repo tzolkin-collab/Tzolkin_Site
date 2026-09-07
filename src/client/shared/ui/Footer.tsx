@@ -47,25 +47,25 @@ export function Footer() {
           {/* Brand & CTA Section */}
           <div className="md:col-span-6 flex flex-col justify-between">
             <div className="mb-12">
-              <Link href="/" className="inline-block group">
-                <div className="flex items-center gap-5 py-4">
-                  <TzolkinLogo size={68} className="transition-transform duration-300 group-hover:scale-105" />
-                  <span className="text-4xl md:text-6xl font-bold tracking-widest text-foreground uppercase group-hover:text-brand transition-colors">
-                    Tzolkin
+              <Link href="/" className="inline-block group select-none">
+                <div className="flex items-center gap-4 py-4">
+                  <TzolkinLogo size={44} className="transition-transform duration-300 group-hover:scale-105" />
+                  <span style={{ fontFamily: 'var(--font-brand)' }} className="text-3xl md:text-4xl font-semibold tracking-[0.12em] text-foreground uppercase group-hover:text-brand transition-colors leading-none">
+                    TZOLKIN
                   </span>
                 </div>
               </Link>
               <p className="mt-6 text-lg max-w-md leading-relaxed">
-                Sites, lojas, tracking de funil e software sob medida. Tecnologia para vender, medir e conectar a operação da sua empresa.
+                Sites, lojas, tracking de funil e software sob medida. A engenharia que a sua empresa precisa para vender mais e parar de perder margem de lucro.
               </p>
             </div>
 
             <Link
               href="/forms"
-              className="inline-flex items-center gap-2 text-2xl md:text-3xl font-medium hover:text-brand transition-colors group w-fit"
+              className="inline-flex items-center gap-2 text-2xl md:text-3xl font-bold hover:text-brand transition-colors group w-fit"
             >
-              <span>Vamos conversar?</span>
-              <ArrowUpRight className="w-8 h-8 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
+              <span>Pronto para destravar sua tecnologia?</span>
+              <ArrowUpRight className="w-8 h-8 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 text-brand" />
             </Link>
           </div>
 
