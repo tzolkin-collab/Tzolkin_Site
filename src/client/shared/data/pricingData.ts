@@ -3,21 +3,20 @@ import { appendTzolkinUtm } from '../utils/utm';
 
 export const pricingData: PricingCardProps[] = [
   {
-    title: 'Landing Pages de Conversão',
+    title: 'Landing Pages de Alta Conversão',
     slug: 'landing-pages-de-conversao',
     ctaText: 'Acessar sites.tzolkin.cloud',
     ctaHref: appendTzolkinUtm('https://sites.tzolkin.cloud'),
-    description: 'Landing pages para apresentar uma oferta e orientar o visitante até o formulário, WhatsApp ou checkout.',
+    description: 'Estrutura completa pronta para rodar tráfego: carregamento instantâneo no mobile, VSL sem travar e copy orientada para o lead agir no primeiro contato.',
     features: [
-      'Hospedagem GRATUITA',
       'Entrega em até 3 dias úteis',
-      'Hospedagem de VSL modelo VTURB nativa',
-      'Página de obrigado',
-      'Formulário Personalizado | Checkout Transparente',
-      'Copywriting Direto e Persuasivo',
-      'Design Mobile-First Exclusivo',
-      'Otimização de carregamento e experiência mobile',
-      'Bônus: Tagueamento (GA4 e Pixels de Base)'
+      'Design Mobile-First com carregamento instantâneo',
+      'Player VSL modelo VTURB nativo integrado',
+      'Formulário Inteligente ou Checkout Transparente',
+      'Hospedagem em nuvem de alta velocidade inclusa',
+      'Copywriting persuasivo e direto ao ponto',
+      'Página de obrigado com disparo de conversão',
+      'BÔNUS: Tagueamento GA4 e Pixels de Base inclusos'
     ]
   },
   {
@@ -25,55 +24,54 @@ export const pricingData: PricingCardProps[] = [
     slug: 'sites-institucionais',
     ctaText: 'Acessar sites.tzolkin.cloud',
     ctaHref: appendTzolkinUtm('https://sites.tzolkin.cloud'),
-    description: 'O hub central da sua marca, feito para transmitir autoridade e confiança instantânea ao mercado.',
+    description: 'O hub central da sua marca, feito para transmitir autoridade inquestionável e gerar leads qualificados para seu comercial.',
     features: [
-      'Suporte primeiro mês gratuito',
-      'Integração personalizada com CRMs',
+      'Primeiro mês de suporte gratuito',
       'Arquitetura Visual Premium e Original',
-      'Multi-páginas (Sobre, Serviços, Portfólio)',
-      'Painel para Gestão de Conteúdo (CMS)',
+      'Multi-páginas (Sobre, Serviços, Portfólio, Contato)',
+      'Painel para Gestão Autônoma de Conteúdo (CMS)',
       'Formulário inteligente com integração ao seu CRM',
-      'Otimização SEO On-page para o Google',
-      'Bônus: Tagueamento (GA4 e Pixels de Base)'
+      'Otimização SEO On-page para indexação no Google',
+      'BÔNUS: Tagueamento de Leads (GA4 e Pixels de Base)'
     ]
   },
   {
-    title: 'E-commerce global',
+    title: 'E-commerce Headless Next.js',
     slug: 'e-commerces-globais',
     ctaText: 'Acessar ecom.tzolkin.cloud',
     ctaHref: appendTzolkinUtm('https://ecom.tzolkin.cloud'),
     dropPrice: 'R$ 10.000',
     price: 'R$ 8.000',
     paymentText: 'Entrada de 50% + 50% na entrega',
-    description: 'Estruturação avançada de lojas escaláveis de alcance global (Dropshipping ou Operação Tradicional).',
+    description: 'A infraestrutura de alta velocidade das maiores marcas globais, sem as limitações e lentidões de plataformas convencionais.',
     popular: true,
     features: [
       'Storefront Headless em Next.js (Velocidade Extrema)',
       'Infraestrutura Global via Edge Computing',
       'Checkout Transparente Multi-provedores',
-      'Layouts Personalizados de Alta Conversão',
-      'Sincronização de Estoque & Back-office',
-      'Otimização de SEO para Escala Orgânica',
-      'Módulos de Upsell e Order Bump Nativos',
-      'Bônus: Tagueamento Completo (GA4 e Pixels)'
+      'Módulos de Upsell de 1-Clique e Order Bump Nativos',
+      'Sincronização de Estoque & Back-office via API',
+      'Otimização de SEO Técnico para Escala Orgânica',
+      'Layouts personalizados de alta conversão',
+      'BÔNUS: Tagueamento Completo de E-commerce (GA4 e Pixels)'
     ]
   },
   {
-    title: 'Tracking de Funil',
+    title: 'Tracking de Funil Server-Side',
     slug: 'tagueamento-de-fluxo',
     dropPrice: 'R$ 3.000',
     price: 'R$ 2.500',
     paymentText: 'Em até 3x no cartão de crédito',
-    description: 'Conecte origem, contato, etapas comerciais e venda. O tracking web é uma camada; CRM, eventos offline e pagamentos ampliam a leitura conforme o escopo.',
+    description: 'Conecte origem do anúncio, contato comercial e dinheiro na conta. Elimine o ponto cego das plataformas de tráfego.',
     features: [
-      'Auditoria de Eventos: De ViewContent a Purchase',
-      'Configuração Server-Side (GTM Cloud)',
-      'Integração com Meta Conversions API (CAPI)',
-      'Tagueamento Avançado para Google e TikTok Ads',
-      'Sincronização de Dados Off-line via Webhooks',
-      'Validação de eventos e diagnóstico de perdas de atribuição',
-      'Monitoramento de Fluxo em Tempo Real',
-      'Configuração Profissional UTMify / GTM'
+      'Configuração Server-Side (GTM Cloud anti-bloqueador)',
+      'Integração direta com Meta Conversions API (CAPI)',
+      'Tagueamento Avançado Google Ads e TikTok Ads',
+      'Sincronização de Vendas Offline via Webhooks',
+      'Auditoria completa de eventos (ViewContent a Purchase)',
+      'Configuração Profissional UTMify e CRM',
+      'Diagnóstico e eliminação de perdas de atribuição',
+      'Validação de dados em tempo real'
     ]
   },
   {

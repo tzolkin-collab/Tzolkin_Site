@@ -27,13 +27,7 @@ export function LogoMarquee({ items, speed = 1 }: LogoMarqueeProps) {
         {items.map((item, index) => (
           <div
             key={`orig-${index}`}
-            className={`
-              flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 w-32 md:h-20 md:w-48
-              opacity-50 transition-all duration-300 hover:opacity-100
-              grayscale hover:grayscale-0
-              ${item.bright ? 'brightness-0 hover:brightness-100' : ''}
-              ${item.invert ? 'invert hover:invert-0' : ''}
-            `}
+            className="flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 w-32 md:h-20 md:w-48 opacity-90 hover:opacity-100 transition-all duration-300 hover:scale-105"
           >
             <Image
               src={item.logo}
@@ -49,13 +43,7 @@ export function LogoMarquee({ items, speed = 1 }: LogoMarqueeProps) {
         {items.map((item, index) => (
           <div
             key={`dup-${index}`}
-            className={`
-              flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 w-32 md:h-20 md:w-48
-              opacity-50 transition-all duration-300 hover:opacity-100
-              grayscale hover:grayscale-0
-              ${item.bright ? 'brightness-0 hover:brightness-100' : ''}
-              ${item.invert ? 'invert hover:invert-0' : ''}
-            `}
+            className="flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 w-32 md:h-20 md:w-48 opacity-90 hover:opacity-100 transition-all duration-300 hover:scale-105"
           >
             <Image
               src={item.logo}

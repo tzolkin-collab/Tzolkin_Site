@@ -358,7 +358,7 @@ export function ProductsShowcase() {
                     }`}
                   >
                     {/* Visual Interface Card com Moldura Gradiente Suave */}
-                    <div className="relative rounded-2xl md:rounded-3xl p-[1.5px] bg-gradient-to-br from-[#7c3aed]/70 via-[#f97316]/60 to-[#8b5cf6]/70 shadow-[0_20px_50px_rgba(0,0,0,0.35)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.65)] group">
+                    <div className="relative rounded-2xl md:rounded-3xl p-[1.5px] bg-gradient-to-br from-[#7c3aed]/70 via-[#f97316]/60 to-[#8b5cf6]/70">
                       <div className="rounded-2xl md:rounded-3xl overflow-hidden bg-card">
                         <Image
                           src={prod.image}

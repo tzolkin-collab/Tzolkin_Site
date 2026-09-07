@@ -1,268 +1,361 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useChat } from "@/client/shared/providers/ChatProvider";
-import { Send, Bot, Sparkles, Loader2, X } from "lucide-react";
-import { ChatMessage, MessageData } from "./ChatMessage";
-import { sendMessage } from "./chatApi";
-import { useLockBody } from "@/hooks/useLockBody";
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowUp,
+  Mic,
+  MicOff,
+  Plus,
+  Volume2,
+  VolumeX,
+  RotateCcw,
+  Sparkles,
+  Loader2,
+  ExternalLink,
+  MessageSquare,
+  FileText,
+  Mail,
+  X
+} from 'lucide-react';
+import { ChatMessage, MessageData } from './ChatMessage';
+import { sendMessage } from './chatApi';
+import { pricingData } from '@/client/shared/data/pricingData';
+import { useSpeech } from './useSpeech';
+import { useRouter } from 'next/navigation';
+import {
+  CONSULTOR_INFO,
+  LeadProfile,
+  extractLeadInfo,
+  buildWhatsAppUrl
+} from './QualificationEngine';
 
-const WELCOME_MESSAGE_CONTENT =
-  "Olá! 👋 Sou o consultor virtual da TZOLKIN. Posso ajudar você a encontrar a solução certa entre as nossas frentes: consultoria, produtos de software sob medida e ferramentas próprias.\n\nMe conte: qual é o seu segmento e o que você está buscando?";
+type ChatIntent = 'idea' | 'catalog' | null;
 
 export function ChatWindow() {
-  const { isChatOpen, closeChat } = useChat();
+  const router = useRouter();
   const [messages, setMessages] = useState<MessageData[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [intent, setIntent] = useState<ChatIntent>(null);
+  const [qualifyStep, setQualifyStep] = useState<number>(0);
+  const [lead, setLead] = useState<LeadProfile>({});
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [mounted, setMounted] = useState(false);
 
-  // Initialize welcome message only on client to avoid hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-    setMessages([
-      {
-        id: "welcome",
-        role: "assistant",
-        content: WELCOME_MESSAGE_CONTENT,
-        timestamp: new Date(),
-      },
-    ]);
-  }, []);
+  const {
+    isListening,
+    ttsEnabled,
+    setTtsEnabled,
+    hasSttSupport,
+    startListening,
+    stopListening,
+    speak,
+    stopSpeaking
+  } = useSpeech();
 
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages, scrollToBottom]);
 
-  // Trava o scroll do body enquanto o chat está aberto
-  // (essencial na visão full-screen do mobile)
-  useLockBody(isChatOpen);
-
-  // Auto-resize textarea
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
-    e.target.style.height = "auto";
-    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.min(e.target.scrollHeight, 180) + 'px';
+  };
+
+  const toggleVoice = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening((transcript) => {
+        setInput(prev => (prev ? `${prev} ${transcript}` : transcript));
+        if (inputRef.current) {
+          inputRef.current.style.height = 'auto';
+          inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 180) + 'px';
+        }
+      });
+    }
+  };
+
+  const startFlow = (chosenIntent: 'form' | 'idea' | 'catalog') => {
+    if (chosenIntent === 'form') {
+      router.push('/forms');
+      return;
+    }
+    setIntent(chosenIntent);
+    setQualifyStep(0);
+    
+    // Create first bot message asking for name
+    const greetingMsg: MessageData = {
+      id: `assistant-${Date.now()}`,
+      role: 'assistant',
+      content: chosenIntent === 'idea' 
+        ? 'Ótimo! Adoraria ouvir a sua ideia. Antes disso, como posso te chamar?'
+        : 'Claro, vou te enviar o nosso portfólio. Como posso te chamar?',
+      timestamp: new Date(),
+    };
+    setMessages([greetingMsg]);
   };
 
   const handleSend = async (customMessage?: string) => {
-    const textToSend =
-      typeof customMessage === "string" ? customMessage : input;
+    const textToSend = typeof customMessage === 'string' ? customMessage : input;
     const trimmed = textToSend.trim();
     if (!trimmed || isLoading) return;
 
-    // Add user message
+    stopSpeaking();
+    if (isListening) stopListening();
+
+    const updatedLead = extractLeadInfo(trimmed, lead);
+    setLead(updatedLead);
+
     const userMsg: MessageData = {
       id: `user-${Date.now()}`,
-      role: "user",
+      role: 'user',
       content: trimmed,
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
-    setInput("");
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
     setIsLoading(true);
 
-    // Reset textarea height
     if (inputRef.current) {
-      inputRef.current.style.height = "auto";
+      inputRef.current.style.height = 'auto';
     }
 
     try {
-      const response = await sendMessage(sessionId, trimmed);
+      let replyText = '';
+      let serviceCards: Array<{ slug: string; reason: string }> = [];
 
-      // Store session ID
-      if (!sessionId) {
-        setSessionId(response.sessionId);
+      if (intent === 'catalog') {
+        if (qualifyStep === 0) {
+          setQualifyStep(1);
+          replyText = `Muito prazer! E qual o nome da sua empresa?`;
+        } else if (qualifyStep === 1) {
+          setQualifyStep(2);
+          replyText = `Perfeito. Aqui estão os principais formatos de trabalho e o catálogo dos nossos projetos recentes. Se quiser tirar dúvidas sobre algo específico, pode me perguntar aqui ou falar com nossa equipe no WhatsApp!`;
+          serviceCards = pricingData.map(p => ({ slug: p.slug, reason: p.description }));
+        } else {
+          // Allow them to ask questions about the catalog
+          const response = await sendMessage(sessionId, trimmed);
+          if (!sessionId) setSessionId(response.sessionId);
+          replyText = response.reply;
+          serviceCards = response.serviceCards || [];
+        }
+      } else if (intent === 'idea') {
+        if (qualifyStep === 0) {
+          setQualifyStep(1);
+          replyText = `Muito prazer! E qual o nome da sua empresa?`;
+        } else if (qualifyStep === 1) {
+          setQualifyStep(2);
+          replyText = `Perfeito. Agora, me conte com detalhes a ideia de software, gargalo operacional ou integração que você quer desenvolver:`;
+        } else {
+          // Send idea to API to get feedback
+          const response = await sendMessage(sessionId, "[IDEIA]: " + trimmed);
+          if (!sessionId) setSessionId(response.sessionId);
+          replyText = response.reply;
+          serviceCards = response.serviceCards || [];
+        }
       }
 
-      // Add assistant message
+      const shouldAttachLeadCard = qualifyStep >= 2;
+
       const assistantMsg: MessageData = {
         id: `assistant-${Date.now()}`,
-        role: "assistant",
-        content: response.reply,
-        serviceCards: response.serviceCards || [],
+        role: 'assistant',
+        content: replyText,
+        serviceCards: serviceCards.length > 0 ? serviceCards : undefined,
+        leadSummary: shouldAttachLeadCard ? updatedLead : undefined,
         timestamp: new Date(),
       };
 
-      // Check for custom solution keywords to manually inject the card if not present
-      const lowerText = trimmed.toLowerCase();
-      const hasCustomKeyword =
-        lowerText.includes("personalizado") ||
-        lowerText.includes("sob medida") ||
-        lowerText.includes("sistema");
-      const alreadyHasCustom = assistantMsg.serviceCards?.some(
-        (card) => card.slug === "solucao-personalizada",
-      );
-
-      if (hasCustomKeyword && !alreadyHasCustom) {
-        assistantMsg.serviceCards = [
-          ...(assistantMsg.serviceCards || []),
-          {
-            slug: "solucao-personalizada",
-            reason:
-              "Esta é a melhor opção para projetos que exigem funcionalidades exclusivas e total flexibilidade.",
-          },
-        ];
-      }
-
-      setMessages((prev) => [...prev, assistantMsg]);
+      setMessages(prev => [...prev, assistantMsg]);
+      speak(replyText);
     } catch {
       const errorMsg: MessageData = {
         id: `error-${Date.now()}`,
-        role: "assistant",
-        content:
-          "Algo não saiu como deveria — sua mensagem não foi perdida. Tente novamente em instantes.",
+        role: 'assistant',
+        content: 'Tivemos um problema de conexão. Você pode clicar no botão abaixo para dar sequência diretamente no WhatsApp com a equipe técnica da TZOLKIN.',
+        leadSummary: updatedLead,
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, errorMsg]);
+      setMessages(prev => [...prev, errorMsg]);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
   };
 
-  const suggestions = [
-    "Qual site devo escolher?",
-    "Preciso de um sistema personalizado",
-    "Quero um site para minha empresa",
-    "Quero montar uma loja online",
-    "Como funciona um cardápio digital?",
-    "Quero integrar pagamentos Pix",
-  ];
+  const hasStartedChat = intent !== null;
 
   return (
-    <AnimatePresence>
-      {isChatOpen && (
-        <motion.div
-          initial={{ y: 20, opacity: 0, scale: 0.8, originX: 1, originY: 1 }}
-          animate={{ y: 0, opacity: 1, scale: 1 }}
-          exit={{ y: 20, opacity: 0, scale: 0.8 }}
-          transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed z-[9999] w-full h-[100dvh] inset-0 rounded-none sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[calc(100%-3rem)] sm:max-w-[440px] sm:h-[700px] sm:max-h-[calc(100vh-140px)] sm:rounded-2xl shadow-2xl border border-border bg-background sm:bg-background/95 sm:backdrop-blur-xl flex flex-col overflow-hidden origin-bottom-right"
-        >
-          <div className="flex flex-col flex-1 h-full p-4 min-h-0">
-            {/* Header do chat */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-4 pb-6 border-b border-border mb-4"
+    <div className="relative w-full h-full flex flex-col overflow-hidden bg-background">
+      {/* Luz ambiente de fundo */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[320px] bg-brand/10 rounded-full blur-[110px] pointer-events-none -z-10" />
+
+      {/* ── Top Bar Minimalista (Atalhos e áudio) ── */}
+      <div className="flex items-center justify-end px-4 md:px-8 py-3 bg-background/70 backdrop-blur-xl z-30 shrink-0">
+        <div className="flex items-center gap-2">
+
+
+          <button
+            type="button"
+            onClick={() => setTtsEnabled(!ttsEnabled)}
+            className={`p-2 rounded-xl border transition-all ${
+              ttsEnabled
+                ? 'bg-brand/10 border-brand/40 text-brand'
+                : 'bg-card/40 border-border text-muted-foreground hover:text-foreground'
+            }`}
+            title={ttsEnabled ? 'Voz ativada' : 'Voz desativada'}
+          >
+            {ttsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+          </button>
+
+          {hasStartedChat && (
+            <button
+              type="button"
+              onClick={() => setMessages([])}
+              className="p-2 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:bg-card/50 transition-all"
+              title="Nova conversa"
             >
-              <div className="relative">
-                <div className="w-12 h-12 rounded-2xl bg-brand/20 flex items-center justify-center">
-                  <Bot className="w-6 h-6 text-brand" />
-                </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-background" />
-              </div>
-              <div className="flex-1">
-                <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                  Consultor TZOLKIN
-                  <Sparkles className="w-4 h-4 text-brand" />
-                </h2>
-                <p className="text-xs text-muted-foreground">
-                  Inteligência artificial · sempre disponível
-                </p>
-              </div>
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ── Conteúdo Central (Imersivo e Minimalista) ── */}
+      <div className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 md:px-8 py-6 scrollbar-thin">
+        {!hasStartedChat ? (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex-1 flex flex-col items-center justify-center max-w-xl mx-auto w-full text-center my-auto py-12"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-8">
+              Como gostaria de começar?
+            </h2>
+            <div className="flex flex-col gap-3 w-full max-w-sm">
               <button
-                onClick={closeChat}
-                className="p-3 bg-muted/80 backdrop-blur-md rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer absolute right-4 top-4 sm:relative sm:top-0 sm:right-0 sm:p-2 sm:bg-transparent"
+                onClick={() => startFlow('form')}
+                className="px-4 py-3 rounded-xl border border-border bg-card hover:border-brand/50 hover:bg-card/80 transition-all text-sm font-medium text-foreground"
               >
-                <X className="w-5 h-5 sm:w-5 sm:h-5" />
+                Preencher Formulário Tradicional
               </button>
-            </motion.div>
-
-            {/* Messages area */}
-            <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-2 scrollbar-thin">
-              <AnimatePresence mode="popLayout">
-                {messages.map((msg) => (
-                  <ChatMessage key={msg.id} message={msg} />
-                ))}
-              </AnimatePresence>
-
-              {/* Typing indicator */}
-              {isLoading && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="flex gap-3 items-start"
-                >
-                  <div className="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
-                    <Bot className="w-4 h-4 text-brand" />
-                  </div>
-                  <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
-                    <Loader2 className="w-4 h-4 text-brand animate-spin" />
-                    <span className="text-xs text-muted-foreground">
-                      Pensando...
-                    </span>
-                  </div>
-                </motion.div>
-              )}
-
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Quick Suggestions */}
-            {messages.length <= 1 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex gap-2 pb-4 overflow-x-auto scrollbar-none"
+              <button
+                onClick={() => startFlow('idea')}
+                className="px-4 py-3 rounded-xl border border-border bg-card hover:border-brand/50 hover:bg-card/80 transition-all text-sm font-medium text-foreground"
               >
-                {suggestions.map((s, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      setInput(s);
-                      handleSend(s);
-                      inputRef.current?.focus();
-                    }}
-                    className="px-4 py-2 rounded-full border border-border bg-transparent text-xs font-medium text-foreground/70 hover:border-brand hover:text-brand transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0"
-                  >
-                    {s}
-                  </button>
-                ))}
+                Explicar minha ideia no Chat
+              </button>
+              <button
+                onClick={() => startFlow('catalog')}
+                className="px-4 py-3 rounded-xl border border-border bg-card hover:border-brand/50 hover:bg-card/80 transition-all text-sm font-medium text-foreground"
+              >
+                Ver o catálogo de projetos
+              </button>
+            </div>
+          </motion.div>
+        ) : (
+          <div className="max-w-3xl mx-auto w-full space-y-5 pb-4">
+            <AnimatePresence mode="popLayout">
+              {messages.map((msg) => (
+                <ChatMessage
+                  key={msg.id}
+                  message={msg}
+                  onSpeak={speak}
+                  onUpdateLead={(updated) => setLead(updated)}
+                />
+              ))}
+            </AnimatePresence>
+
+            {isLoading && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex gap-3 items-center"
+              >
+                <div className="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-4 h-4 text-brand animate-spin" />
+                </div>
+                <div className="bg-card border border-border px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
+                  <Loader2 className="w-3.5 h-3.5 text-brand animate-spin" />
+                  <span className="text-xs text-muted-foreground font-medium">Analisando arquitetura da sua demanda...</span>
+                </div>
               </motion.div>
             )}
 
-            <div className="border-t border-border pt-4">
-              <div className="flex items-end gap-3 bg-muted rounded-2xl p-2 transition-all focus-within:ring-2 focus-within:ring-brand/30">
-                <textarea
-                  ref={inputRef}
-                  value={input}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Digite sua mensagem..."
-                  rows={1}
-                  className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-foreground placeholder:text-muted-foreground px-3 py-2 max-h-[120px]"
-                />
-                <button
-                  onClick={() => handleSend()}
-                  disabled={!input.trim() || isLoading}
-                  className="w-10 h-10 rounded-xl bg-brand text-black flex items-center justify-center shrink-0 hover:bg-brand/80 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer active:scale-95"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </div>
+
+      {/* ── Input Flutuante Minimalista (ChatGPT Style Puro) ── */}
+      {hasStartedChat && (
+        <div className="px-4 md:px-8 pb-5 pt-2 shrink-0 bg-gradient-to-t from-background via-background/90 to-transparent z-20">
+          <div className="max-w-3xl mx-auto w-full">
+            <div className="relative rounded-[28px] border border-border/80 bg-card/95 backdrop-blur-2xl shadow-xl p-3 md:p-3.5 transition-all focus-within:border-brand/60 focus-within:ring-2 focus-within:ring-brand/20">
+              
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                placeholder="Escreva sua mensagem..."
+                rows={1}
+                className="w-full bg-transparent border-none outline-none resize-none text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 px-3 py-1.5 max-h-[160px] leading-relaxed"
+              />
+
+              <div className="flex items-center justify-end pt-2 border-t border-border/40">
+                {/* Controles de Envio: Microfone e Seta */}
+                <div className="flex items-center gap-2">
+                  {hasSttSupport && (
+                    <button
+                      type="button"
+                      onClick={toggleVoice}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                        isListening
+                          ? 'bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/40 scale-105'
+                          : 'hover:bg-foreground/5 text-muted-foreground hover:text-foreground'
+                      }`}
+                      title={isListening ? 'Gravando voz... clique para parar' : 'Falar por voz'}
+                    >
+                      {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || isLoading}
+                    className="w-8 h-8 rounded-full bg-foreground text-background disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 transition-all flex items-center justify-center shadow-md cursor-pointer"
+                    title="Enviar mensagem"
+                  >
+                    <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </div>
   );
 }

@@ -44,7 +44,7 @@ export function ServiceCard({ slug, reason }: ServiceCardProps) {
       {/* Reason from bot */}
       <div className="bg-brand/10 border border-brand/20 rounded-lg p-2.5 mb-3">
         <p className="text-xs font-medium text-foreground/80 italic">
-          💡 {reason}
+          {reason}
         </p>
       </div>
 

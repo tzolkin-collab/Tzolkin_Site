@@ -9,30 +9,30 @@ import { Button } from './Button';
 const services = [
   {
     icon: Zap,
-    title: "Apresente sua oferta. Facilite a compra.",
-    subtitle: "TZOLKIN Sites e Commerce: páginas, sites e lojas com um caminho claro até o contato ou o pedido.",
-    description: "Organizamos conteúdo, navegação e experiência mobile em torno da decisão do seu cliente. Formulários, checkout e integrações entram conforme o escopo da entrega.",
-    highlights: ["Sites e landing pages", "Lojas e checkout", "Experiência mobile"],
+    title: "Páginas e lojas projetadas para a decisão rápida.",
+    subtitle: "Menos cliques até o pagamento, zero lentidão no mobile.",
+    description: "Criamos sua estrutura de venda pensada para conversão: layouts leves, checkout transparente, VSL sem travamento e copy orientada para o lead agir no primeiro contato.",
+    highlights: ["Carregamento < 1.5s", "Checkout Otimizado", "Foco em Conversão Mobile"],
     glow: "from-brand/10 via-transparent to-transparent",
     iconGradient: "from-brand to-brand2",
     color: "var(--brand)"
   },
   {
     icon: BarChart3,
-    title: "Entenda onde o funil perde vendas.",
-    subtitle: "Tracking de funil vai além do pixel: conecta a origem do contato às etapas comerciais e aos resultados registrados.",
-    description: "Mapeamos eventos, UTMs, CRM e pagamentos conforme as ferramentas da sua operação. Do tracking web ao server-side e aos eventos offline, o escopo define o que pode ser medido — sem prometer rastreamento sem perdas.",
-    highlights: ["Origem e eventos do site", "Etapas do CRM", "Vendas e pagamentos"],
+    title: "Pare de pilotar seus anúncios no escuro.",
+    subtitle: "Atribuição Server-Side real: da origem da UTM até o dinheiro na conta.",
+    description: "O pixel comum do navegador perde até 30% dos dados por bloqueadores e iOS. Nós estruturamos API de Conversões (CAPI) e dados offline via servidor para suas plataformas de tráfego entenderem exatamente quem comprou e de onde veio.",
+    highlights: ["Meta CAPI Server-Side", "Google & TikTok Ads", "Auditoria de Gargalos do CRM"],
     glow: "from-brand2/10 via-transparent to-transparent",
     iconGradient: "from-brand2 to-brand",
     color: "var(--brand2)"
   },
   {
     icon: Palette,
-    title: "Conecte o que hoje depende de trabalho manual.",
-    subtitle: "Software sob medida para processos que não cabem nas ferramentas prontas que você já usa.",
-    description: "Integramos sistemas e desenhamos fluxos para a sua rotina: do cadastro à cobrança, do pedido ao acompanhamento. A proposta define integrações, responsabilidades e etapas de entrega.",
-    highlights: ["Integrações entre sistemas", "Automações de processos", "Desenvolvimento sob medida"],
+    title: "Elimine o trabalho braçal que emperra sua escala.",
+    subtitle: "Sistemas e integrações sob medida para o fluxo único da sua empresa.",
+    description: "Planilhas duplicadas, dados preenchidos na mão e sistemas isolados custam caro. Construímos automações, APIs, webhooks e painéis sob medida para que seu time foque em vender, não em alimentar software.",
+    highlights: ["Integração de APIs e Webhooks", "Painéis e Back-office Custom", "Automação Financeira & CRM"],
     glow: "from-brand/10 via-transparent to-transparent",
     iconGradient: "from-brand to-brand2",
     color: "var(--brand)"
@@ -154,15 +154,15 @@ function ServiceCard({ service, index }: { service: ServiceItem, index: number }
 
 export function ServicesSection() {
   return (
-    <section className="w-full bg-background py-20 md:py-32 relative z-10" id="services">
+    <section className="w-full bg-background pt-10 md:py-32 relative z-10" id="services">
       <div className="container mx-auto px-6 md:px-12">
-        <div className="mb-20 space-y-6">
+        <div className="mb-10 space-y-6">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tighter max-w-4xl text-foreground">
-            Vender, medir e operar.<br className="hidden md:inline" />
-            <span className="text-brand">Por onde começar?</span>
+            O triângulo operacional:<br className="hidden md:inline" />
+            <span className="text-brand">Vender. Medir. Conectar.</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Você não precisa contratar tudo de uma vez. Escolha a frente que resolve sua prioridade; cada projeto tem entregas e limites definidos.
+            Você não precisa de um projeto milionário de 6 meses. Ataque o gargalo que está travando o faturamento da sua empresa hoje.
           </p>
         </div>
 
@@ -181,7 +181,7 @@ export function ServicesSection() {
             transition={{ duration: 0.5 }}
             className="text-xl md:text-2xl font-bold text-foreground"
           >
-            A tecnologia entra <span className="text-brand">quando o processo pede.</span>
+            Engenharia aplicada ao <span className="text-brand">resultado financeiro.</span>
           </motion.p>
 
           <div className="flex flex-wrap gap-4">
@@ -209,12 +209,12 @@ export function ServicesSection() {
               size="lg"
               className="px-12 shadow-xl hover:scale-105 transition-transform"
             >
-              Conversar sobre meu projeto
+              Destravar meu gargalo operacional
             </Button>
           </Link>
 
           <p className="text-sm text-muted-foreground text-center">
-            Conte o que precisa resolver e quais ferramentas sua empresa já usa.
+            Diagnóstico rápido de escopo via formulário ou conversa direta.
           </p>
         </div>
       </div>

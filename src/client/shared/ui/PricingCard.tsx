@@ -2,7 +2,7 @@
 
 import React, { useId, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, LucideIcon } from 'lucide-react';
 import { Button } from '@/client/shared/ui/Button';
 import Link from 'next/link';
 import { appendTzolkinUtm } from '@/client/shared/utils/utm';
@@ -10,6 +10,7 @@ import { appendTzolkinUtm } from '@/client/shared/utils/utm';
 export interface PricingCardProps {
   title: string;
   slug: string;
+  icon?: LucideIcon;
   dropPrice?: string;
   price?: string;
   paymentText?: string;
@@ -23,10 +24,12 @@ export interface PricingCardProps {
     tagline: string;
     includes: string[];
   };
+  fullWidth?: boolean;
 }
 
 export function PricingCard({
   title,
+  icon: Icon,
   slug,
   dropPrice,
   price,
@@ -37,6 +40,7 @@ export function PricingCard({
   ctaText,
   ctaHref,
   maintenance,
+  fullWidth,
 }: PricingCardProps) {
   const [withMaintenance, setWithMaintenance] = useState(false);
   const segmentId = useId();
@@ -46,19 +50,29 @@ export function PricingCard({
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className={`relative flex flex-col h-full p-6 sm:p-8 md:p-10 rounded-3xl border w-[85vw] max-w-[340px] md:max-w-none md:w-[420px] shrink-0 ${popular
-        ? 'bg-brand/5 border-brand/50 shadow-lg shadow-brand/5'
-        : 'bg-card border-border/50 hover:border-brand/30'
+      className={`relative flex flex-col h-full p-6 sm:p-8 md:p-10 rounded-3xl border shrink-0 transition-colors duration-300 group ${
+        fullWidth ? 'w-full' : 'w-[85vw] max-w-[340px] md:max-w-none md:w-[420px]'
+      } ${popular
+        ? 'bg-brand/5 border-brand/50 shadow-lg shadow-brand/10'
+        : 'bg-card/40 backdrop-blur-sm border-border/40 hover:border-brand/50 hover:shadow-2xl hover:shadow-brand/5 shadow-[0_2px_6px_rgba(0,0,0,0.03),0_12px_28px_-12px_rgba(0,0,0,0.16)]'
         }`}
     >
+      {/* Glow Hover Background */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
       {popular && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-brand border border-brand/50 text-brand-foreground text-xs font-bold uppercase tracking-widest rounded-full whitespace-nowrap shadow-sm">
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-brand border border-brand/50 text-brand-foreground text-xs font-bold uppercase tracking-widest rounded-full whitespace-nowrap shadow-[0_0_15px_rgba(var(--brand-rgb),0.5)]">
           Mais Procurado
         </div>
       )}
 
-      <div className="mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-2">{title}</h3>
+      <div className="mb-8 relative z-10">
+        {Icon && (
+          <div className={`mb-6 inline-flex p-3 rounded-2xl transition-colors duration-300 ${popular ? 'bg-brand text-brand-foreground shadow-[0_0_20px_rgba(var(--brand-rgb),0.4)]' : 'bg-foreground/5 text-muted-foreground group-hover:bg-brand/10 group-hover:text-brand'}`}>
+            <Icon className="w-7 h-7" />
+          </div>
+        )}
+        <h3 className="text-2xl font-bold text-foreground mb-2 leading-tight">{title}</h3>
         <p className="text-sm text-muted-foreground min-h-[40px] leading-relaxed">{description}</p>
       </div>
 
@@ -98,8 +112,10 @@ export function PricingCard({
       )}
 
       {price && (
-        <div className="mb-8">
-          <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase mb-2">A partir de</span>
+        <div className="mb-8 relative z-10">
+          {price.startsWith('R$') && (
+            <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase mb-2">A partir de</span>
+          )}
           <div className="flex items-end gap-3 mb-3">
             {dropPrice && (
               <span className="text-2xl font-bold text-muted-foreground/40 line-through decoration-brand/50 mb-1">{dropPrice}</span>
@@ -154,7 +170,7 @@ export function PricingCard({
         )}
       </AnimatePresence>
 
-      <div className="space-y-4 mb-8 flex-1">
+      <div className="space-y-4 mb-8 flex-1 relative z-10">
         {features.map((feature, idx) => (
           <div key={idx} className="flex items-start gap-3">
             <Check className="w-5 h-5 text-brand shrink-0 mt-0.5" />
@@ -163,17 +179,17 @@ export function PricingCard({
         ))}
       </div>
 
-      <div className="mt-auto pt-2">
+      <div className="mt-auto pt-4 relative z-10">
         <Link
           href={destinationHref}
           target={isExternal ? '_blank' : undefined}
           rel={isExternal ? 'noopener noreferrer' : undefined}
-          className="block"
+          className="block group/btn"
         >
           <Button
-            variant={popular ? 'brand' : 'primary'}
+            variant={isExternal ? 'brand' : (popular ? 'brand' : 'primary')}
             size="lg"
-            className="w-full text-sm hover:scale-[1.02]"
+            className="w-full text-base font-bold h-14 shadow-xl group-hover/btn:scale-105 transition-transform"
           >
             {ctaText || 'Tenho Interesse'}
           </Button>

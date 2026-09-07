@@ -1,0 +1,421 @@
+'use client';
+
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowUp,
+  Mic,
+  MicOff,
+  Plus,
+  Volume2,
+  VolumeX,
+  RotateCcw,
+  Sparkles,
+  Loader2,
+  ExternalLink,
+  MessageSquare,
+  FileText,
+  Mail,
+  X
+} from 'lucide-react';
+import { ChatMessage, MessageData } from './ChatMessage';
+import { sendMessage } from './chatApi';
+import { useSpeech } from './useSpeech';
+import {
+  CONSULTOR_INFO,
+  LeadProfile,
+  extractLeadInfo,
+  buildWhatsAppUrl
+} from './QualificationEngine';
+import { LeadDirectForm } from '@/client/pages/forms/LeadDirectForm';
+
+export function ChatWindow() {
+  const [messages, setMessages] = useState<MessageData[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [lead, setLead] = useState<LeadProfile>({});
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const {
+    isListening,
+    ttsEnabled,
+    setTtsEnabled,
+    hasSttSupport,
+    startListening,
+    stopListening,
+    speak,
+    stopSpeaking
+  } = useSpeech();
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages, scrollToBottom]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.min(e.target.scrollHeight, 180) + 'px';
+  };
+
+  const toggleVoice = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening((transcript) => {
+        setInput(prev => (prev ? `${prev} ${transcript}` : transcript));
+        if (inputRef.current) {
+          inputRef.current.style.height = 'auto';
+          inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 180) + 'px';
+        }
+      });
+    }
+  };
+
+  const handleSend = async (customMessage?: string) => {
+    const textToSend = typeof customMessage === 'string' ? customMessage : input;
+    const trimmed = textToSend.trim();
+    if (!trimmed || isLoading) return;
+
+    stopSpeaking();
+    if (isListening) stopListening();
+
+    const updatedLead = extractLeadInfo(trimmed, lead);
+    setLead(updatedLead);
+
+    const userMsg: MessageData = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: trimmed,
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
+    setIsLoading(true);
+
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+    }
+
+    try {
+      let replyText = '';
+      let serviceCards: Array<{ slug: string; reason: string }> = [];
+
+      try {
+        const response = await sendMessage(sessionId, trimmed);
+        if (!sessionId) setSessionId(response.sessionId);
+        replyText = response.reply;
+        serviceCards = response.serviceCards || [];
+      } catch {
+        const lower = trimmed.toLowerCase();
+        if (lower.includes('landing page') || lower.includes('lp')) {
+          replyText = 'Para Landing Pages de Alta Conversão, nosso prazo de entrega é de até 3 dias úteis. Entregamos design mobile-first com carregamento instantâneo, player VSL nativo e Bônus de Tagueamento GA4 e Pixels de Base inclusos.\n\nQual é o produto ou serviço que sua página vai anunciar?';
+          serviceCards = [{ slug: 'landing-pages-de-conversao', reason: 'Entrega ágil em 3 dias com foco em conversão imediata.' }];
+        } else if (lower.includes('tracking') || lower.includes('pixel') || lower.includes('capi')) {
+          replyText = 'O Tracking de Funil Server-Side é fundamental para recuperar dados perdidos em bloqueadores e atualizações do iOS. Configuramos a Meta CAPI e GA4 via GTM Server-Side com validação em tempo real.\n\nQuais canais de tráfego sua empresa utiliza atualmente?';
+          serviceCards = [{ slug: 'tagueamento-de-fluxo', reason: 'Recupere até 30% dos dados de vendas do seu tráfego pago.' }];
+        } else if (lower.includes('loja') || lower.includes('e-commerce') || lower.includes('dropshipping')) {
+          replyText = 'Desenvolvemos lojas virtuais Headless em Next.js com foco em carregamento instantâneo, checkout transparente integrado e alta tolerância a picos de tráfego.\n\nSua operação trabalha com catálogo próprio ou alto volume de SKUs?';
+          serviceCards = [{ slug: 'e-commerces-globais', reason: 'Infraestrutura moderna e rápida para operações que não podem travar.' }];
+        } else if (lower.includes('sob medida') || lower.includes('sistema') || lower.includes('personalizado') || lower.includes('microsserviço') || lower.includes('integração')) {
+          replyText = 'Em projetos de Software Sob Medida, arquitetamos sistemas resilientes com microsserviços, mensageria assíncrona e painéis sob demanda para substituir processos manuais e planilhas.\n\nQual fluxo de trabalho você precisa automatizar primeiro?';
+          serviceCards = [{ slug: 'solucao-personalizada', reason: 'Engenharia dimensionada exclusivamente para suas regras operacionais.' }];
+        } else {
+          replyText = `Compreendido. Mapeei sua necessidade para ${updatedLead.service || 'engenharia de software'}.\n\nPara avançarmos com a estimativa técnica, me informe o nome da sua empresa e o objetivo central da aplicação.`;
+        }
+      }
+
+      const shouldAttachLeadCard = Boolean(
+        updatedLead.service ||
+        trimmed.toLowerCase().includes('orçamento') ||
+        trimmed.toLowerCase().includes('whatsapp') ||
+        trimmed.toLowerCase().includes('preço') ||
+        trimmed.toLowerCase().includes('finalizar')
+      );
+
+      const assistantMsg: MessageData = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        content: replyText,
+        serviceCards,
+        leadSummary: shouldAttachLeadCard ? updatedLead : undefined,
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, assistantMsg]);
+      speak(replyText);
+    } catch {
+      const errorMsg: MessageData = {
+        id: `error-${Date.now()}`,
+        role: 'assistant',
+        content: 'Mapeamos os pontos centrais da sua demanda. Você pode clicar no botão abaixo para dar sequência diretamente no WhatsApp com a equipe técnica da TZOLKIN.',
+        leadSummary: updatedLead,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const hasStartedChat = messages.length > 0;
+
+  return (
+    <div className="relative w-full h-full flex flex-col overflow-hidden bg-background">
+      {/* Luz ambiente de fundo */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[320px] bg-brand/10 rounded-full blur-[110px] pointer-events-none -z-10" />
+
+      {/* ── Top Bar Minimalista (Atalhos e áudio) ── */}
+      <div className="flex items-center justify-between px-4 md:px-8 py-3 border-b border-border/40 bg-background/70 backdrop-blur-xl z-30 shrink-0">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIsFormModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/70 hover:border-brand/50 text-xs font-medium text-muted-foreground hover:text-foreground bg-card/40 transition-all"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Formulário Tradicional</span>
+            <span className="sm:hidden">Formulário</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2">
+
+
+          <button
+            type="button"
+            onClick={() => setTtsEnabled(!ttsEnabled)}
+            className={`p-2 rounded-xl border transition-all ${
+              ttsEnabled
+                ? 'bg-brand/10 border-brand/40 text-brand'
+                : 'bg-card/40 border-border text-muted-foreground hover:text-foreground'
+            }`}
+            title={ttsEnabled ? 'Voz ativada' : 'Voz desativada'}
+          >
+            {ttsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+          </button>
+
+          {hasStartedChat && (
+            <button
+              type="button"
+              onClick={() => setMessages([])}
+              className="p-2 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:bg-card/50 transition-all"
+              title="Nova conversa"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ── Conteúdo Central (Imersivo e Minimalista) ── */}
+      <div className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 md:px-8 py-6 scrollbar-thin">
+        {!hasStartedChat ? (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex-1 flex flex-col items-center justify-center max-w-xl mx-auto w-full text-center my-auto py-12"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-2">
+              Como posso ajudar você hoje?
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Descreva seu projeto, gargalo operacional ou o software que precisa construir.
+            </p>
+          </motion.div>
+        ) : (
+          <div className="max-w-3xl mx-auto w-full space-y-5 pb-4">
+            <AnimatePresence mode="popLayout">
+              {messages.map((msg) => (
+                <ChatMessage
+                  key={msg.id}
+                  message={msg}
+                  onSpeak={speak}
+                  onUpdateLead={(updated) => setLead(updated)}
+                />
+              ))}
+            </AnimatePresence>
+
+            {isLoading && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex gap-3 items-center"
+              >
+                <div className="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-4 h-4 text-brand animate-spin" />
+                </div>
+                <div className="bg-card border border-border px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
+                  <Loader2 className="w-3.5 h-3.5 text-brand animate-spin" />
+                  <span className="text-xs text-muted-foreground font-medium">Analisando arquitetura da sua demanda...</span>
+                </div>
+              </motion.div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </div>
+
+      {/* ── Input Flutuante Minimalista (ChatGPT Style Puro) ── */}
+      <div className="px-4 md:px-8 pb-5 pt-2 shrink-0 bg-gradient-to-t from-background via-background/90 to-transparent z-20">
+        <div className="max-w-3xl mx-auto w-full">
+          <div className="relative rounded-[28px] border border-border/80 bg-card/95 backdrop-blur-2xl shadow-xl p-3 md:p-3.5 transition-all focus-within:border-brand/60 focus-within:ring-2 focus-within:ring-brand/20">
+            
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Descreva seu projeto, gargalo operacional ou integração que precisa desenvolver..."
+              rows={1}
+              className="w-full bg-transparent border-none outline-none resize-none text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 px-3 py-1.5 max-h-[160px] leading-relaxed"
+            />
+
+            <div className="flex items-center justify-between pt-2 border-t border-border/40">
+              {/* Botão + (Ações Rápidas) */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsActionsMenuOpen(!isActionsMenuOpen)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-foreground/5 text-muted-foreground hover:text-foreground transition-colors"
+                  title="Ações e atalhos"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+
+                <AnimatePresence>
+                  {isActionsMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                      className="absolute bottom-10 left-0 w-60 p-1.5 rounded-2xl bg-card border border-border shadow-2xl z-50 space-y-0.5 text-xs"
+                    >
+                      <a
+                        href={buildWhatsAppUrl(lead)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-foreground/5 text-emerald-500 font-semibold transition-colors"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>Falar no WhatsApp direto</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsActionsMenuOpen(false);
+                          setIsFormModalOpen(true);
+                        }}
+                        className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-foreground/5 text-foreground font-medium transition-colors"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        <span>Formulário Tradicional</span>
+                      </button>
+                      <a
+                        href="/catalogo"
+                        className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-foreground/5 text-foreground font-medium transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>Ver Catálogo</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsActionsMenuOpen(false);
+                          handleSend('Gostaria de gerar a ficha do meu projeto para conversar com os especialistas.');
+                        }}
+                        className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-foreground/5 text-brand font-medium transition-colors"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>Gerar Ficha Técnica</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Controles de Envio: Microfone e Seta */}
+              <div className="flex items-center gap-2">
+                {hasSttSupport && (
+                  <button
+                    type="button"
+                    onClick={toggleVoice}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                      isListening
+                        ? 'bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/40 scale-105'
+                        : 'hover:bg-foreground/5 text-muted-foreground hover:text-foreground'
+                    }`}
+                    title={isListening ? 'Gravando voz... clique para parar' : 'Falar por voz'}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => handleSend()}
+                  disabled={!input.trim() || isLoading}
+                  className="w-8 h-8 rounded-full bg-foreground text-background disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 transition-all flex items-center justify-center shadow-md cursor-pointer"
+                  title="Enviar mensagem"
+                >
+                  <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Modal do Formulário Tradicional à Parte ── */}
+      <AnimatePresence>
+        {isFormModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              className="relative w-full max-w-lg max-h-[90vh] bg-card border border-border rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <button
+                type="button"
+                onClick={() => setIsFormModalOpen(false)}
+                className="absolute top-4 right-4 z-20 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <div className="p-3 sm:p-5 max-h-[85vh] overflow-y-auto">
+                <LeadDirectForm syncedLead={lead} />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

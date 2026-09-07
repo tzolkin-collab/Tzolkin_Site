@@ -16,10 +16,10 @@ export function Button({
 
   const variants = {
     brand: "bg-brand text-white hover:bg-brand/90 hover:shadow-lg hover:shadow-brand/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    primary: "bg-foreground text-background hover:bg-foreground/90 hover:shadow-lg hover:shadow-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    secondary: "bg-foreground/5 text-foreground hover:bg-foreground/10 border border-border/60 hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    outline: "border border-border bg-transparent text-foreground hover:bg-foreground/5 hover:border-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    ghost: "text-foreground/80 hover:text-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    primary: "bg-foreground text-background hover:bg-brand hover:text-white hover:shadow-lg hover:shadow-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    secondary: "bg-foreground/5 text-foreground hover:bg-brand hover:text-white hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    outline: "border border-border bg-transparent text-foreground hover:bg-brand hover:text-white hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    ghost: "text-foreground/80 hover:text-foreground hover:bg-brand hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   };
 
   const sizes = {
