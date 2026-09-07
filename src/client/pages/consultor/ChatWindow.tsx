@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowUp,
@@ -58,6 +59,19 @@ export function ChatWindow() {
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  const [headerContainer, setHeaderContainer] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const el = document.getElementById('chat-header-actions');
+      if (el) {
+        setHeaderContainer(el);
+        clearInterval(interval);
+      }
+    }, 200);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -208,11 +222,9 @@ export function ChatWindow() {
       {/* Luz ambiente de fundo */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[320px] bg-brand/10 rounded-full blur-[110px] pointer-events-none -z-10" />
 
-      {/* ── Top Bar Minimalista (Atalhos e áudio) ── */}
-      <div className="flex items-center justify-end px-4 md:px-8 py-3 bg-background/70 backdrop-blur-xl z-30 shrink-0">
-        <div className="flex items-center gap-2">
-
-
+      {/* ── Controles de Áudio (Portal para o Header) ── */}
+      {headerContainer && createPortal(
+        <>
           <button
             type="button"
             onClick={() => setTtsEnabled(!ttsEnabled)}
@@ -236,8 +248,9 @@ export function ChatWindow() {
               <RotateCcw className="w-4 h-4" />
             </button>
           )}
-        </div>
-      </div>
+        </>,
+        headerContainer
+      )}
 
       {/* ── Conteúdo Central (Imersivo e Minimalista) ── */}
       <div className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 md:px-8 py-6 scrollbar-thin">
