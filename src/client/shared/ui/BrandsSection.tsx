@@ -11,7 +11,7 @@ interface IntegrationItem {
   name: string;
   svg?: string;
   svgDark?: string;
-  icon?: React.ElementType;
+  icon?: React.ComponentType<any>;
 }
 
 const integrations: IntegrationItem[] = [
