@@ -1,11 +1,13 @@
 import { readLimitedJson, validateLead } from '@/server/leads/validation.mjs';
+import { deliverLead } from '@/server/leads/delivery.mjs';
 import { LEAD_SUBMISSIONS_ENABLED, LEAD_SUBMISSIONS_PAUSED_MESSAGE } from '@/lib/lead-submissions.mjs';
 
 export const runtime = 'nodejs';
 const reply = (status: number, message: string) => Response.json({ message }, { status, headers: { 'Cache-Control': 'no-store' } });
 
+// O lead não passa mais por banco do site: vai direto ao intake do Core (ADR 0011), com e-mail interno
+// de segurança se o Core não confirmar. Ver src/server/leads/delivery.mjs.
 export async function POST(request: Request) {
-  // Antes de ler o corpo ou carregar o repositório: não acessar o banco na pausa.
   if (!LEAD_SUBMISSIONS_ENABLED) return reply(503, LEAD_SUBMISSIONS_PAUSED_MESSAGE);
   const origin = request.headers.get('origin');
   if (!origin || origin !== new URL(request.url).origin) return reply(403, 'Origem não permitida.');
@@ -19,14 +21,14 @@ export async function POST(request: Request) {
       ? reply(413, 'Formulário muito extenso.') : reply(400, 'Revise os dados de contato e os campos do formulário.');
   }
   try {
-    const { saveLead } = await import('@/server/leads/repository');
-    await saveLead(data, key);
-    return reply(200, 'Recebemos sua solicitação.');
-  } catch (error) {
-    if (error instanceof Error && error.message === 'RATE_LIMITED') return reply(429, 'Muitos envios. Aguarde antes de tentar novamente.');
-    if (error instanceof Error && error.message === 'IDEMPOTENCY_CONFLICT') return reply(409, 'Este envio já foi recebido com outros dados. Atualize a página para iniciar outro.');
-    // Never log request payloads or database error details (may contain contact data).
-    console.error('[leads] persistence_failed');
-    return reply(503, 'Não foi possível salvar agora. Seus dados continuam no formulário; tente novamente.');
+    const result = await deliverLead(data, key);
+    if (result.status === 200) return reply(200, 'Recebemos sua solicitação.');
+    if (result.status === 429) return reply(429, 'Muitos envios. Aguarde antes de tentar novamente.');
+    if (result.status === 409) return reply(409, 'Este envio já foi recebido com outros dados. Atualize a página para iniciar outro.');
+    // Never log request payloads or provider details (may contain contact data): só o motivo.
+    console.error('[leads] delivery_failed', result.reason);
+  } catch {
+    console.error('[leads] delivery_error');
   }
+  return reply(503, 'Não foi possível enviar agora. Seus dados continuam no formulário; tente novamente.');
 }

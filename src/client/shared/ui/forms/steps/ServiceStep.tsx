@@ -9,6 +9,7 @@ import { Button } from '@/client/shared/ui/Button';
 import { ArrowLeft, Loader2, Sparkles, Send } from 'lucide-react';
 import { pricingData } from '@/client/shared/data/pricingData';
 import { trackEvent } from '@/client/shared/utils/analytics';
+import { readAttribution } from '@/client/shared/utils/attribution';
 
 export function ServiceStep() {
   const [submitError, setSubmitError] = useState('');
@@ -46,7 +47,7 @@ export function ServiceStep() {
     const finalData = { ...formData, ...data };
 
     setSubmitError('');
-    const payload = JSON.stringify(finalData);
+    const payload = JSON.stringify({ ...finalData, attribution: readAttribution() });
     if (!submission.current || submission.current.payload !== payload) {
       submission.current = { payload, key: crypto.randomUUID() };
     }

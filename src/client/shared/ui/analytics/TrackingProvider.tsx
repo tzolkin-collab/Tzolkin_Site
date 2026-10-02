@@ -1,8 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
 import Script from 'next/script';
+import { captureAttribution } from '@/client/shared/utils/attribution';
 
 export function TrackingProvider() {
+  // Guarda UTM e IDs de anúncio da chegada, para o formulário mandar a origem junto com o lead.
+  useEffect(() => { captureAttribution(); }, []);
   const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
   const UTMIFY_URL = process.env.NEXT_PUBLIC_UTMIFY_URL || "https://cdn.utmify.com.br/scripts/utmify.js"; // URL padrão como fallback de script de rastreio
 
