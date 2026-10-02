@@ -14,12 +14,19 @@
 export const PRODUCT_ID = 'sites';
 const MAX_MESSAGE = 5000;
 
-const EXTRAS = [['Porte', 'companySize'], ['Funcionários', 'employees'], ['Instagram', 'instagram'], ['Site', 'website']];
+// [rótulo, campo do formulário, chave do campo no espaço "sites" do Core (space_fields, migração 043)]
+const EXTRAS = [['Porte', 'companySize', 'porte'], ['Funcionários', 'employees', 'funcionarios'], ['Instagram', 'instagram', 'instagram'], ['Site', 'website', 'site']];
+
+/** Os quatro campos próprios do espaço, no formato do bloco `space_data` do intake. Só o que foi preenchido. */
+export function composeSpaceData(data) {
+  const dados = Object.fromEntries(EXTRAS.filter(([, campo]) => data[campo]).map(([, campo, chave]) => [chave, data[campo]]));
+  return Object.keys(dados).length ? dados : undefined;
+}
 
 /**
- * O formulário coleta quatro campos que o Core ainda não tem onde guardar (porte, funcionários, Instagram,
- * site). Até existir um bloco de dados por espaço (docs do Core: `space_data`), eles viajam no início da
- * mensagem em vez de se perderem. A mensagem do visitante é cortada antes dos extras se passar do limite.
+ * Formato antigo: o Core que ainda não conhece `space_data` recusa o bloco, então o mesmo lead pode viajar com os
+ * quatro campos no início da mensagem (legacy). É só a volta de segurança; o envio normal usa `space_data`.
+ * A mensagem do visitante é cortada antes dos extras se passar do limite.
  */
 export function composeMessage(data) {
   const extras = EXTRAS.filter(([, campo]) => data[campo]).map(([rotulo, campo]) => `${rotulo}: ${data[campo]}`);
@@ -36,12 +43,13 @@ function atribuicao(data) {
   return a;
 }
 
-export function buildIntakePayload(data, key, now = new Date()) {
+export function buildIntakePayload(data, key, now = new Date(), { legacy = false } = {}) {
   const lead = { name: data.fullName };
   if (data.email) lead.email = data.email;
   if (data.whatsapp) lead.whatsapp = data.whatsapp;
-  const message = composeMessage(data);
+  const message = legacy ? composeMessage(data) : data.message || undefined;
   if (message) lead.message = message;
+  const spaceData = legacy ? undefined : composeSpaceData(data);
   return {
     lead,
     organization: data.companyName ? { name: data.companyName, organization_type: 'company' } : { organization_type: 'person' },
@@ -54,6 +62,7 @@ export function buildIntakePayload(data, key, now = new Date()) {
     attribution: { ...atribuicao(data), source_system: 'tzolkin-site', source_ref: key, channel: 'institutional-form', created_at: now.toISOString() },
     // O formulário não capta preferência de contato: registra isso como está, sem inventar consentimento.
     privacy: { contact_allowed: false, source: 'institutional-form-no-preference-recorded' },
+    ...(spaceData ? { space_data: spaceData } : {}),
   };
 }
 
@@ -64,7 +73,7 @@ const esperar = ms => new Promise(resolve => setTimeout(resolve, ms));
  * crescente. 429 (limite por e-mail), 409 (conteúdo diferente com a mesma chave) e 400/401/403 não se
  * repetem: tentar de novo não muda a resposta.
  */
-export async function submitToCore(payload, key, { env = process.env, fetchImpl = fetch, sleep = esperar, tentativas = 3 } = {}) {
+export async function submitToCore(payload, key, { env = process.env, fetchImpl = fetch, sleep = esperar, tentativas = 3, alternate = null } = {}) {
   const base = env.CORE_INTAKE_URL, token = env.CORE_INTAKE_KEY;
   if (!base || !token) return { ok: false, reason: 'not_configured' };
   let url;
@@ -83,6 +92,11 @@ export async function submitToCore(payload, key, { env = process.env, fetchImpl 
         const corpo = await resposta.json().catch(() => null);
         if (typeof corpo?.lead_id === 'string') return { ok: true, leadId: corpo.lead_id };
         ultimo = { ok: false, reason: 'invalid_response' };
+      } else if (resposta.status === 400 && alternate) {
+        // Core mais antigo, que ainda não conhece o bloco `space_data`: o mesmo lead, no formato antigo, uma vez só.
+        // Não conta como tentativa e reaproveita a mesma chave de idempotência (a recusa não gravou nada).
+        payload = alternate; alternate = null; tentativa--;
+        continue;
       } else if (resposta.status === 429) return { ok: false, reason: 'rate_limited', status: 429 };
       else if (resposta.status === 409) return { ok: false, reason: 'conflict', status: 409 };
       else if (resposta.status === 408 || resposta.status >= 500) ultimo = { ok: false, reason: `http_${resposta.status}`, status: resposta.status };
@@ -137,7 +151,8 @@ export async function sendFallbackEmail(data, key, { env = process.env, fetchImp
  */
 export async function deliverLead(data, key, opcoes = {}) {
   const payload = buildIntakePayload(data, key, opcoes.now ? opcoes.now() : new Date());
-  const core = await submitToCore(payload, key, opcoes);
+  const alternate = payload.space_data ? buildIntakePayload(data, key, opcoes.now ? opcoes.now() : new Date(), { legacy: true }) : null;
+  const core = await submitToCore(payload, key, { ...opcoes, alternate });
   if (core.ok) return { status: 200, via: 'core' };
   if (core.reason === 'rate_limited') return { status: 429, reason: core.reason };
   if (core.reason === 'conflict') return { status: 409, reason: core.reason };

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { validateLead, sanitizeAttribution, services } from '../src/server/leads/validation.mjs';
 import {
-  buildIntakePayload, composeMessage, submitToCore, sendFallbackEmail, composeFallbackEmail, deliverLead,
+  buildIntakePayload, composeMessage, composeSpaceData, submitToCore, sendFallbackEmail, composeFallbackEmail, deliverLead,
 } from '../src/server/leads/delivery.mjs';
 
 const KEY = '2f6b1a0e-5c3d-4e8f-9a1b-7c2d3e4f5a6b';
@@ -61,6 +61,7 @@ test('o envio ao Core tem o formato do intake e marca origem e consentimento sem
   const dados = validateLead({ ...base, attribution: { utm_source: 'meta', utm_tzolkin: 'sites.corretor', landing_page: '/sites' } });
   const p = buildIntakePayload(dados, KEY, new Date('2026-10-02T12:00:00Z'));
   assert.deepEqual(p.lead, { name: 'Ana Teste', email: 'ana@example.invalid', whatsapp: '11999999999', message: 'Quero um site.' });
+  assert.equal(p.space_data, undefined, 'sem porte, funcionários, Instagram e site, não manda o bloco');
   assert.deepEqual(p.organization, { name: 'Empresa Teste', organization_type: 'company' });
   assert.deepEqual(p.commercial, { product_id: 'sites', service_model: 'on_demand', label: 'Sites Institucionais' });
   assert.deepEqual(p.privacy, { contact_allowed: false, source: 'institutional-form-no-preference-recorded' });
@@ -81,7 +82,45 @@ test('pessoa sem empresa vira "person"; Educacional vira "education"; utm_tzolki
   assert.equal(p.attribution.utm_tzolkin, undefined);
 });
 
-test('porte, funcionários, Instagram e site não se perdem: vão no início da mensagem, dentro do limite do Core', () => {
+test('porte, funcionários, Instagram e site vão em space_data com as chaves do espaço, e a mensagem fica só com o que o visitante escreveu', () => {
+  const dados = validateLead({ ...base, companySize: 'Pequena', employees: '10', instagram: '@empresa', website: 'https://empresa.example' });
+  assert.deepEqual(composeSpaceData(dados), { porte: 'Pequena', funcionarios: '10', instagram: '@empresa', site: 'https://empresa.example' });
+  const p = buildIntakePayload(dados, KEY);
+  assert.deepEqual(p.space_data, { porte: 'Pequena', funcionarios: '10', instagram: '@empresa', site: 'https://empresa.example' });
+  assert.equal(p.lead.message, 'Quero um site.');
+  // só o que foi preenchido
+  assert.deepEqual(composeSpaceData(validateLead({ ...base, instagram: '@so' })), { instagram: '@so' });
+  assert.equal(composeSpaceData(validateLead(base)), undefined);
+  // o formato antigo continua existindo, para a volta de segurança
+  const antigo = buildIntakePayload(dados, KEY, new Date(), { legacy: true });
+  assert.equal(antigo.space_data, undefined);
+  assert.match(antigo.lead.message, /^\[Dados do formulário\]\nPorte: Pequena/);
+});
+
+test('Core antigo que recusa space_data (400): o mesmo lead é reenviado uma vez no formato antigo, com a mesma chave', async () => {
+  const dados = validateLead({ ...base, companySize: 'Pequena' });
+  const corpos = [], chaves = [];
+  const r = await deliverLead(dados, KEY, { env: ENV, sleep: semEspera, fetchImpl: async (url, init) => {
+    corpos.push(JSON.parse(init.body)); chaves.push(init.headers['idempotency-key']);
+    return corpos.length === 1 ? resposta(400, { message: 'Campos inválidos.' }) : resposta(200, { lead_id: 'l' });
+  } });
+  assert.deepEqual(r, { status: 200, via: 'core' });
+  assert.equal(corpos.length, 2);
+  assert.deepEqual(corpos[0].space_data, { porte: 'Pequena' });
+  assert.equal(corpos[1].space_data, undefined);
+  assert.match(corpos[1].lead.message, /Porte: Pequena/);
+  assert.deepEqual(chaves, [KEY, KEY]);
+  // sem space_data não há o que recuar: o 400 é definitivo e não repete
+  let n = 0;
+  const sem = await deliverLead(validateLead(base), KEY, { env: ENV, sleep: semEspera, fetchImpl: async () => { n++; return resposta(400); } });
+  assert.equal(n, 1); assert.equal(sem.status, 503);
+  // a volta é uma só: se o formato antigo também for recusado, para
+  n = 0;
+  const duas = await submitToCore({ a: 1 }, KEY, { env: ENV, sleep: semEspera, alternate: { b: 2 }, fetchImpl: async () => { n++; return resposta(400); } });
+  assert.equal(n, 2); assert.equal(duas.reason, 'http_400');
+});
+
+test('mensagem do formato antigo: porte, funcionários, Instagram e site no início, dentro do limite do Core', () => {
   const dados = validateLead({ ...base, companySize: 'Pequena', employees: '10', instagram: '@empresa', website: 'https://empresa.example', message: 'x'.repeat(5000) });
   const mensagem = composeMessage(dados);
   assert.match(mensagem, /^\[Dados do formulário\]\nPorte: Pequena\nFuncionários: 10\nInstagram: @empresa\nSite: https:\/\/empresa\.example\n\nxxx/);
