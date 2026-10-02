@@ -1,30 +1,47 @@
 # Leads comerciais do institucional
 
-Este banco pertence ao app institucional TZOLKIN. Não é banco universal do Core nem armazena leads dos clientes de outros apps.
+> **Mudou em 2026-10-02 (ADR 0011 do `tzolkin-core`).** O lead **não é mais gravado neste banco**. O site manda o lead
+> direto ao intake do Core (`POST /v1/commercial/intake`), que é onde todos os leads vivem. Os arquivos `001`, `002` e
+> `003` abaixo ficam como histórico do desenho antigo; nada novo grava em `institucional.leads`.
 
-## Fluxo implementado
+## Fluxo atual
 
-Formulário → POST /api/leads → validação no servidor → transação PostgreSQL com lead + email_outbox → confirmação ao frontend.
+Formulário → `POST /api/leads` → validação no servidor → **intake do Core** (3 tentativas, idempotente pela chave do envio)
+→ confirmação ao visitante.
 
-O backend fixa a origem como tzolkin.cloud. Campos extras como tenant, plano, preço e permissões são rejeitados. A rota é pública para captação, não uma API multiempresa autenticada.
+- **Se o Core não confirmar**, o servidor manda um **e-mail interno** com o lead (rede de segurança) e só então diz "recebemos".
+  Sem Core **e** sem e-mail configurado, responde 503 e o visitante mantém os dados no formulário.
+- **Limites:** a regra de cinco envios por e-mail por hora passou para o Core (devolve 429).
+- **O navegador não decide origem, plano, preço nem permissões.** Campo desconhecido é recusado. A origem do lead
+  (`tzolkin-site`, canal, referência) é fixada pelo servidor.
+- **Atribuição:** o formulário manda UTM, `utm_tzolkin` (`sites.<nicho>`), IDs de anúncio da Meta, `fbclid`, `gclid`,
+  página de entrada e referência, capturados na chegada (`src/client/shared/utils/attribution.ts`). É melhor-esforço: um
+  parâmetro inválido é descartado e **nunca derruba o lead**. Convenção dos nomes: `tzolkin-core/docs/ATTRIBUTION.md`.
+- **Campos sem lugar no Core ainda** (porte, funcionários, Instagram, site) viajam no início da mensagem do lead.
 
-O identificador de envio permite repetir uma requisição sem criar outro lead. Alterar o conteúdo com a mesma chave retorna conflito. Há limite de cinco envios por email por hora, compartilhado entre instâncias via banco. Isso NÃO substitui proteção global de abuso: antes de tráfego público, definir limitação na borda e/ou desafio antiautomação. A checagem de Origin não autentica bots.
+## Variáveis de ambiente (servidor)
 
-## Email: pendente de ativação
+| Variável | Para quê |
+|---|---|
+| `CORE_INTAKE_URL` | Endereço do Core, HTTPS (ex.: o domínio do Core). `http` só em `localhost`/`127.0.0.1` |
+| `CORE_INTAKE_KEY` | Chave de integração do espaço **sites**, escopo `commercial:intake`. Criada no Core (Sites → Chaves de integração); o segredo aparece **uma única vez** |
+| `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_INTERNAL_TO` | Rede de segurança por e-mail. `EMAIL_INTERNAL_TO` aceita vários endereços separados por vírgula |
 
-email_outbox registra intenção de notificação interna na mesma transação do lead. O consumidor está em scripts/email-worker.mjs; pending NÃO significa email entregue. Nenhuma campanha ou confirmação ao visitante é enviada.
+Sem `CORE_INTAKE_URL`/`CORE_INTAKE_KEY`, nada é entregue ao Core. Nenhuma delas pode ir para o navegador.
 
-O consumidor usa Resend, chave idempotente estável, payload congelado na primeira tentativa, trava PostgreSQL, até cinco tentativas e backoff. Após 23 horas da primeira tentativa, exige revisão manual em vez de arriscar duplicidade além da janela de 24h do provedor (https://resend.com/docs/dashboard/emails/idempotency-keys). O status sent significa aceitação pelo provedor, não entrega na caixa de entrada.
+## Legado (não alimentado)
 
-Antes de ativar: configurar RESEND_API_KEY, EMAIL_FROM (remetente verificado) e EMAIL_INTERNAL_TO (destinatário interno). `npm run email:check` é somente leitura. `node scripts/email-worker.mjs --send` envia no máximo uma notificação elegível e é uma ação externa explícita. Ainda não foi executado nem agendado. Confirmar a configuração e testar com destinatário interno autorizado antes de ativação. Nenhum segredo no frontend ou payload nos logs.
+`db/001_leads.sql`, `002_lead_delivery.sql`, `003_email_worker.sql` e `scripts/email-worker.mjs` pertencem ao desenho antigo
+(banco do site e fila de e-mail). Seguem no repositório até serem removidos de vez; **a fila nunca é preenchida**.
+O desenho da fila `core_outbox` foi arquivado na branch local `arquivo/outbox-core-descartado`.
 
 ## Verificação
 
-- `node --test scripts/leads.test.mjs`: validações sem banco.
-- `npm test`: 18 testes locais de leads e adaptador de email, sem chamadas ao provedor.
-- `npm run test:integration`: banco real, API local e provedor de email simulado; remove apenas registros sintéticos dos testes.
+- `npm test`: 34 testes sem banco e sem rede: validação, contrato dos serviços com os formulários (`pricingData`),
+  atribuição, formato do envio ao Core, tentativas, e-mail de segurança e orquestração.
+- O formato do envio foi conferido contra `validateIntake` do Core (5 casos). Esse teste cruza dois repositórios e por isso
+  não faz parte do `npm test`.
 - `npm run typecheck` e `npm run build`: verificações do projeto.
-- `node scripts/leads-integration.mjs`: usa Next local na porta 3000 e banco da env local; cria registros sintéticos em example.invalid e remove somente os registros dessa execução. Não envia emails.
-- `node scripts/migrate-leads.mjs`: aplica db/002_lead_delivery.sql no banco configurado localmente.
+- `npm run test:integration`: só o worker de e-mail legado, com banco real.
 
-DATABASE_URL é segredo server-side e já está cadastrada em Production na Vercel. Não cadastrar a base de produção em previews de terceiros. Nenhum deploy faz parte desta implementação.
+Nenhum deploy faz parte desta mudança.

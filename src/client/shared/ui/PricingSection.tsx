@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, Compass, Code2, Users } from 'lucide-react';
 import { PricingCard } from './PricingCard';
 import Link from 'next/link';
-import { appendTzolkinUtm } from '@/client/shared/utils/utm';
 
 export function PricingSection() {
 
@@ -60,10 +59,6 @@ export function PricingSection() {
       ctaText: 'Ver Portfólio de Projetos',
       ctaHref: 'https://sites.tzolkin.cloud/',
       popular: false,
-      extraLink: {
-        text: 'Precisa de uma LP ou site? Conheça as entregas para apresentar sua oferta e gerar contatos.',
-        url: 'https://sites.tzolkin.cloud/'
-      }
     }
   ];
 
@@ -127,25 +122,6 @@ export function PricingSection() {
                 ctaHref={model.ctaHref}
                 fullWidth={true}
               />
-              {model.extraLink && (
-                <div className="mt-6 p-5 rounded-2xl border border-brand/20 bg-brand/5 relative overflow-hidden group w-full transition-colors hover:bg-brand/10">
-                  <div className="absolute inset-0 bg-brand/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                  <div className="relative z-10">
-                    <p className="text-sm text-foreground/80 font-medium mb-3">
-                      {model.extraLink.text}
-                    </p>
-                    <Link 
-                      href={appendTzolkinUtm(model.extraLink.url)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-bold text-brand hover:text-brand/80 transition-colors uppercase tracking-wider"
-                    >
-                      Ver LPs e sites
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-              )}
             </motion.div>
           ))}
         </div>

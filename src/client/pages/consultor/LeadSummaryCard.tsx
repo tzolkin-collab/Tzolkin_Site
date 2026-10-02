@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MessageSquare, Mail, CheckCircle2, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import { Button } from '@/client/shared/ui/Button';
 import { LeadProfile, buildWhatsAppUrl } from './QualificationEngine';
+import { readAttribution } from '@/client/shared/utils/attribution';
 
 interface LeadSummaryCardProps {
   lead: LeadProfile;
@@ -16,6 +17,9 @@ export function LeadSummaryCard({ lead, onUpdateLead }: LeadSummaryCardProps) {
   const [nameInput, setNameInput] = useState(lead.name || '');
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  // A mesma chave em tentativas seguidas: o Core não duplica o lead se o primeiro envio chegou.
+  const submissionKey = useRef<string | null>(null);
   const [showEmailForm, setShowEmailForm] = useState(false);
 
   const whatsappUrl = buildWhatsAppUrl({
@@ -29,26 +33,35 @@ export function LeadSummaryCard({ lead, onUpdateLead }: LeadSummaryCardProps) {
     if (!emailInput) return;
 
     setIsSendingEmail(true);
+    setEmailError('');
     try {
-      await fetch('/api/leads', {
+      submissionKey.current ??= crypto.randomUUID();
+      const response = await fetch('/api/leads', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': submissionKey.current },
         body: JSON.stringify({
           fullName: nameInput || 'Lead Consultor',
           email: emailInput,
-          whatsapp: lead.whatsapp || 'Nao informado',
-          companyName: lead.company || 'Nao informada',
-          service: lead.service || 'Consultoria Geral',
-          message: `Bundle gerado via Consultor IA: ${lead.summary || 'Interesse identificado'}`,
-          source: 'consultor_ia'
+          whatsapp: lead.whatsapp || '',
+          companyName: lead.company || '',
+          // O serviço que a IA identificou é texto livre e o servidor só aceita a lista oficial:
+          // vai na mensagem, e o serviço fica "Outro" até a equipe classificar.
+          service: 'Outro',
+          message: `Bundle gerado via Consultor IA (serviço de interesse: ${lead.service || 'não definido'}): ${lead.summary || 'Interesse identificado'}`,
+          attribution: readAttribution(),
         })
       });
+      if (!response.ok) {
+        const erro = await response.json().catch(() => ({}));
+        throw new Error(erro.message || 'Não foi possível enviar agora. Tente novamente.');
+      }
       setEmailSent(true);
       if (onUpdateLead) {
         onUpdateLead({ ...lead, email: emailInput, name: nameInput });
       }
-    } catch {
-      setEmailSent(true);
+    } catch (error) {
+      // Antes isto marcava "enviado" mesmo com falha, e o lead se perdia sem ninguém saber.
+      setEmailError(error instanceof Error ? error.message : 'Não foi possível enviar agora. Tente novamente.');
     } finally {
       setIsSendingEmail(false);
     }
@@ -144,6 +157,9 @@ export function LeadSummaryCard({ lead, onUpdateLead }: LeadSummaryCardProps) {
                 {isSendingEmail ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Salvar Proposta'}
               </Button>
             </div>
+            {emailError && (
+              <p role="alert" className="text-[11px] text-red-500 text-center">{emailError}</p>
+            )}
             <p className="text-[10px] text-muted-foreground text-center">
               Enviaremos o resumo completo por e-mail e manteremos o link do WhatsApp ativo.
             </p>
