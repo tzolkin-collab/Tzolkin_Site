@@ -82,6 +82,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning className={cn("font-sans", sourceSans3.variable, figtree.variable)}>
+      <head>
+        <meta
+          name="facebook-domain-verification"
+          content="jbrszedkqg3k343k03c9llb8mrtbir"
+        />
+      </head>
       <body
         suppressHydrationWarning
         className={`${sourceSans3.className} antialiased bg-background text-foreground overflow-x-hidden relative w-full`}
