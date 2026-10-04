@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Source_Sans_3, Figtree } from "next/font/google";
 import { ThemeProvider } from "@/client/shared/providers/ThemeProvider";
 import { SmoothScrolling } from "@/client/shared/ui/SmoothScrolling";
@@ -21,6 +21,13 @@ const figtree = Figtree({
   display: 'swap',
   weight: ['300', '400', '500', '600', '700', '800', '900'],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: {

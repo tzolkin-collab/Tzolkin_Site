@@ -253,3 +253,21 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     scroll-padding-top: 5rem;
   }
 }
+
+/* Mobile: sem zoom de pinça e sem rolagem horizontal da página.
+   touch-action libera só a rolagem em x/y (carrosséis com overflow próprio seguem rolando);
+   overflow-x: clip corta o que vazar sem criar contêiner de rolagem (não quebra position: sticky). */
+html, body {
+  max-width: 100%;
+  overflow-x: clip;
+  touch-action: pan-x pan-y;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* iOS dá zoom ao focar campo com fonte menor que 16px */
+@media (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
