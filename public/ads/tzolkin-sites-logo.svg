@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Símbolo Tzolkin Sites sobre fundo preto</title>
+  <desc id="desc">Dois cards sobrepostos em fundo preto. O card traseiro tem contorno branco e o frontal tem contorno em gradiente.</desc>
+  <defs>
+    <linearGradient id="tzolkin-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4EA8FF"/>
+      <stop offset="34%" stop-color="#7B61FF"/>
+      <stop offset="66%" stop-color="#E84D8A"/>
+      <stop offset="100%" stop-color="#FF8546"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="220" fill="#05070A"/>
+  <rect x="208" y="208" width="432" height="432" rx="82" fill="none" stroke="#FFFFFF" stroke-width="52"/>
+  <rect x="384" y="384" width="432" height="432" rx="82" fill="#05070A" stroke="url(#tzolkin-gradient)" stroke-width="52"/>
+</svg>

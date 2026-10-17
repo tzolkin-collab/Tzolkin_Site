@@ -47,29 +47,3 @@ export async function getSession(sessionId: string): Promise<SessionData> {
     messages: [],
   };
 }
-
-export async function saveLead(data: {
-  sessionId: string;
-  name?: string;
-  email?: string;
-  whatsapp?: string;
-  company?: string;
-  service?: string;
-}): Promise<void> {
-  try {
-    await fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fullName: data.name || 'Lead Chat',
-        email: data.email || 'contato@cliente.com',
-        whatsapp: data.whatsapp || 'Não informado',
-        companyName: data.company || 'Não informada',
-        service: data.service || 'Consultoria Geral',
-        message: `Lead via chat: ${data.sessionId}`,
-      }),
-    });
-  } catch {
-    // Ignora erro de rede em background
-  }
-}
