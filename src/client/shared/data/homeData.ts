@@ -7,6 +7,8 @@ export interface ApplicationItem {
   slug: string;
   title: string;
   audience: string;
+  /** Frase curta de para-quem usada nos cartoes do bento. */
+  forWho: string;
   delivers: string;
   chips: string[];
   ctaText: string;
@@ -17,6 +19,7 @@ export interface ApplicationItem {
 export const applications: ApplicationItem[] = [
   {
     slug: 'crm-com-ia',
+    forWho: 'Para times comerciais e de atendimento com contexto espalhado.',
     title: 'CRM com IA para comercial e atendimento',
     audience:
       'Times comerciais e de atendimento que hoje dividem contexto entre planilhas, WhatsApp e ferramentas soltas.',
@@ -28,6 +31,7 @@ export const applications: ApplicationItem[] = [
   },
   {
     slug: 'agentes-ia',
+    forWho: 'Para quem recebe muitos contatos por WhatsApp, chat ou telefone.',
     title: 'Agentes de IA para mensagens e voz',
     audience: 'Empresas com volume recorrente de contatos por WhatsApp, chat ou telefone.',
     delivers:
@@ -38,6 +42,7 @@ export const applications: ApplicationItem[] = [
   },
   {
     slug: 'ecommerce-marketplace',
+    forWho: 'Para marcas que vendem online em mais de um canal.',
     title: 'E-commerce e marketplaces',
     audience:
       'Marcas que vendem online e precisam de loja própria, tema Shopify ou pedidos de marketplaces no mesmo fluxo.',
@@ -49,6 +54,7 @@ export const applications: ApplicationItem[] = [
   },
   {
     slug: 'fiscal',
+    forWho: 'Para operações que emitem nota fiscal na mão.',
     title: 'Automação fiscal',
     audience: 'Operações que emitem nota fiscal manualmente ou a partir de várias fontes de pedido.',
     delivers:
@@ -59,6 +65,7 @@ export const applications: ApplicationItem[] = [
   },
   {
     slug: 'piloto',
+    forWho: 'Para quem já tem um protótipo ou MVP e precisa da próxima versão.',
     title: 'Evoluir um piloto existente',
     audience:
       'Quem já tem um protótipo, um MVP ou um sistema funcionando em parte, inclusive criado com ferramentas de IA.',
