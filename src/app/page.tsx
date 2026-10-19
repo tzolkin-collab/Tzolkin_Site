@@ -1,14 +1,14 @@
 import { LandingPage } from "@/client/pages/home/LandingPage";
 import type { Metadata } from "next";
 
-const description = "Sites, lojas, tracking de funil e software sob medida para sua empresa. Conheça as soluções da TZOLKIN para vender, medir e conectar sua operação.";
+const description = "Software house que desenha, cria e evolui produtos digitais com IA: CRMs, agentes de IA, lojas e marketplaces, com cibersegurança, infraestrutura dedicada e código limpo.";
 
 export const metadata: Metadata = {
-  title: { absolute: "TZOLKIN | Sites, tracking e software sob medida" },
+  title: { absolute: "TZOLKIN | Software house de produtos digitais com IA" },
   description,
   alternates: { canonical: "https://tzolkin.cloud/" },
   openGraph: {
-    title: "TZOLKIN | Sites, tracking e software sob medida",
+    title: "TZOLKIN | Software house de produtos digitais com IA",
     description,
     url: "https://tzolkin.cloud/",
     siteName: "TZOLKIN",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TZOLKIN | Sites, tracking e software sob medida",
+    title: "TZOLKIN | Software house de produtos digitais com IA",
     description,
     images: ["https://tzolkin.cloud/og-image.jpg"],
   },

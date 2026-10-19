@@ -8,6 +8,10 @@ export interface Project {
   invert: boolean;
   category?: 'partnership' | 'case';
   description?: string;
+  /** O que a TZOLKIN fez no projeto. Só preencher com informação confirmada. */
+  role?: string;
+  /** Estágio atual do projeto (ex.: "Em operação"). TODO(PO): confirmar por projeto. */
+  stage?: string;
   instagram?: string;
   instagramPostUrl?: string;
   website?: string;
@@ -25,7 +29,8 @@ export const projects: Project[] = [
     bright: true,
     invert: false,
     category: 'case',
-    description: "Aceleradora de negócios e educação corporativa. Elevamos a infraestrutura para suportar alto volume.",
+    description: "Aceleradora de negócios e educação corporativa.",
+    role: "Infraestrutura.",
     website: "https://powerhousebrasil.com.br/",
     gallery: []
   },
@@ -38,7 +43,8 @@ export const projects: Project[] = [
     bright: false,
     invert: false,
     category: 'case',
-    description: "Gestão e dashboards inteligentes. Construímos um ecossistema sólido para visualização de dados.",
+    description: "Gestão e dashboards.",
+    role: "Construção do ecossistema de visualização de dados.",
     website: "https://kalidash.com/",
     gallery: []
   },
@@ -51,7 +57,8 @@ export const projects: Project[] = [
     bright: false,
     invert: false,
     category: 'case',
-    description: "Plataforma analítica e de BI. Desenvolvimento focado em performance extrema e responsividade.",
+    description: "Plataforma analítica e de BI.",
+    role: "Desenvolvimento da plataforma.",
     website: "https://novodash.com/",
     gallery: []
   },
@@ -64,7 +71,7 @@ export const projects: Project[] = [
     bright: false,
     invert: false,
     category: 'case',
-    description: "Grande rede de franquias de moda infantil. Roupas para bebês e crianças com preços acessíveis.",
+    description: "Rede de franquias de moda infantil.",
     instagram: "https://www.instagram.com/kidstok/",
     instagramPostUrl: "https://www.instagram.com/p/DRM2Nr0keFb/",
     website: "https://kidstok.com.br/",
@@ -110,7 +117,8 @@ export const projects: Project[] = [
     bright: false,
     invert: false,
     category: 'case',
-    description: "Atuamos diretamente como consultoria estratégica e de arquitetura de software para potencializar a operação.",
+    description: "Projeto de assinatura de marca própria.",
+    role: "Arquitetura de software.",
     website: "https://assinaturamarcapropria.com/",
     gallery: []
   }

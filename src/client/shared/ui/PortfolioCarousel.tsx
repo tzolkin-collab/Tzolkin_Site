@@ -94,6 +94,22 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
                   <h3 className="text-2xl font-medium">{project.name}</h3>
                   <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{project.year}</span>
                 </div>
+
+                {(project.description || project.role || project.stage) && (
+                  <div className="mt-4 space-y-1 text-sm leading-relaxed relative z-10">
+                    {project.description && <p className="text-foreground">{project.description}</p>}
+                    {project.role && (
+                      <p className="text-muted-foreground">
+                        <span className="font-semibold text-foreground">O que a TZOLKIN fez:</span> {project.role}
+                      </p>
+                    )}
+                    {project.stage && (
+                      <p className="text-muted-foreground">
+                        <span className="font-semibold text-foreground">Estágio:</span> {project.stage}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )

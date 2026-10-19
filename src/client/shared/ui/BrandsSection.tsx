@@ -11,7 +11,7 @@ interface IntegrationItem {
   name: string;
   svg?: string;
   svgDark?: string;
-  icon?: React.ComponentType<any>;
+  icon?: React.ComponentType<{ className?: string; strokeWidth?: number }>;
 }
 
 const integrations: IntegrationItem[] = [
@@ -59,7 +59,7 @@ export function BrandsSection() {
   }, [isModalOpen]);
 
   return (
-    <section className="pb-12 bg-background relative overflow-hidden border-t md:py-12 border-border/50">
+    <section aria-labelledby="integracoes-title" className="py-16 bg-background relative overflow-hidden border-t md:py-24 border-border/50">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col lg:flex-row gap-8 md:gap-16 lg:gap-24 items-start">
 
@@ -71,23 +71,23 @@ export function BrandsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
-                Sua operação conectada de ponta a ponta. <span className="text-brand">Sem gambiarras.</span>
+              <h2 id="integracoes-title" className="text-3xl md:text-5xl font-bold leading-tight mb-6">
+                Integrações com as ferramentas que sua operação <span className="text-brand">já usa.</span>
               </h2>
 
               <div className="space-y-6 text-lg md:text-xl text-muted-foreground leading-relaxed">
                 <p>
-                  Seu tráfego, CRM, gateway de pagamento e ERP precisam falar a mesma língua em tempo real.
+                  Os produtos que construímos se conectam a CRM, meios de pagamento, nota fiscal, marketplaces e plataformas de anúncios.
                 </p>
                 <p>
-                  A TZOLKIN constrói a ponte que conecta suas ferramentas com estabilidade: <span className="text-foreground font-semibold">sem travar seu sistema, sem lentidão e sem risco de perda de pedidos.</span>
+                  Cada integração é listada na proposta, com o serviço externo envolvido e o custo, quando houver.
                 </p>
               </div>
 
               <div className="pt-8">
-                <Link href="/forms?interesse=consultoria">
+                <Link href="/forms">
                   <Button variant="primary" size="lg" className="px-8 group w-full md:w-auto hover:scale-105">
-                    Conectar as ferramentas da minha empresa
+                    Conversar sobre integrações
                     <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
@@ -236,12 +236,12 @@ export function BrandsSection() {
 
               <div id="microsservicos-modal-desc" className="space-y-4 text-muted-foreground leading-relaxed relative z-10">
                 <p>
-                  <strong className="text-foreground">Engenharia de Alta Concorrência:</strong> suportamos picos de vendas e tráfego pesado através de mensageria assíncrona (Redis pub/sub, RabbitMQ) e webhooks inteligentes.
+                  <strong className="text-foreground">Processamento assíncrono:</strong> quando o projeto pede, separamos tarefas pesadas da aplicação principal com filas e mensageria (por exemplo Redis ou RabbitMQ) e webhooks.
                 </p>
                 <ul className="list-disc pl-5 space-y-2 mt-4 text-sm md:text-base">
-                  <li>Filas assíncronas que nunca derrubam a aplicação principal</li>
-                  <li>Arquitetura orientada a eventos para respostas em milissegundos</li>
-                  <li>Sincronização em tempo real entre checkout, ERP e back-office</li>
+                  <li>Filas para tarefas demoradas, como envio de mensagens e emissão de nota</li>
+                  <li>Arquitetura orientada a eventos entre os sistemas conectados</li>
+                  <li>Sincronização entre checkout, ERP e back-office conforme o escopo</li>
                 </ul>
               </div>
 
