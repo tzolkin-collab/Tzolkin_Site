@@ -1,5 +1,3 @@
-'use client'
-import React from 'react'
 import Image from 'next/image'
 
 interface LogoMarqueeProps {
@@ -9,42 +7,34 @@ interface LogoMarqueeProps {
     bright?: boolean;
     invert?: boolean;
   }[]
+  /** Mantido por compatibilidade: a faixa agora é estática (sem animação). */
   speed?: number
 }
 
 /**
- * Faixa de logos em tom neutro (silhueta cinza) com animação CSS pura.
- * Todos os logos recebem o mesmo tratamento, o que dispensa o cartão escuro
- * para logos claros: brightness-0 vira silhueta preta e dark:invert, branca.
+ * Faixa de logos de clientes em escala de cinza, estática, como na Stripe.
+ * Sem animação contínua: evita recálculo de estilo por frame. Logos claros ganham um
+ * cartão escuro para não sumirem no fundo branco.
  */
-export function LogoMarquee({ items, speed = 1 }: LogoMarqueeProps) {
-  const duration = 30 / speed;
-
-  const renderSet = (keyPrefix: string) =>
-    items.map((item, index) => (
-      <div
-        key={`${keyPrefix}-${index}`}
-        className="relative mr-8 h-16 w-36 flex-[0_0_auto] md:mr-14 md:h-20 md:w-48"
-      >
-        <Image
-          src={item.logo}
-          alt={item.name}
-          fill
-          className="object-contain opacity-50 brightness-0 dark:invert"
-          sizes="(min-width: 768px) 192px, 144px"
-        />
-      </div>
-    ));
-
+export function LogoMarquee({ items }: LogoMarqueeProps) {
   return (
-    <div className="relative w-full overflow-hidden py-6">
-      <div
-        className="flex animate-marquee touch-pan-y items-center"
-        style={{ '--marquee-duration': `${duration}s` } as React.CSSProperties}
-      >
-        {renderSet('orig')}
-        {renderSet('dup')}
-      </div>
+    <div className="mx-auto max-w-[1200px] px-6 py-8 md:px-12">
+      <ul className="grid grid-cols-3 items-center justify-items-center gap-x-6 gap-y-6 sm:grid-cols-4 lg:grid-cols-6">
+        {items.map((item) => (
+          <li
+            key={item.name}
+            className={`relative h-12 w-full max-w-[140px] md:h-14 ${item.bright ? 'rounded-xl bg-neutral-900' : ''}`}
+          >
+            <Image
+              src={item.logo}
+              alt={item.name}
+              fill
+              className={`object-contain grayscale opacity-70 dark:opacity-80 ${item.bright ? 'p-2' : ''}`}
+              sizes="(min-width: 1024px) 140px, 33vw"
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
