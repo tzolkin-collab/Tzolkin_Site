@@ -24,7 +24,6 @@ const tzolkinLinks: FooterLink[] = [
 const contatoLinks: FooterLink[] = [
   { label: "Iniciar projeto", href: "/forms" },
   { label: "contato@tzolkin.com.br", href: "mailto:contato@tzolkin.com.br" },
-  // { label: "Consultor virtual", href: "/consultor" }, // Em breve — Enterprise
 ];
 
 const footerColumns: { title: string; links: FooterLink[] }[] = [
