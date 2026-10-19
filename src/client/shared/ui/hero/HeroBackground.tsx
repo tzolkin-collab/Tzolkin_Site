@@ -1,16 +1,27 @@
-/** Malha de gradientes radiais estática (CSS puro, sem animação). */
+import { GradientBands } from '@/client/shared/ui/assets';
+
+const MASK =
+  'linear-gradient(to left, #000 38%, rgba(0,0,0,0.45) 56%, transparent 82%), linear-gradient(to bottom, #000 58%, transparent 98%)';
+
+/**
+ * Faixas diagonais estáticas no canto superior direito, atrás da composição.
+ * A máscara (alpha) dissolve as faixas rumo à coluna de texto e à seção abaixo,
+ * então funciona igual no claro e no escuro. Só em lg+; no mobile as faixas
+ * ficam atrás do mockup (ver HeroMockups).
+ */
 export function HeroBackground() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0"
+      className="pointer-events-none absolute inset-y-0 right-0 hidden w-[66%] lg:block"
       style={{
-        backgroundImage: [
-          'radial-gradient(60% 50% at 85% 10%, color-mix(in oklab, var(--brand) 9%, transparent), transparent 70%)',
-          'radial-gradient(45% 45% at 100% 60%, color-mix(in oklab, var(--foreground) 5%, transparent), transparent 70%)',
-          'radial-gradient(50% 50% at 0% 0%, color-mix(in oklab, var(--foreground) 4%, transparent), transparent 70%)',
-        ].join(','),
+        WebkitMaskImage: MASK,
+        maskImage: MASK,
+        WebkitMaskComposite: 'source-in',
+        maskComposite: 'intersect',
       }}
-    />
+    >
+      <GradientBands variant="hero" drift={false} className="dark:opacity-75" />
+    </div>
   );
 }
