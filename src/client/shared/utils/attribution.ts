@@ -11,7 +11,7 @@
 const STORAGE_KEY = 'tz_attribution_v1';
 const PARAMS = [
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_tzolkin',
-  'meta_campaign_id', 'meta_adset_id', 'meta_ad_id', 'fbclid', 'gclid',
+  'meta_campaign_id', 'meta_adset_id', 'meta_ad_id', 'fbclid', 'gclid', 'wbraid', 'gbraid',
 ] as const;
 
 export type Attribution = Partial<Record<(typeof PARAMS)[number] | 'landing_page' | 'referrer', string>>;
