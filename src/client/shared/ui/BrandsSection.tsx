@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/client/shared/ui/Button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Plus, X, Network, QrCode, FileText, Box, Activity } from 'lucide-react';
+import { ArrowRight, Plus, X, Network, QrCode, FileText, Box, Activity, Plug } from 'lucide-react';
 
 interface IntegrationItem {
   name: string;
@@ -60,7 +60,11 @@ export function BrandsSection() {
 
   return (
     <section aria-labelledby="integracoes-title" className="py-16 bg-background relative overflow-hidden border-t md:py-24 border-border/50">
-      <div className="container mx-auto px-6 md:px-12">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_55%_45%_at_100%_0%,color-mix(in_srgb,var(--brand)_12%,transparent),transparent)]"
+      />
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="flex flex-col lg:flex-row gap-8 md:gap-16 lg:gap-24 items-start">
 
           {/* Text Content */}
@@ -71,6 +75,10 @@ export function BrandsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-foreground/70 mb-6 text-sm font-medium tracking-wider uppercase text-white">
+                <Plug size={14} aria-hidden="true" />
+                <span>Integrações</span>
+              </div>
               <h2 id="integracoes-title" className="text-3xl md:text-5xl font-bold leading-tight mb-6">
                 Integrações com as ferramentas que sua operação <span className="text-brand">já usa.</span>
               </h2>
@@ -86,7 +94,7 @@ export function BrandsSection() {
 
               <div className="pt-8">
                 <Link href="/forms">
-                  <Button variant="primary" size="lg" className="px-8 group w-full md:w-auto hover:scale-105">
+                  <Button variant="primary" size="lg" className="px-8 group w-full md:w-auto">
                     Conversar sobre integrações
                     <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </Button>
@@ -105,11 +113,11 @@ export function BrandsSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="aspect-square min-w-0 bg-card rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 hover:bg-brand/10 dark:hover:bg-brand/20 transition-all duration-300 group relative overflow-hidden border border-border/40 hover:border-brand/40 shadow-sm"
+                  className="aspect-square min-w-0 bg-card rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 hover:bg-brand/10 dark:hover:bg-brand/20 transition-all duration-300 group relative overflow-hidden border border-border/40 hover:border-brand/40 shadow-[0_2px_6px_rgba(0,0,0,0.03),0_12px_28px_-12px_rgba(0,0,0,0.16)]"
                 >
                   {integration.svg ? (
                     <div className="flex flex-col items-center justify-center gap-3 w-full h-full">
-                      <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                      <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center">
                         {integration.svgDark ? (
                           <>
                             <Image
@@ -143,7 +151,7 @@ export function BrandsSection() {
                     </div>
                   ) : integration.icon ? (
                     <div className="flex flex-col items-center justify-center gap-3 w-full h-full">
-                      <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 text-muted-foreground group-hover:text-foreground">
+                      <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-muted-foreground group-hover:text-foreground">
                         <integration.icon className="w-10 h-10 md:w-12 md:h-12" strokeWidth={1.5} />
                       </div>
                       <span className="font-bold text-center text-muted-foreground group-hover:text-foreground text-xs md:text-sm tracking-wide uppercase transition-colors">
@@ -152,7 +160,7 @@ export function BrandsSection() {
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center gap-2 p-2">
-                      <span className="font-extrabold text-center text-foreground uppercase tracking-wider text-sm md:text-lg break-words transform group-hover:scale-105 transition-transform duration-300">
+                      <span className="font-extrabold text-center text-foreground uppercase tracking-wider text-sm md:text-lg break-words">
                         {integration.name}
                       </span>
                       <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold border border-border px-2 py-0.5 rounded-full">
@@ -180,9 +188,9 @@ export function BrandsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: integrations.length * 0.05 }}
-                className="aspect-square min-w-0 bg-brand/10 dark:bg-brand/20 cursor-pointer rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 hover:bg-brand/20 dark:hover:bg-brand/30 transition-colors group relative overflow-hidden border border-brand/50 hover:border-brand shadow-[0_0_15px_rgba(74,33,187,0.2)] dark:shadow-[0_0_15px_rgba(134,112,255,0.25)]"
+                className="aspect-square min-w-0 bg-brand/10 dark:bg-brand/20 cursor-pointer rounded-2xl flex flex-col items-center justify-center p-4 md:p-6 hover:bg-brand/20 dark:hover:bg-brand/30 transition-colors group relative overflow-hidden border border-brand/50 hover:border-brand shadow-lg shadow-brand/15"
               >
-                <Plus className="w-10 h-10 mb-2 text-brand group-hover:scale-125 transition-transform duration-300" />
+                <Plus className="w-10 h-10 mb-2 text-brand" />
                 <span className="font-bold text-center text-foreground uppercase tracking-wider md:tracking-widest text-xs md:text-base break-words">
                   Microsserviços
                 </span>
@@ -201,7 +209,7 @@ export function BrandsSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeModal}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
           >
             <motion.div
               role="dialog"
