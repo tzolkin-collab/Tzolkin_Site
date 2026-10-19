@@ -4,40 +4,31 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Project } from '@/client/shared/data/projects';
+import { SectionHeader } from './SectionHeader';
 
 interface MajorPartnershipsProps {
   partnerships: Project[];
 }
 
-function PartnershipCardMedia({ project }: { project: Project }) {
+function PartnerLogo({ project }: { project: Project }) {
   const [logoFailed, setLogoFailed] = useState(false);
   const showLogo = Boolean(project.logo) && !logoFailed;
 
   return (
-    <div className="aspect-[16/10] bg-neutral-950 dark:bg-white mb-8 overflow-hidden relative flex items-center justify-center p-8 md:p-16 transition-all duration-500 rounded-3xl group-hover:-translate-y-2 z-10 shadow-xl border border-white/5 dark:border-black/5 group-hover:border-brand/30">
-      {/* Fallback visual: logo ausente ou falha de carregamento */}
-      {!showLogo && (
-        <div className="absolute inset-0 z-[5] flex items-center justify-center bg-muted">
-          <span className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-muted-foreground text-center px-8">
-            {project.name}
-          </span>
-        </div>
-      )}
-
-      {/* Main Content - Project Logo */}
-      {showLogo && (
-        <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105">
-          <Image
-            src={project.logo}
-            alt={`Logo ${project.name}`}
-            fill
-            loading="lazy"
-            quality={75}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-contain brightness-0 invert dark:invert-0"
-            onError={() => setLogoFailed(true)}
-          />
-        </div>
+    <div className="relative flex h-32 items-center justify-center rounded-xl bg-muted/60">
+      {showLogo ? (
+        <Image
+          src={project.logo}
+          alt={`Logo ${project.name}`}
+          fill
+          loading="lazy"
+          quality={75}
+          sizes="(max-width: 768px) 90vw, 560px"
+          className="object-contain p-3 opacity-70 brightness-0 dark:invert"
+          onError={() => setLogoFailed(true)}
+        />
+      ) : (
+        <span className="px-8 text-center text-xl font-semibold tracking-tight text-muted-foreground">{project.name}</span>
       )}
     </div>
   );
@@ -45,44 +36,31 @@ function PartnershipCardMedia({ project }: { project: Project }) {
 
 export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
   return (
-    <section className="py-20 md:py-24 bg-background relative overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 md:mb-24 items-start"
-        >
-          <h2 className="text-[11vw] md:text-[6vw] leading-[0.9] font-bold tracking-tight text-foreground uppercase mix-blend-normal">
-            Parcerias <br />
-            <span className="text-brand">da TZOLKIN</span>
-          </h2>
-          <p className="mt-8 text-lg text-foreground max-w-xl">
-            Organizações com as quais mantemos parceria em tecnologia.
-          </p>
-        </motion.div>
+    <section aria-labelledby="parcerias-title" className="bg-background py-20 md:py-28">
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <SectionHeader
+          id="parcerias-title"
+          eyebrow="Parcerias"
+          title="Organizações com as quais"
+          muted="mantemos parceria em tecnologia."
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-24">
+        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
           {partnerships.map((project, index) => (
             <motion.div
               key={project.name}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className={`group cursor-pointer relative ${index % 2 !== 0 ? 'md:mt-24' : ''}`}
+              transition={{ duration: 0.35, delay: index * 0.05 }}
+              className="rounded-2xl border border-border bg-card p-5"
             >
-              {/* Card Container */}
-              <PartnershipCardMedia project={project} />
-
-              {/* Text Content */}
-              <div className="flex flex-col border-l-2 border-transparent group-hover:border-brand transition-colors duration-500 relative z-10">
-                <div className="transition-transform duration-500 group-hover:translate-x-8">
-                  <h3 className="text-4xl font-bold mb-3 tracking-tight group-hover:text-brand transition-colors">{project.name}</h3>
-                  <span className="text-base text-muted-foreground uppercase tracking-widest font-medium">Parceria Estratégica &bull; {project.year}</span>
-                </div>
+              <PartnerLogo project={project} />
+              <div className="mt-5 flex items-baseline justify-between gap-3">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">{project.name}</h3>
+                <span className="text-sm text-muted-foreground">{project.year}</span>
               </div>
+              <p className="mt-1 text-sm text-muted-foreground">Parceria estratégica</p>
             </motion.div>
           ))}
         </div>

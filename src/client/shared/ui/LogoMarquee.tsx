@@ -12,48 +12,38 @@ interface LogoMarqueeProps {
   speed?: number
 }
 
+/**
+ * Faixa de logos em tom neutro (silhueta cinza) com animação CSS pura.
+ * Todos os logos recebem o mesmo tratamento, o que dispensa o cartão escuro
+ * para logos claros: brightness-0 vira silhueta preta e dark:invert, branca.
+ */
 export function LogoMarquee({ items, speed = 1 }: LogoMarqueeProps) {
-  // Speed factor to adjust animation duration
-  // Default 20s for speed 1. Higher speed = Lower duration.
   const duration = 30 / speed;
 
+  const renderSet = (keyPrefix: string) =>
+    items.map((item, index) => (
+      <div
+        key={`${keyPrefix}-${index}`}
+        className="relative mr-8 h-16 w-36 flex-[0_0_auto] md:mr-14 md:h-20 md:w-48"
+      >
+        <Image
+          src={item.logo}
+          alt={item.name}
+          fill
+          className="object-contain opacity-50 brightness-0 dark:invert"
+          sizes="(min-width: 768px) 192px, 144px"
+        />
+      </div>
+    ));
+
   return (
-    <div className="w-full overflow-hidden bg-background py-8 border-y border-border relative z-20">
+    <div className="relative w-full overflow-hidden py-6">
       <div
         className="flex animate-marquee touch-pan-y items-center"
         style={{ '--marquee-duration': `${duration}s` } as React.CSSProperties}
       >
-        {/* First Set */}
-        {items.map((item, index) => (
-          <div
-            key={`orig-${index}`}
-            className={`flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 md:h-20 opacity-90 hover:opacity-100 transition-opacity duration-300 ${item.bright ? 'w-16 md:w-20 rounded-2xl bg-neutral-900' : 'w-32 md:w-48'}`}
-          >
-            <Image
-              src={item.logo}
-              alt={item.name}
-              fill
-              className={`object-contain ${item.bright ? 'p-3' : ''}`}
-              sizes="(min-width: 1024px) 192px, 128px"
-            />
-          </div>
-        ))}
-
-        {/* Duplicate Set for Infinite Loop */}
-        {items.map((item, index) => (
-          <div
-            key={`dup-${index}`}
-            className={`flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 md:h-20 opacity-90 hover:opacity-100 transition-opacity duration-300 ${item.bright ? 'w-16 md:w-20 rounded-2xl bg-neutral-900' : 'w-32 md:w-48'}`}
-          >
-            <Image
-              src={item.logo}
-              alt={item.name}
-              fill
-              className={`object-contain ${item.bright ? 'p-3' : ''}`}
-              sizes="(min-width: 1024px) 192px, 128px"
-            />
-          </div>
-        ))}
+        {renderSet('orig')}
+        {renderSet('dup')}
       </div>
     </div>
   )

@@ -2,13 +2,10 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
-import { Button } from '@/client/shared/ui/Button';
-import { Marquee } from '@/client/shared/ui/Marquee';
 import { LogoMarquee } from '@/client/shared/ui/LogoMarquee';
 import { Header } from '@/client/shared/ui/Header';
 import { projects } from '@/client/shared/data/projects';
 import { brands } from '@/client/shared/data/brands';
-import { applications } from '@/client/shared/data/homeData';
 
 import { PortfolioCarousel } from '@/client/shared/ui/PortfolioCarousel';
 import { MajorPartnerships } from '@/client/shared/ui/MajorPartnerships';
@@ -17,13 +14,11 @@ import { MethodTOISection } from '@/client/shared/ui/MethodTOISection';
 import { BrandsSection } from '@/client/shared/ui/BrandsSection';
 import { FounderSection } from '@/client/shared/ui/FounderSection';
 import { PricingSection } from '@/client/shared/ui/PricingSection';
+import { SectionHeader } from '@/client/shared/ui/SectionHeader';
+import { HeroBackground } from '@/client/shared/ui/hero/HeroBackground';
+import { HeroMockups } from '@/client/shared/ui/hero/HeroMockups';
+import { FinalCta } from '@/client/shared/ui/FinalCta';
 import { Footer } from '@/client/shared/ui/Footer';
-
-// Faixa de aplicações (substitui o marquee antigo de serviços).
-const MARQUEE_ITEMS = [
-  ...applications.map((a) => a.title),
-  ...applications.map((a) => a.title),
-];
 
 export function LandingPage() {
   const { regularProjects, partnershipProjects } = useMemo(() => {
@@ -44,61 +39,42 @@ export function LandingPage() {
       <Header />
 
       {/* ── Hero ── */}
-      <section className="flex-1 flex flex-col justify-center px-6 md:px-12 pt-32 pb-20 relative overflow-hidden bg-background">
-        <div className="max-w-[1400px] mx-auto w-full">
-          <p className="text-sm md:text-base font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-8 animate-[fadeIn_0.6s_var(--ease-sophisticated)_forwards]">
-            Software house · Produtos digitais e IA
-          </p>
-
-          <h1 className="sr-only">Desenhamos, criamos e evoluímos produtos digitais.</h1>
-
-          <div aria-hidden="true" className="overflow-hidden flex items-center gap-[2.5vw] md:gap-[2vw]">
-            <span className="shrink-0 flex flex-col text-[2.8vw] md:text-[1.3vw] leading-[1.5] font-semibold tracking-[0.2em] text-muted-foreground uppercase opacity-0 animate-[slideUp_0.6s_var(--ease-sophisticated)_0.08s_forwards]">
-              <span>Desenhamos</span>
-              <span>Criamos</span>
-              <span>Evoluímos</span>
-            </span>
-            <span className="text-[12vw] leading-[0.85] font-bold tracking-tight text-foreground/90 uppercase animate-[slideUp_0.6s_var(--ease-sophisticated)_forwards]">
-              Produtos
-            </span>
-          </div>
-          <div aria-hidden="true" className="overflow-hidden">
-            <span className="block text-[12vw] leading-[0.9] font-bold tracking-tight text-brand uppercase opacity-0 animate-[slideUp_0.6s_var(--ease-sophisticated)_0.16s_forwards]">
-              Digitais.
-            </span>
-          </div>
-
-          <div className="mt-12 md:mt-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 animate-[fadeIn_0.6s_var(--ease-sophisticated)_0.3s_forwards] opacity-0">
-            <p className="max-w-2xl text-lg md:text-xl text-foreground leading-relaxed">
+      <section className="relative overflow-hidden bg-background px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-40">
+        <HeroBackground />
+        <div className="relative mx-auto grid w-full max-w-[1200px] items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+          <div>
+            <p className="mb-6 inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
+              Software house · Produtos digitais e IA
+            </p>
+            <h1 className="text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.03em] text-foreground sm:text-6xl lg:text-[4.25rem]">
+              Desenhamos, criamos e evoluímos produtos digitais.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
               Da primeira jornada à evolução de um piloto, desenvolvemos software para sua empresa vender, atender e operar. CRMs, agentes de IA, lojas e marketplaces, com integrações e uma base preparada para a próxima etapa.
             </p>
-
-            <div className="flex flex-col items-start md:items-end gap-3">
-              <Link href="/forms" className="block">
-                <Button
-                  variant="brand"
-                  size="lg"
-                  className="px-12 shadow-xl"
-                >
-                  Conversar sobre meu projeto
-                </Button>
+            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Link
+                href="/forms"
+                className="inline-flex h-12 items-center rounded-full bg-brand px-7 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                Conversar sobre meu projeto
               </Link>
-              <p className="text-sm text-muted-foreground max-w-xs md:text-right">
-                Suítes de dois meses, conforme o escopo. O valor é apresentado na proposta, com infraestrutura e serviços externos discriminados.
-              </p>
+              <a href="#aplicacoes" className="text-sm font-semibold text-foreground hover:text-brand">
+                Ver aplicações <span aria-hidden="true">→</span>
+              </a>
             </div>
+            <p className="mt-6 max-w-md text-sm text-muted-foreground">
+              Suítes de dois meses, conforme o escopo. O valor é apresentado na proposta.
+            </p>
           </div>
+
+          <HeroMockups />
         </div>
       </section>
 
-      {/* Faixa de aplicações */}
-      <Marquee items={MARQUEE_ITEMS} speed={2} />
-
-      {/* Prova social logo abaixo do hero: clientes */}
-      <section aria-label="Clientes" className="bg-background">
-        <p className="text-center text-xs md:text-sm font-semibold tracking-[0.2em] text-muted-foreground uppercase pt-10 pb-2">
-          Empresas que já construíram com a TZOLKIN
-        </p>
+      {/* Clientes */}
+      <section aria-label="Clientes" className="border-y border-border bg-background py-8">
+        <p className="px-6 text-center text-sm text-muted-foreground">Empresas que já construíram com a TZOLKIN</p>
         <LogoMarquee items={brands} speed={0.8} />
       </section>
 
@@ -109,14 +85,12 @@ export function LandingPage() {
       <MethodTOISection />
 
       {/* Cases */}
-      <section id="cases" aria-labelledby="cases-title" className="bg-background relative overflow-hidden pt-15 md:py-24">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-12 animate-[fadeIn_0.6s_var(--ease-sophisticated)_0.3s_forwards] opacity-0">
-          <h2 id="cases-title" className="text-3xl md:text-5xl font-bold tracking-tight text-foreground uppercase max-w-3xl">
-            Projetos em que <span className="text-brand">já atuamos</span>
-          </h2>
-        </div>
-        <div className="max-w-full relative z-10">
-          <PortfolioCarousel projects={regularProjects} />
+      <section id="cases" aria-labelledby="cases-title" className="bg-background py-20 md:py-28">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+          <SectionHeader id="cases-title" eyebrow="Cases" title="Projetos em que" muted="já atuamos." />
+          <div className="mt-12">
+            <PortfolioCarousel projects={regularProjects} />
+          </div>
         </div>
       </section>
 
@@ -131,6 +105,8 @@ export function LandingPage() {
 
       {/* Quem somos */}
       <FounderSection />
+
+      <FinalCta />
 
       <Footer />
     </div>

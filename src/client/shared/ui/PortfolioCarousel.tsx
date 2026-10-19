@@ -3,118 +3,92 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import useEmblaCarousel from 'embla-carousel-react';
-import Autoplay from 'embla-carousel-autoplay';
+import { motion } from 'framer-motion';
 import { Project } from '@/client/shared/data/projects';
-import { InstagramEmbed } from './InstagramEmbed';
 
 interface PortfolioCarouselProps {
   projects: Project[];
-  showEmbeds?: boolean;
 }
 
-export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCarouselProps) {
-  const [emblaRef] = useEmblaCarousel({
-    loop: true,
-    align: 'start',
-    skipSnaps: false,
-    dragFree: true
-  }, [
-    Autoplay({ delay: 4000, stopOnInteraction: false })
-  ]);
-
+function CaseLogo({ project }: { project: Project }) {
   return (
-    <div className="w-full relative overflow-hidden" ref={emblaRef}>
-      <div className="flex touch-pan-y gap-8 md:gap-12 px-4 md:px-0 items-start">
-        {projects.map((project, index) => {
-          const projectUrl = project.website || project.instagram;
+    <div className="relative flex h-28 items-center justify-center rounded-xl bg-muted/60 px-8">
+      {project.logo ? (
+        <Image
+          src={project.logo}
+          alt={`Logo de ${project.name}`}
+          fill
+          loading="lazy"
+          quality={75}
+          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 380px"
+          className="object-contain p-2 opacity-70 brightness-0 dark:invert"
+        />
+      ) : (
+        <span className="text-center text-lg font-semibold tracking-tight text-muted-foreground">{project.name}</span>
+      )}
+    </div>
+  );
+}
 
-          return (
-            <div
-              key={`${project.name}-${index}`}
-              className="flex-[0_0_100%] sm:flex-[0_0_350px] md:flex-[0_0_400px] min-w-0 pl-4 relative"
-            >
-              <div className="group cursor-pointer relative">
-
-                {showEmbeds && project.instagramPostUrl ? (
-                  <div className="mb-6 relative z-10 transition-transform duration-500 group-hover:-translate-y-2">
-                    <div className="overflow-hidden rounded-xl shadow-2xl bg-white dark:bg-black">
-                      <InstagramEmbed url={project.instagramPostUrl} />
-                    </div>
-                  </div>
-                ) : (
-                  projectUrl ? (
-                    <Link href={projectUrl} target="_blank" rel="noopener noreferrer" className="block mb-6 relative z-10 transition-transform duration-500 group-hover:-translate-y-2">
-                      <div className="aspect-square md:rounded-[240px] bg-white/100 overflow-hidden relative flex items-center justify-center p-12 shadow-2xl rounded-sm">
-                        {/* Main Content - Project Logo */}
-                        <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105 flex items-center justify-center">
-                          {project.logo ? (
-                            <Image
-                              src={project.logo}
-                              alt={`Logo de ${project.name}`}
-                              fill
-                              loading="lazy"
-                              quality={75}
-                              sizes="(max-width: 640px) 85vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
-                              className={`object-contain transition-transform duration-500 ${project.bright ? 'brightness-0' : ''} ${project.invert ? 'invert dark:invert-0' : ''}`}
-                            />
-                          ) : (
-                            <span className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-neutral-500 dark:text-neutral-400 text-center px-4">
-                              {project.name}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                  ) : (
-                    <div className="aspect-square md:rounded-[240px] bg-neutral-950 dark:bg-white mb-6 overflow-hidden relative flex items-center justify-center p-12 transition-transform duration-500 group-hover:-translate-y-2 z-10 shadow-2xl rounded-sm">
-                      {/* Main Content - Project Logo */}
-                      <div className="relative w-full h-full z-10 transition-transform duration-500 group-hover:scale-105 flex items-center justify-center">
-                        {project.logo ? (
-                          <Image
-                            src={project.logo}
-                            alt={`Logo de ${project.name}`}
-                            fill
-                            loading="lazy"
-                            quality={75}
-                            sizes="(max-width: 640px) 85vw, (max-width: 768px) 45vw, (max-width: 1024px) 25vw, 20vw"
-                            className={`object-contain transition-transform duration-500 ${project.bright ? 'brightness-0' : ''} ${project.invert ? 'invert dark:invert-0' : ''}`}
-                          />
-                        ) : (
-                          <span className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-neutral-500 dark:text-neutral-400 text-center px-4">
-                            {project.name}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )
-                )}
-
-                <div className="flex justify-between items-baseline border-b border-foreground/10 pb-4 group-hover:border-foreground transition-colors duration-300 relative z-10">
-                  <h3 className="text-2xl font-medium">{project.name}</h3>
-                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{project.year}</span>
-                </div>
-
-                {(project.description || project.role || project.stage) && (
-                  <div className="mt-4 space-y-1 text-sm leading-relaxed relative z-10">
-                    {project.description && <p className="text-foreground">{project.description}</p>}
-                    {project.role && (
-                      <p className="text-muted-foreground">
-                        <span className="font-semibold text-foreground">O que a TZOLKIN fez:</span> {project.role}
-                      </p>
-                    )}
-                    {project.stage && (
-                      <p className="text-muted-foreground">
-                        <span className="font-semibold text-foreground">Estágio:</span> {project.stage}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
+/**
+ * Grade de cases. Mantém o nome do componente por compatibilidade, mas não é
+ * mais um carrossel: sem autoplay/JS contínuo, apenas cartões estáticos.
+ */
+export function PortfolioCarousel({ projects }: PortfolioCarouselProps) {
+  return (
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project, index) => {
+        const projectUrl = project.website || project.instagram;
+        const body = (
+          <>
+            <CaseLogo project={project} />
+            <div className="mt-5 flex items-baseline justify-between gap-3">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">{project.name}</h3>
+              <span className="text-sm text-muted-foreground">{project.year}</span>
             </div>
-          )
-        })}
-      </div>
+            {project.description && <p className="mt-2 text-sm leading-relaxed text-foreground">{project.description}</p>}
+            {(project.role || project.stage) && (
+              <dl className="mt-4 space-y-1.5 border-t border-border pt-4 text-sm">
+                {project.role && (
+                  <div>
+                    <dt className="inline font-medium text-foreground">O que a TZOLKIN fez: </dt>
+                    <dd className="inline text-muted-foreground">{project.role}</dd>
+                  </div>
+                )}
+                {project.stage && (
+                  <div>
+                    <dt className="inline font-medium text-foreground">Estágio: </dt>
+                    <dd className="inline text-muted-foreground">{project.stage}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+            {projectUrl && (
+              <span className="mt-4 inline-block text-sm font-semibold text-brand">
+                Visitar <span aria-hidden="true">→</span>
+              </span>
+            )}
+          </>
+        );
+        const cls = 'block h-full rounded-2xl border border-border bg-card p-5 transition-colors hover:border-foreground/25';
+        return (
+          <motion.div
+            key={`${project.name}-${index}`}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, delay: Math.min(index, 3) * 0.05 }}
+          >
+            {projectUrl ? (
+              <Link href={projectUrl} target="_blank" rel="noopener noreferrer" className={cls}>
+                {body}
+              </Link>
+            ) : (
+              <div className={cls}>{body}</div>
+            )}
+          </motion.div>
+        );
+      })}
     </div>
   );
 }
