@@ -19,7 +19,7 @@ export function MethodTOISection() {
           </p>
         </div>
 
-        <ul className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <ul className="flex flex-col gap-6 md:gap-8">
           {buildCommitments.map((item, index) => {
             const Icon = icons[index] ?? Code2;
             return (
@@ -28,22 +28,34 @@ export function MethodTOISection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                className="flex"
+                transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-                <article className="w-full bg-card border border-border rounded-3xl p-7 md:p-8 shadow-lg">
-                  <Icon size={28} strokeWidth={1.75} className="text-brand mb-5" aria-hidden="true" />
-                  <h3 className="text-2xl font-bold text-card-foreground tracking-tight mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-6">{item.summary}</p>
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">O que é entregue</p>
-                  <ul className="space-y-3">
-                    {item.deliverables.map((d) => (
-                      <li key={d} className="flex gap-3 text-card-foreground/90 leading-relaxed">
-                        <Check size={18} className="text-brand shrink-0 mt-1" aria-hidden="true" />
-                        <span>{d}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <article className="relative overflow-hidden rounded-3xl border border-brand/20 bg-gradient-to-br from-brand/10 via-card to-card shadow-2xl p-7 md:p-12 flex flex-col md:flex-row gap-8 md:gap-14 md:items-center">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent pointer-events-none" aria-hidden="true" />
+
+                  <div className="relative flex-1 space-y-5">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-brand2 flex items-center justify-center shadow-lg shadow-brand/30">
+                      <Icon size={28} strokeWidth={1.75} className="text-brand-foreground drop-shadow-md" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-card-foreground mb-3 tracking-tight">{item.title}</h3>
+                      <p className="text-muted-foreground font-medium leading-relaxed text-base md:text-lg">{item.summary}</p>
+                    </div>
+                  </div>
+
+                  <div className="relative flex-1 w-full">
+                    <p className="text-xs font-bold uppercase tracking-widest text-brand-ink mb-4">O que é entregue</p>
+                    <ul className="space-y-3">
+                      {item.deliverables.map((d) => (
+                        <li key={d} className="flex gap-3 text-base md:text-lg text-card-foreground/90 leading-relaxed">
+                          <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand/15 border border-brand/30">
+                            <Check size={14} className="text-brand-ink" aria-hidden="true" />
+                          </span>
+                          <span>{d}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </article>
               </motion.li>
             );
