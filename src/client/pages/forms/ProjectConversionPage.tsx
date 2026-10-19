@@ -172,7 +172,7 @@ function ProjectForm() {
       </div>
       {error && <p role="alert" className="text-sm text-rose-500 font-medium">{error}</p>}
       <p className="text-sm text-muted-foreground">
-        Suítes de dois meses, de R$ 7 mil a R$ 29,8 mil, conforme o escopo. Infraestrutura e serviços externos discriminados na proposta.
+        Suítes de dois meses, conforme o escopo. O valor é apresentado na proposta, com infraestrutura e serviços externos discriminados.
       </p>
       <Button type="submit" disabled={submitting} variant="brand" size="lg" className="w-full gap-2">
         {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

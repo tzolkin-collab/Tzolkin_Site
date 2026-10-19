@@ -27,13 +27,13 @@ export function LogoMarquee({ items, speed = 1 }: LogoMarqueeProps) {
         {items.map((item, index) => (
           <div
             key={`orig-${index}`}
-            className="flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 w-32 md:h-20 md:w-48 opacity-90 hover:opacity-100 transition-all duration-300 hover:scale-105"
+            className={`flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 md:h-20 opacity-90 hover:opacity-100 transition-opacity duration-300 ${item.bright ? 'w-16 md:w-20 rounded-2xl bg-neutral-900' : 'w-32 md:w-48'}`}
           >
             <Image
               src={item.logo}
               alt={item.name}
               fill
-              className="object-contain"
+              className={`object-contain ${item.bright ? 'p-3' : ''}`}
               sizes="(min-width: 1024px) 192px, 128px"
             />
           </div>
@@ -43,13 +43,13 @@ export function LogoMarquee({ items, speed = 1 }: LogoMarqueeProps) {
         {items.map((item, index) => (
           <div
             key={`dup-${index}`}
-            className="flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 w-32 md:h-20 md:w-48 opacity-90 hover:opacity-100 transition-all duration-300 hover:scale-105"
+            className={`flex-[0_0_auto] min-w-0 mr-12 md:mr-24 relative h-16 md:h-20 opacity-90 hover:opacity-100 transition-opacity duration-300 ${item.bright ? 'w-16 md:w-20 rounded-2xl bg-neutral-900' : 'w-32 md:w-48'}`}
           >
             <Image
               src={item.logo}
               alt={item.name}
               fill
-              className="object-contain"
+              className={`object-contain ${item.bright ? 'p-3' : ''}`}
               sizes="(min-width: 1024px) 192px, 128px"
             />
           </div>

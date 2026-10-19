@@ -1,7 +1,7 @@
 export const CTA_HREF = "/forms?aplicacao=crm-ia&suite=integrada";
 export const CTA_LABEL = "Quero meu CRM com IA";
 export const PRICE_LINE =
-  "Suíte Integrada: R$ 14.900 por dois meses. Infraestrutura e serviços externos discriminados na proposta.";
+  "Suíte Integrada: dois meses de trabalho. O valor é apresentado na proposta, com infraestrutura e serviços externos discriminados.";
 
 export const forWho = [
   "Equipe comercial que recebe contatos por WhatsApp, formulário e anúncios e perde o contexto de cada conversa.",
@@ -93,7 +93,7 @@ export type FaqItem = { q: string; a: string };
 export const faq: FaqItem[] = [
   {
     q: "Quanto custa?",
-    a: "A Suíte Integrada custa R$ 14.900 por dois meses. Infraestrutura e serviços externos (hospedagem, mensagens, uso de IA) são discriminados na proposta, porque dependem do seu volume.",
+    a: "O valor da Suíte Integrada é apresentado na proposta, conforme o escopo, e cobre dois meses de trabalho. Infraestrutura e serviços externos (hospedagem, mensagens, uso de IA) são discriminados na proposta, porque dependem do seu volume.",
   },
   {
     q: "Em quanto tempo fica pronto?",

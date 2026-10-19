@@ -105,8 +105,6 @@ export const buildCommitments: CommitmentItem[] = [
 export interface ContractSuite {
   slug: 'recorte' | 'integrada' | 'completa';
   name: string;
-  pricePrefix?: string;
-  price: string;
   summary: string;
   scope: string;
   integrations: string;
@@ -116,16 +114,13 @@ export interface ContractSuite {
   highlight?: boolean;
 }
 
-// Preços confirmados pelo PO: Integrada R$ 14.900, Completa R$ 29.800 e
-// entrada "a partir de R$ 7 mil" (recorte pequeno sobre base existente).
+// Decisão do PO: preços NÃO são exibidos no site; o valor é apresentado na proposta.
 // Os textos de escopo/integrações/acompanhamento são rascunho a validar pelo PO.
-// TODO(PO): quarta faixa pendente (nome e valor ainda não definidos). Não inventar.
+// TODO(PO): quarta faixa pendente (nome ainda não definido). Não inventar.
 export const contractSuites: ContractSuite[] = [
   {
     slug: 'recorte',
     name: 'Recorte',
-    pricePrefix: 'a partir de',
-    price: 'R$ 7 mil',
     summary: 'Um recorte pequeno sobre uma base que já existe.',
     scope: 'Um módulo, ajuste ou evolução delimitado, sobre um sistema ou piloto existente.',
     integrations: 'Integrações pontuais, listadas na proposta.',
@@ -136,7 +131,6 @@ export const contractSuites: ContractSuite[] = [
   {
     slug: 'integrada',
     name: 'Integrada',
-    price: 'R$ 14.900',
     summary: 'Uma aplicação em produção, conectada ao que ela precisa.',
     scope: 'Uma das aplicações desta página, do desenho à entrada em funcionamento.',
     integrations:
@@ -149,7 +143,6 @@ export const contractSuites: ContractSuite[] = [
   {
     slug: 'completa',
     name: 'Completa',
-    price: 'R$ 29.800',
     summary: 'Escopo amplo, com mais de uma frente no mesmo ciclo.',
     scope: 'Duas ou mais aplicações conectadas entre si, ou um produto de escopo mais amplo.',
     integrations: 'Integrações em maior número e profundidade, definidas no escopo.',

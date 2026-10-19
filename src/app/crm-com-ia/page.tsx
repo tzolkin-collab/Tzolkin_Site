@@ -4,7 +4,7 @@ import { CrmIaPage } from "@/client/pages/crm-ia/CrmIaPage";
 const URL = "https://tzolkin.cloud/crm-com-ia";
 const title = "CRM com IA para equipes comerciais | TZOLKIN";
 const description =
-  "CRM com IA integrado: recebe a oportunidade, organiza o contexto, registra os dados e encaminha ao responsável. Suíte Integrada: R$ 14.900 por dois meses.";
+  "CRM com IA integrado: recebe a oportunidade, organiza o contexto, registra os dados e encaminha ao responsável. Suíte Integrada de dois meses, com valor apresentado na proposta.";
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -38,8 +38,6 @@ const jsonLd = {
   areaServed: "BR",
   offers: {
     "@type": "Offer",
-    price: "14900",
-    priceCurrency: "BRL",
     description: "Dois meses. Infraestrutura e serviços externos discriminados na proposta.",
   },
 };

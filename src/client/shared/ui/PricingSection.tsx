@@ -16,7 +16,7 @@ export function PricingSection() {
             Como contratar: <span className="text-brand">suítes de dois meses.</span>
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            Cada suíte tem escopo, prazo e valor definidos antes de começar. O preço cobre os dois meses de trabalho da equipe.
+            Cada suíte tem escopo e prazo definidos antes de começar. O valor é apresentado na proposta, conforme o escopo, e cobre os dois meses de trabalho da equipe.
           </p>
         </div>
 
@@ -39,12 +39,8 @@ export function PricingSection() {
                 <h3 className="text-2xl font-bold text-card-foreground tracking-tight">{suite.name}</h3>
                 <p className="mt-2 text-muted-foreground leading-relaxed">{suite.summary}</p>
 
-                <p className="mt-6 text-card-foreground">
-                  {suite.pricePrefix && (
-                    <span className="block text-sm font-semibold uppercase tracking-widest text-muted-foreground">{suite.pricePrefix}</span>
-                  )}
-                  <span className="text-4xl font-bold tracking-tight">{suite.price}</span>
-                  <span className="block text-sm text-muted-foreground mt-1">pelos dois meses, mais custos externos</span>
+                <p className="mt-6 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+                  Dois meses · valor na proposta
                 </p>
 
                 <dl className="mt-6 space-y-4 flex-1">
@@ -74,7 +70,7 @@ export function PricingSection() {
         </ul>
 
         <p className="mt-8 text-sm text-muted-foreground max-w-3xl leading-relaxed">
-          Valores pelos dois meses de trabalho. Infraestrutura, APIs e serviços de terceiros (hospedagem, mensageria, emissão fiscal, entre outros) são cobrados à parte e discriminados na proposta.
+          O valor cobre os dois meses de trabalho. Infraestrutura, APIs e serviços de terceiros (hospedagem, mensageria, emissão fiscal, entre outros) são cobrados à parte e discriminados na proposta.
         </p>
       </div>
     </section>

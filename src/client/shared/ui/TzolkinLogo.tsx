@@ -91,18 +91,11 @@ export function TzolkinLogo({
     },
   };
 
+  // O brilho só aparece no hover. Antes pulsava em loop infinito com blur, o que reescrevia o SVG a cada frame
+  // em todas as páginas (Header e Footer) e travava a rolagem.
   const glowVariants: Variants = {
     initial: { opacity: 0, scale: 0.8 },
-    animate: {
-      opacity: [0, 0.3, 0],
-      scale: [0.8, 1.2, 0.9],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        repeatType: 'reverse' as const,
-        ease: 'easeInOut',
-      },
-    },
+    animate: { opacity: 0, scale: 0.8 },
     hover: {
       opacity: 0.55,
       scale: 1.3,

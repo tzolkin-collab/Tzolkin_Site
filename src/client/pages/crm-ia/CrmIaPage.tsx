@@ -150,11 +150,11 @@ export function CrmIaPage() {
           </div>
         </Section>
 
-        <Section id="custo" title="Custo total e o que acontece depois">
+        <Section id="custo" title="Proposta e o que acontece depois">
           <div className="mt-6 rounded-2xl border border-border p-6">
             <p className="text-lg font-semibold">{PRICE_LINE}</p>
             <p className="mt-3 text-muted-foreground">
-              Esse valor cobre o desenvolvimento descrito acima. Hospedagem, mensagens e uso de IA são cobrados por quem
+              O valor da proposta cobre o desenvolvimento descrito acima. Hospedagem, mensagens e uso de IA são cobrados por quem
               presta cada serviço, conforme o seu volume, e aparecem separados na proposta.
             </p>
           </div>

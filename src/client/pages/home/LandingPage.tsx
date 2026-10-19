@@ -70,7 +70,7 @@ export function LandingPage() {
                 </Button>
               </Link>
               <p className="text-sm text-muted-foreground max-w-xs md:text-right">
-                Suítes de dois meses, de R$ 7 mil a R$ 29,8 mil, conforme o escopo. Infraestrutura e serviços externos discriminados na proposta.
+                Suítes de dois meses, conforme o escopo. O valor é apresentado na proposta, com infraestrutura e serviços externos discriminados.
               </p>
             </div>
           </div>
@@ -79,6 +79,14 @@ export function LandingPage() {
 
       {/* Faixa de aplicações */}
       <Marquee items={MARQUEE_ITEMS} speed={2} />
+
+      {/* Prova social logo abaixo do hero: clientes */}
+      <section aria-label="Clientes" className="bg-background">
+        <p className="text-center text-xs md:text-sm font-semibold tracking-[0.2em] text-muted-foreground uppercase pt-10 pb-2">
+          Empresas que já construíram com a TZOLKIN
+        </p>
+        <LogoMarquee items={brands} speed={0.8} />
+      </section>
 
       {/* Aplicações */}
       <ServicesSection />
@@ -109,9 +117,6 @@ export function LandingPage() {
 
       {/* Quem somos */}
       <FounderSection />
-
-      {/* Logo Marquee Separator */}
-      <LogoMarquee items={brands || []} speed={0.8} />
 
       <Footer />
     </div>
