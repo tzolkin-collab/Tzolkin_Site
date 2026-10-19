@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/client/shared/providers/ThemeProvider";
 import { SmoothScrolling } from "@/client/shared/ui/SmoothScrolling";
 import { ScrollToTop } from "@/client/shared/ui/ScrollToTop";
 import { TrackingProvider } from "@/client/shared/ui/analytics/TrackingProvider";
-import { ChatProvider } from "@/client/shared/providers/ChatProvider";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -100,9 +99,7 @@ export default function RootLayout({
           <TrackingProvider />
           <ScrollToTop />
           <SmoothScrolling />
-          <ChatProvider>
-            {children}
-          </ChatProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>

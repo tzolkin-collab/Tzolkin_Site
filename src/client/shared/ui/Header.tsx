@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 import { ModeToggle } from './ModeToggle';
 import Link from 'next/link';
 import { TzolkinLogo } from './TzolkinLogo';
@@ -24,8 +23,6 @@ const mobileMenuItems: MenuItem[] = [
 ];
 
 export function Header() {
-  const pathname = usePathname();
-  const isConsultor = pathname?.startsWith('/consultor');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const rafRef = useRef<number | null>(null);
@@ -73,15 +70,7 @@ export function Header() {
           </Link>
 
           {/* Navigation & Actions */}
-          {isConsultor ? (
-            <div className="flex items-center gap-4 z-50">
-              <div id="chat-header-actions" className="flex items-center gap-2"></div>
-              <div className="pl-4 border-l border-foreground/20 hidden md:block">
-                <ModeToggle />
-              </div>
-            </div>
-          ) : (
-            <>
+          <>
               {/* Desktop Navigation */}
               <nav className="hidden lg:flex items-center gap-6">
                 {menuItems.map((item) => (
@@ -120,8 +109,7 @@ export function Header() {
                   {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
               </div>
-            </>
-          )}
+          </>
         </div>
       </header >
 

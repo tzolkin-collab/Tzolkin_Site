@@ -1,10 +1,5 @@
-import { Suspense } from 'react';
-import { CompanyStep } from '@/client/shared/ui/forms/steps/CompanyStep';
+import { redirectToForms } from '@/lib/redirectToForms';
 
-export default function EmpresaPage() {
-  return (
-    <Suspense fallback={null}>
-      <CompanyStep />
-    </Suspense>
-  );
+export default function LegacyRedirect({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  return redirectToForms(searchParams);
 }

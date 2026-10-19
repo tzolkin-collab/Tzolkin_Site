@@ -14,6 +14,13 @@ test('rejects missing, malformed and oversized input', () => {
   for (const data of [null, [], {}, { ...valid, email: 'invalid' }, { ...valid, whatsapp: 'abc' }, { ...valid, service: 'forged' }, { ...valid, message: 'x'.repeat(5001) }, { ...valid, fullName: {} }]) assert.throws(() => validateLead(data));
 });
 test('custom project requires details on server', () => assert.throws(() => validateLead({ ...valid, service: 'Sob Demanda' })));
+for (const service of ['CRM com IA', 'Agentes de IA (mensagens e voz)', 'E-commerce e Marketplace', 'Automação fiscal', 'Evoluir um piloto', 'Outro projeto']) {
+  test(`aceita "${service}" com mensagem e exige a mensagem`, () => {
+    assert.equal(validateLead({ ...valid, service, message: 'Quero um piloto' }).service, service);
+    assert.throws(() => validateLead({ ...valid, service }), /MESSAGE_REQUIRED/);
+    assert.throws(() => validateLead({ ...valid, service, message: '   ' }), /MESSAGE_REQUIRED/);
+  });
+}
 test('body size is measured, not trusted from Content-Length', async () => {
   const request = new Request('http://localhost/api/leads', { method: 'POST', body: JSON.stringify(valid) });
   assert.deepEqual(await readLimitedJson(request), valid);

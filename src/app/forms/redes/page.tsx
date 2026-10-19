@@ -1,10 +1,5 @@
-import { Suspense } from 'react';
-import { SocialsStep } from '@/client/shared/ui/forms/steps/SocialsStep';
+import { redirectToForms } from '@/lib/redirectToForms';
 
-export default function RedesPage() {
-  return (
-    <Suspense fallback={null}>
-      <SocialsStep />
-    </Suspense>
-  );
+export default function LegacyRedirect({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  return redirectToForms(searchParams);
 }
