@@ -1,4 +1,4 @@
-export type EventName = 'lead' | 'initiate_checkout' | 'page_view' | 'form_started';
+export type EventName = 'lead' | 'initiate_checkout' | 'page_view' | 'form_started' | 'whatsapp_click';
 
 // Flag de debug: ativa em desenvolvimento ou via NEXT_PUBLIC_ANALYTICS_DEBUG=true
 const ANALYTICS_DEBUG =
