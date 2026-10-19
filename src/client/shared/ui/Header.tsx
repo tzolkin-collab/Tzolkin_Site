@@ -10,8 +10,8 @@ import { useLockBody } from '@/hooks/useLockBody';
 type MenuItem = { label: string; href: string; badge?: string };
 
 const menuItems: MenuItem[] = [
-  { label: 'Serviços', href: '/servicos' },
-  { label: 'Soluções', href: '/#products' },
+  { label: 'Aplicações', href: '/#aplicacoes' },
+  { label: 'Como contratar', href: '/#como-contratar' },
   // { label: 'Enterprise', href: '/enterprise' },     // Em breve
   // { label: 'Educacional', href: '/educacional' },   // Em breve
   // { label: 'Soluções', href: '/solucoes' },         // Em breve

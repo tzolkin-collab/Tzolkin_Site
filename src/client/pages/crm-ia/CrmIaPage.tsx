@@ -27,18 +27,20 @@ function Section({
   eyebrow,
   title,
   muted,
+  description,
   children,
 }: {
   id: string;
   eyebrow: string;
   title: string;
   muted?: string;
+  description?: string;
   children: React.ReactNode;
 }) {
   return (
     <section aria-labelledby={id} className="border-t border-border px-6 py-20 md:px-12 md:py-28">
       <div className="mx-auto max-w-[1200px]">
-        <SectionHeader id={id} eyebrow={eyebrow} title={title} muted={muted} />
+        <SectionHeader id={id} eyebrow={eyebrow} title={title} muted={muted} description={description} />
         <div className="mt-12 md:mt-14">{children}</div>
       </div>
     </section>
@@ -157,7 +159,7 @@ export function CrmIaPage() {
           </div>
         </Section>
 
-        <Section id="fluxo" eyebrow="Fluxo" title="Como o fluxo funciona." muted="Do primeiro contato ao acompanhamento, cada etapa fica registrada e com um responsável.">
+        <Section id="fluxo" eyebrow="Fluxo" title="Como o fluxo funciona." description="Do primeiro contato ao acompanhamento, cada etapa fica registrada e com um responsável.">
           <FlowDiagram />
         </Section>
 

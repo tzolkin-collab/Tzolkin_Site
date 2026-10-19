@@ -14,7 +14,7 @@ export function FinalCta() {
           Vamos desenhar o seu próximo produto.
         </h2>
         <p className="mt-5 max-w-xl text-lg text-neutral-300">
-          Conte o que você precisa. Respondemos com escopo, prazo e proposta.
+          Conte o que você precisa construir ou melhorar e a equipe retorna pelo canal que você escolher.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
           <Link
@@ -22,9 +22,6 @@ export function FinalCta() {
             className="inline-flex h-12 items-center rounded-full bg-white px-7 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
           >
             Conversar sobre meu projeto
-          </Link>
-          <Link href="/forms/contato" className="text-sm font-semibold text-neutral-200 hover:text-white">
-            Falar com os fundadores <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>

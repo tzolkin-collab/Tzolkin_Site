@@ -32,8 +32,9 @@ export function ServicesSection() {
           <SectionHeader
             id="aplicacoes-title"
             eyebrow="Aplicações"
-            title="Software para vender, atender e operar."
-            muted="Cinco frentes em que já desenhamos e entregamos. O escopo final é definido em conversa."
+            title="Software para vender,"
+            muted="atender e operar."
+            description="Cinco frentes em que já desenhamos e entregamos. O escopo final é definido em conversa."
           />
         </div>
 

@@ -2,23 +2,22 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { TzolkinLogo } from "./TzolkinLogo";
-import { appendTzolkinUtm } from "@/client/shared/utils/utm";
 
 type FooterLink = { label: string; href: string; badge?: string };
 
-// Pontual & Ecossistema de Serviços
-const pontualLinks: FooterLink[] = [
-  { label: "Serviços", href: "/servicos" },
-  { label: "Landing Pages & Sites", href: appendTzolkinUtm("https://sites.tzolkin.cloud") },
-  { label: "E-commerce Global", href: appendTzolkinUtm("https://ecom.tzolkin.cloud") },
-  { label: "Tracking de funil", href: "/servicos/tagueamento-de-fluxo" },
+const aplicacoesLinks: FooterLink[] = [
+  { label: "CRM com IA", href: "/crm-com-ia" },
+  { label: "Agentes de IA", href: "/forms?aplicacao=agentes-ia" },
+  { label: "E-commerce e marketplaces", href: "/forms?aplicacao=ecommerce-marketplace" },
+  { label: "Automação fiscal", href: "/forms?aplicacao=fiscal" },
+  { label: "Evoluir um piloto", href: "/forms?aplicacao=piloto" },
 ];
 
 const tzolkinLinks: FooterLink[] = [
+  { label: "Como construímos", href: "/#como-construimos" },
+  { label: "Como contratar", href: "/#como-contratar" },
   { label: "Cases", href: "/#cases" },
-  { label: "Catálogo Geral", href: "/catalogo" },
 ];
 
 const contatoLinks: FooterLink[] = [
@@ -27,7 +26,7 @@ const contatoLinks: FooterLink[] = [
 ];
 
 const footerColumns: { title: string; links: FooterLink[] }[] = [
-  { title: "Serviços", links: pontualLinks },
+  { title: "Aplicações", links: aplicacoesLinks },
   { title: "A TZOLKIN", links: tzolkinLinks },
   { title: "Contato", links: contatoLinks },
 ];
@@ -44,8 +43,8 @@ export function Footer() {
       <div className="max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-10">
           {/* Brand & CTA Section */}
-          <div className="md:col-span-6 flex flex-col justify-between">
-            <div className="mb-12">
+          <div className="md:col-span-6">
+            <div>
               <Link href="/" className="inline-block group select-none">
                 <div className="flex items-center gap-4 py-4">
                   <TzolkinLogo size={44} className="transition-transform duration-300 group-hover:scale-105" />
@@ -55,17 +54,10 @@ export function Footer() {
                 </div>
               </Link>
               <p className="mt-6 text-lg max-w-md leading-relaxed">
-                Sites, lojas, tracking de funil e software sob medida. A engenharia que a sua empresa precisa para vender mais e parar de perder margem de lucro.
+                Software house que desenha, cria e evolui produtos digitais com IA: CRMs, agentes, lojas e marketplaces, com segurança, infraestrutura dedicada e código limpo.
               </p>
             </div>
 
-            <Link
-              href="/forms"
-              className="inline-flex items-center gap-2 text-2xl md:text-3xl font-bold hover:text-brand transition-colors group w-fit"
-            >
-              <span>Pronto para destravar sua tecnologia?</span>
-              <ArrowUpRight className="w-8 h-8 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 text-brand" />
-            </Link>
           </div>
 
           {/* Links Section */}

@@ -16,8 +16,9 @@ export function MethodTOISection() {
           <SectionHeader
             id="como-construimos-title"
             eyebrow="Como construímos"
-            title="Três compromissos verificáveis."
-            muted="Cada um vira entrega concreta no projeto. Descrevemos o que você recebe, sem prometer certificações."
+            title="Três compromissos"
+            muted="verificáveis."
+            description="Cada um vira entrega concreta no projeto. Descrevemos o que você recebe, sem prometer certificações."
           />
         </div>
 
