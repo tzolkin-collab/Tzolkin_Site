@@ -119,7 +119,7 @@ export const projects: Project[] = [
     category: 'case',
     description: "Projeto de assinatura de marca própria.",
     role: "Arquitetura de software.",
-    website: "https://assinaturamarcapropria.com/",
+    website: "https://assinaturamarcapropria.com.br/",
     gallery: []
   }
 ];
