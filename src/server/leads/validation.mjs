@@ -1,3 +1,9 @@
+// Nesses serviços o formulário pergunta o que o visitante quer construir; sem a mensagem não há lead útil.
+export const messageRequiredServices = [
+  'CRM com IA', 'Agentes de IA (mensagens e voz)', 'E-commerce e Marketplace',
+  'Automação fiscal', 'Evoluir um piloto', 'Outro projeto',
+];
+
 export const services = new Set([
   'Landing Pages de Conversão', 'Sites Institucionais', 'E-commerce global',
   'Tracking de Funil', 'Cardápios Virtuais', 'Pagamentos Globais', 'API Pix',
@@ -6,6 +12,8 @@ export const services = new Set([
   // Os títulos que os formulários realmente oferecem (pricingData). Sem eles o servidor recusava o
   // carro-chefe: "Landing Pages de Alta Conversão". Os nomes antigos acima seguem aceitos.
   'Landing Pages de Alta Conversão', 'E-commerce Headless Next.js', 'Tracking de Funil Server-Side',
+  // Aplicações oferecidas pelo formulário de uma página (/forms).
+  ...messageRequiredServices,
 ]);
 
 // Atribuição é melhor-esforço: o lead NUNCA se perde por causa de UTM mal formado. Chave desconhecida ou
@@ -57,7 +65,7 @@ export function validateLead(input) {
   if (result.fullName.length < 2 || (!temEmail && !temWhatsapp)
     || (temEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.email))
     || (temWhatsapp && !/^\d{10,15}$/.test(result.whatsapp)) || !services.has(result.service)) throw new Error('INVALID_CONTACT');
-  if (result.service === 'Sob Demanda' && !result.message) throw new Error('MESSAGE_REQUIRED');
+  if ((result.service === 'Sob Demanda' || messageRequiredServices.includes(result.service)) && !result.message) throw new Error('MESSAGE_REQUIRED');
   const cleanAttribution = sanitizeAttribution(attribution);
   if (cleanAttribution) result.attribution = cleanAttribution;
   return result;

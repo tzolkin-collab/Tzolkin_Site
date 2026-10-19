@@ -1,10 +1,5 @@
-import { Suspense } from 'react';
-import { ContactStep } from '@/client/shared/ui/forms/steps/ContactStep';
+import { redirectToForms } from '@/lib/redirectToForms';
 
-export default function ContatoPage() {
-  return (
-    <Suspense fallback={null}>
-      <ContactStep />
-    </Suspense>
-  );
+export default function LegacyRedirect({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  return redirectToForms(searchParams);
 }

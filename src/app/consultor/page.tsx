@@ -1,7 +1,5 @@
-'use client';
+import { redirectToForms } from '@/lib/redirectToForms';
 
-import { ProjectConversionPage } from '@/client/pages/forms/ProjectConversionPage';
-
-export default function ConsultorPage() {
-  return <ProjectConversionPage />;
+export default function LegacyRedirect({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  return redirectToForms(searchParams);
 }

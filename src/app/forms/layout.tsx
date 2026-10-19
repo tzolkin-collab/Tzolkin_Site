@@ -3,7 +3,7 @@ import React from 'react';
 
 export const metadata = {
   title: 'Iniciar Projeto | TZOLKIN',
-  description: 'Converse com o consultor virtual ou envie os detalhes do seu projeto para receber uma proposta técnica.',
+  description: 'Conte o que você quer construir ou melhorar e a equipe da TZOLKIN responde pelo canal que você escolher.',
 };
 
 export default function FormsLayout({ children }: { children: React.ReactNode }) {
