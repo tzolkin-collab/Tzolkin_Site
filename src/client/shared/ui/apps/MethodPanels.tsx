@@ -1,92 +1,95 @@
-/** Painéis ilustrativos em fonte mono para "Como construímos". Exemplos, sem dados reais. */
+/**
+ * Painéis de código para "Como construímos", com o CodeBlock do kit.
+ * Exemplos ilustrativos: sem dados reais e sem promessa de certificação.
+ */
+import { CodeBlock, IllustrativeTag, tok } from '@/client/shared/ui/assets';
+import type { CodeLine } from '@/client/shared/ui/assets';
 
-const panel = 'relative overflow-hidden rounded-xl border border-border bg-muted/60 font-mono text-[12px] leading-relaxed text-foreground';
-
-function Bar({ label }: { label: string }) {
+function Wrap({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-2 text-[11px] text-muted-foreground">
-      <span className="truncate">{label}</span>
-      <span className="shrink-0 font-sans">Exemplo ilustrativo</span>
+    <div aria-hidden="true" inert className="min-w-0">
+      <div className="h-[272px]">{children}</div>
+      <IllustrativeTag className="mt-3" />
     </div>
   );
 }
 
+const permissoes: readonly CodeLine[] = [
+  [tok('cm', '// perfis e ações por área')],
+  [tok('kw', 'export const'), tok('var', ' perfis'), tok('punct', ' = {')],
+  [tok('plain', '  '), tok('var', 'admin'), tok('punct', ': ['), tok('str', '"ler"'), tok('punct', ', '), tok('str', '"editar"'), tok('punct', ', '), tok('str', '"excluir"'), tok('punct', '],')],
+  [tok('plain', '  '), tok('var', 'operador'), tok('punct', ': ['), tok('str', '"ler"'), tok('punct', ', '), tok('str', '"editar"'), tok('punct', '],')],
+  [tok('plain', '  '), tok('var', 'leitura'), tok('punct', ': ['), tok('str', '"ler"'), tok('punct', '],')],
+  [tok('punct', '} '), tok('kw', 'as const'), tok('punct', ';')],
+  [],
+  [tok('cm', '// segredos só no ambiente')],
+  [tok('kw', 'const'), tok('var', ' chave'), tok('punct', ' = '), tok('var', 'process.env.'), tok('num', 'API_KEY'), tok('punct', ';')],
+];
+
+const recursos: readonly CodeLine[] = [
+  [tok('cm', '# quem responde por cada recurso')],
+  [tok('fn', 'hospedagem'), tok('punct', ':'), tok('plain', '   '), tok('punct', '{ dono: '), tok('str', 'TZOLKIN'), tok('punct', ' }')],
+  [tok('fn', 'banco_dados'), tok('punct', ':'), tok('plain', '  '), tok('punct', '{ dono: '), tok('str', 'TZOLKIN'), tok('punct', ' }')],
+  [tok('fn', 'filas'), tok('punct', ':'), tok('plain', '        '), tok('punct', '{ dono: '), tok('str', 'TZOLKIN'), tok('punct', ' }')],
+  [],
+  [tok('cm', '# contas que ficam com você')],
+  [tok('fn', 'dominio'), tok('punct', ':'), tok('plain', '      '), tok('punct', '{ dono: '), tok('kw', 'Cliente'), tok('punct', ' }')],
+  [tok('fn', 'servicos_ext'), tok('punct', ':'), tok('plain', ' '), tok('punct', '{ dono: '), tok('kw', 'Cliente'), tok('punct', ' }')],
+];
+
+const terminal: readonly CodeLine[] = [
+  [tok('punct', '$ '), tok('fn', 'tree'), tok('plain', ' -L 1 projeto')],
+  [tok('plain', '├── '), tok('var', 'docs/')],
+  [tok('plain', '├── '), tok('var', 'src/')],
+  [tok('plain', '├── '), tok('var', 'tests/')],
+  [tok('plain', '├── '), tok('var', 'README.md')],
+  [tok('plain', '└── '), tok('var', 'HANDOFF.md')],
+  [],
+  [tok('punct', '$ '), tok('fn', 'npm'), tok('plain', ' test')],
+  [tok('str', '✓ '), tok('plain', 'fluxos críticos '), tok('cm', '(12)')],
+  [tok('str', '✓ '), tok('plain', 'permissões '), tok('cm', '(4)')],
+  [tok('str', '16 passaram'), tok('cm', ' · 0 falhas')],
+];
+
 export function PermissionsPanel() {
-  const head = ['Perfil', 'Ler', 'Editar', 'Excluir'];
-  const rows: [string, boolean, boolean, boolean][] = [
-    ['Admin', true, true, true],
-    ['Operador', true, true, false],
-    ['Leitura', true, false, false],
-  ];
   return (
-    <div className={panel} aria-hidden="true">
-      <Bar label="permissoes.md" />
-      <div className="grid grid-cols-[1.4fr_1fr_1fr_1fr] gap-y-2 px-4 py-4">
-        {head.map((h) => (
-          <span key={h} className="text-[11px] text-muted-foreground">{h}</span>
-        ))}
-        {rows.map(([name, ...v]) => (
-          <div key={name} className="contents">
-            <span>{name}</span>
-            {v.map((ok, i) => (
-              <span key={i} className={ok ? 'text-foreground' : 'text-muted-foreground/50'}>{ok ? '●' : '○'}</span>
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="border-t border-border px-4 py-2.5 text-[11px] text-muted-foreground">
-        <span className="text-brand">env</span> segredos fora do código
-      </div>
-    </div>
+    <Wrap>
+      <CodeBlock
+        className="h-full"
+        lines={permissoes}
+        tabs={[{ name: 'permissoes.ts', active: true }, { name: '.env.example' }]}
+        highlightLines={[9]}
+        ariaLabel="Exemplo de arquivo de permissões"
+      />
+    </Wrap>
   );
 }
 
 export function ResourcesPanel() {
-  const rows = [
-    ['Hospedagem', 'TZOLKIN'],
-    ['Banco de dados', 'TZOLKIN'],
-    ['Filas', 'TZOLKIN'],
-    ['Domínio', 'Cliente'],
-    ['Serviços externos', 'Cliente'],
-  ];
   return (
-    <div className={panel} aria-hidden="true">
-      <Bar label="recursos.md" />
-      <ul className="divide-y divide-border">
-        {rows.map(([r, o]) => (
-          <li key={r} className="flex items-center justify-between px-4 py-2">
-            <span>{r}</span>
-            <span className="rounded border border-border bg-card px-1.5 py-0.5 text-[10px] text-muted-foreground">{o}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Wrap>
+      <CodeBlock
+        className="h-full"
+        lines={recursos}
+        tabs={[{ name: 'recursos.yaml', active: true }, { name: 'infra.md' }]}
+        highlightLines={[7, 8]}
+        ariaLabel="Exemplo de arquivo de recursos e responsáveis"
+      />
+    </Wrap>
   );
 }
 
 export function RepoPanel() {
-  const lines: [string, string?][] = [
-    ['├─ docs/', 'arquitetura'],
-    ['├─ src/'],
-    ['├─ tests/', 'fluxos críticos'],
-    ['├─ README.md'],
-    ['└─ HANDOFF.md', 'fim do ciclo'],
-  ];
   return (
-    <div className={panel} aria-hidden="true">
-      <Bar label="repositório do cliente" />
-      <div className="space-y-1 px-4 py-4">
-        <div className="text-muted-foreground">cliente/projeto</div>
-        {lines.map(([f, note]) => (
-          <div key={f} className="flex justify-between gap-3 whitespace-nowrap">
-            <span>{f}</span>
-            {note && <span className="truncate text-muted-foreground">{note}</span>}
-          </div>
-        ))}
-      </div>
-      <div className="border-t border-border px-4 py-2.5 text-[11px] text-muted-foreground">
-        <span className="text-brand">✓</span> testes passando
-      </div>
-    </div>
+    <Wrap>
+      <CodeBlock
+        className="h-full"
+        variant="terminal"
+        title="projeto — zsh"
+        showLineNumbers={false}
+        lines={terminal}
+        ariaLabel="Exemplo de árvore do repositório e testes"
+      />
+    </Wrap>
   );
 }
