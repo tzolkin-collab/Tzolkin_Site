@@ -46,13 +46,27 @@ export function LandingPage() {
       {/* ── Hero ── */}
       <section className="flex-1 flex flex-col justify-center px-6 md:px-12 pt-32 pb-20 relative overflow-hidden bg-background">
         <div className="max-w-[1400px] mx-auto w-full">
-          <p className="text-sm md:text-base font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-6 animate-[fadeIn_0.6s_var(--ease-sophisticated)_forwards]">
+          <p className="text-sm md:text-base font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-8 animate-[fadeIn_0.6s_var(--ease-sophisticated)_forwards]">
             Software house · Produtos digitais e IA
           </p>
 
-          <h1 className="max-w-6xl text-[11vw] sm:text-6xl md:text-7xl lg:text-8xl leading-[1.02] font-bold tracking-tight text-foreground uppercase animate-[slideUp_0.6s_var(--ease-sophisticated)_forwards]">
-            Desenhamos, criamos e <span className="text-brand">evoluímos</span> produtos digitais.
-          </h1>
+          <h1 className="sr-only">Desenhamos, criamos e evoluímos produtos digitais.</h1>
+
+          <div aria-hidden="true" className="overflow-hidden flex items-center gap-[2.5vw] md:gap-[2vw]">
+            <span className="shrink-0 flex flex-col text-[2.8vw] md:text-[1.3vw] leading-[1.5] font-semibold tracking-[0.2em] text-muted-foreground uppercase opacity-0 animate-[slideUp_0.6s_var(--ease-sophisticated)_0.08s_forwards]">
+              <span>Desenhamos</span>
+              <span>Criamos</span>
+              <span>Evoluímos</span>
+            </span>
+            <span className="text-[12vw] leading-[0.85] font-bold tracking-tight text-foreground/90 uppercase animate-[slideUp_0.6s_var(--ease-sophisticated)_forwards]">
+              Produtos
+            </span>
+          </div>
+          <div aria-hidden="true" className="overflow-hidden">
+            <span className="block text-[12vw] leading-[0.9] font-bold tracking-tight text-brand uppercase opacity-0 animate-[slideUp_0.6s_var(--ease-sophisticated)_0.16s_forwards]">
+              Digitais.
+            </span>
+          </div>
 
           <div className="mt-12 md:mt-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 animate-[fadeIn_0.6s_var(--ease-sophisticated)_0.3s_forwards] opacity-0">
             <p className="max-w-2xl text-lg md:text-xl text-foreground leading-relaxed">
@@ -64,7 +78,7 @@ export function LandingPage() {
                 <Button
                   variant="brand"
                   size="lg"
-                  className="px-12 shadow-xl hover:scale-105 transition-transform"
+                  className="px-12 shadow-xl"
                 >
                   Conversar sobre meu projeto
                 </Button>

@@ -54,7 +54,7 @@ export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
           transition={{ duration: 0.6 }}
           className="mb-16 md:mb-24 items-start"
         >
-          <h2 className="text-[8vw] md:text-[4vw] leading-[0.9] font-bold tracking-tight text-foreground uppercase mix-blend-normal">
+          <h2 className="text-[11vw] md:text-[6vw] leading-[0.9] font-bold tracking-tight text-foreground uppercase mix-blend-normal">
             Parcerias <br />
             <span className="text-brand">da TZOLKIN</span>
           </h2>

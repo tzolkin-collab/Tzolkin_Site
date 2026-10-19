@@ -25,7 +25,7 @@ export function PortfolioCarousel({ projects, showEmbeds = false }: PortfolioCar
 
   return (
     <div className="w-full relative overflow-hidden" ref={emblaRef}>
-      <div className="flex touch-pan-y gap-8 md:gap-12 px-4 md:px-0 items-start" style={{ willChange: 'transform' }}>
+      <div className="flex touch-pan-y gap-8 md:gap-12 px-4 md:px-0 items-start">
         {projects.map((project, index) => {
           const projectUrl = project.website || project.instagram;
 

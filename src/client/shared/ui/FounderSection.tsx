@@ -15,7 +15,10 @@ export function FounderSection() {
           transition={{ duration: 0.8 }}
           className="max-w-3xl mx-auto"
         >
-          <h2 id="about-title" className="text-4xl md:text-6xl font-bold leading-tight mb-8">
+          <p className="text-xs md:text-sm font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-4">
+            Quem somos
+          </p>
+          <h2 id="about-title" className="text-[13vw] md:text-8xl leading-[0.9] font-bold tracking-tight uppercase mb-10">
             Quem constrói <span className="text-brand">com você.</span>
           </h2>
 
@@ -28,9 +31,13 @@ export function FounderSection() {
             </p>
           </div>
 
+          <p className="mt-12 border-l-4 border-brand pl-6 md:pl-10 text-2xl md:text-4xl font-bold leading-tight uppercase tracking-tight">
+            Escopo, prazo e custos combinados antes de começar.
+          </p>
+
           <div className="mt-12">
             <Link href="/forms/contato">
-              <Button variant="outline" size="lg" className="px-8 hover:scale-105">
+              <Button variant="outline" size="lg" className="px-8 ">
                 Falar diretamente com os fundadores
               </Button>
             </Link>
