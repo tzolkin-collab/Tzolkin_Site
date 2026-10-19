@@ -3,7 +3,6 @@
 import React, { Suspense, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle2, Loader2, MessageSquare, Send } from 'lucide-react';
-import { Button } from '@/client/shared/ui/Button';
 import { readAttribution } from '@/client/shared/utils/attribution';
 import { trackEvent } from '@/client/shared/utils/analytics';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
@@ -26,8 +25,8 @@ const SUITES: Record<string, string> = { recorte: 'Recorte', integrada: 'Integra
 
 const STAGES = ['Só a ideia', 'Tenho um piloto ou protótipo', 'Já opero e quero evoluir'] as const;
 
-const field = 'w-full px-4 py-2.5 rounded-xl bg-foreground/5 border border-border focus:border-brand outline-none text-sm text-foreground transition-all';
-const label = 'block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5';
+const field = 'w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 outline-none transition-shadow focus:border-brand focus:ring-2 focus:ring-brand/30';
+const label = 'mb-1.5 block text-xs font-medium text-muted-foreground';
 
 function ProjectForm() {
   const params = useSearchParams();
@@ -97,11 +96,11 @@ function ProjectForm() {
 
   if (done) {
     return (
-      <div className="p-6 rounded-2xl bg-brand/10 border border-brand/30 space-y-4 text-center my-6" role="status">
-        <div className="w-12 h-12 rounded-full bg-brand/20 text-brand mx-auto flex items-center justify-center">
+      <div className="my-6 space-y-4 rounded-2xl border border-border bg-card p-8 text-center" role="status">
+        <div className="w-12 h-12 rounded-full border border-border text-brand mx-auto flex items-center justify-center">
           <CheckCircle2 className="w-6 h-6" />
         </div>
-        <h2 className="text-lg font-bold text-foreground">Projeto recebido</h2>
+        <h2 className="text-lg font-semibold tracking-tight text-foreground">Projeto recebido</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
           Nossa equipe vai responder pelo canal que você escolheu. Se quiser adiantar a conversa, continue no WhatsApp com o resumo já pronto.
         </p>
@@ -110,7 +109,7 @@ function ProjectForm() {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackEvent('whatsapp_click', { service, suite: suite || undefined })}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider transition-all w-full"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background transition-colors hover:bg-foreground/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <MessageSquare className="w-4 h-4" />
           <span>Continuar no WhatsApp</span>
@@ -120,9 +119,9 @@ function ProjectForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} onFocusCapture={markStarted} onChange={markStarted} className="space-y-4">
+    <form onSubmit={handleSubmit} onFocusCapture={markStarted} onChange={markStarted} className="space-y-5">
       {suite && (
-        <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-foreground/5 text-xs font-semibold text-brand">
+        <p className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium text-brand">
           Suíte de interesse: {suite}
         </p>
       )}
@@ -135,7 +134,7 @@ function ProjectForm() {
         <legend className={label}>Em que estágio está?</legend>
         <div className="flex flex-wrap gap-2">
           {STAGES.map((s) => (
-            <label key={s} className={`cursor-pointer px-3 py-2 rounded-xl border text-sm transition-all focus-within:ring-2 focus-within:ring-brand ${stage === s ? 'border-brand bg-brand/10 text-foreground' : 'border-border bg-foreground/5 text-muted-foreground'}`}>
+            <label key={s} className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-sm transition-colors focus-within:ring-2 focus-within:ring-brand/40 ${stage === s ? 'border-brand text-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}>
               <input type="radio" name="stage" value={s} checked={stage === s} onChange={() => setStage(s)} className="sr-only" />
               {s}
             </label>
@@ -170,15 +169,19 @@ function ProjectForm() {
             onChange={(e) => setEmail(e.target.value)} className={field} />
         </div>
       </div>
-      {error && <p role="alert" className="text-sm text-rose-500 font-medium">{error}</p>}
+      {error && <p role="alert" className="text-sm font-medium text-red-600 dark:text-red-400">{error}</p>}
       <p className="text-sm text-muted-foreground">
         Suítes de dois meses, conforme o escopo. O valor é apresentado na proposta, com infraestrutura e serviços externos discriminados.
       </p>
-      <Button type="submit" disabled={submitting} variant="brand" size="lg" className="w-full gap-2">
+      <button
+        type="submit"
+        disabled={submitting}
+        className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-brand px-6 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50"
+      >
         {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         <span>{submitting ? 'Enviando...' : 'Enviar meu projeto'}</span>
-      </Button>
-      <p className="text-[11px] text-muted-foreground text-center">
+      </button>
+      <p className="text-xs text-muted-foreground text-center">
         Usamos seus dados só para responder sobre o projeto.
       </p>
     </form>
@@ -188,12 +191,15 @@ function ProjectForm() {
 export function ProjectConversionPage() {
   return (
     <div className="w-full flex-1 overflow-y-auto">
-      <div className="max-w-2xl mx-auto py-6 md:py-10 px-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Conte sobre o seu projeto</h1>
-        <p className="text-sm text-muted-foreground mb-6">Poucas respostas e a equipe retorna pelo canal que você escolher.</p>
-        <Suspense fallback={null}>
-          <ProjectForm />
-        </Suspense>
+      <div className="mx-auto max-w-[640px] px-1 py-8 md:py-14">
+        <p className="mb-3 text-sm font-semibold tracking-wide text-brand">Iniciar projeto</p>
+        <h1 className="mb-2 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">Conte sobre o seu projeto</h1>
+        <p className="mb-8 text-base text-muted-foreground">Poucas respostas e a equipe retorna pelo canal que você escolher.</p>
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.15)] md:p-8">
+          <Suspense fallback={null}>
+            <ProjectForm />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
