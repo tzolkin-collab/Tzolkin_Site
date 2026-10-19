@@ -8,6 +8,7 @@ export interface ApplicationItem {
   title: string;
   audience: string;
   delivers: string;
+  chips: string[];
   ctaText: string;
   href: string;
 }
@@ -21,6 +22,7 @@ export const applications: ApplicationItem[] = [
       'Times comerciais e de atendimento que hoje dividem contexto entre planilhas, WhatsApp e ferramentas soltas.',
     delivers:
       'Funil de vendas e histórico de atendimento no mesmo lugar, com IA apoiando triagem, resumo de conversas e definição do próximo passo.',
+    chips: ['Funil de vendas', 'Histórico de atendimento', 'Triagem e resumo com IA'],
     ctaText: 'Conhecer o CRM com IA',
     href: '/crm-com-ia',
   },
@@ -30,6 +32,7 @@ export const applications: ApplicationItem[] = [
     audience: 'Empresas com volume recorrente de contatos por WhatsApp, chat ou telefone.',
     delivers:
       'Agentes que respondem, qualificam e encaminham para uma pessoa quando necessário, ligados ao seu CRM e aos seus sistemas.',
+    chips: ['WhatsApp, chat e voz', 'Qualificação', 'Encaminha a uma pessoa'],
     ctaText: 'Conversar sobre agentes',
     href: '/forms?aplicacao=agentes-ia',
   },
@@ -40,6 +43,7 @@ export const applications: ApplicationItem[] = [
       'Marcas que vendem online e precisam de loja própria, tema Shopify ou pedidos de marketplaces no mesmo fluxo.',
     delivers:
       'Loja ou tema Shopify no ar, com catálogo, estoque e pedidos integrados aos canais de venda que você usa.',
+    chips: ['Loja ou tema Shopify', 'Catálogo e estoque', 'Pedidos de marketplaces'],
     ctaText: 'Conversar sobre minha loja',
     href: '/forms?aplicacao=ecommerce-marketplace',
   },
@@ -49,6 +53,7 @@ export const applications: ApplicationItem[] = [
     audience: 'Operações que emitem nota fiscal manualmente ou a partir de várias fontes de pedido.',
     delivers:
       'Emissão automática de nota fiscal a partir do pedido, com registro de cada emissão e tratamento das que falham.',
+    chips: ['Emissão automática', 'Registro de cada emissão', 'Tratamento de falhas'],
     ctaText: 'Conversar sobre nota fiscal',
     href: '/forms?aplicacao=fiscal',
   },
@@ -59,6 +64,7 @@ export const applications: ApplicationItem[] = [
       'Quem já tem um protótipo, um MVP ou um sistema funcionando em parte, inclusive criado com ferramentas de IA.',
     delivers:
       'Revisão do que existe, correção dos pontos críticos e uma próxima versão com repositório, documentação e testes.',
+    chips: ['Revisão do que existe', 'Repositório e documentação', 'Testes'],
     ctaText: 'Conversar sobre meu piloto',
     href: '/forms?aplicacao=piloto',
   },

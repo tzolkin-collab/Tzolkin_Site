@@ -26,7 +26,7 @@ export function ServicesSection() {
           </p>
         </div>
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="flex flex-col gap-6 md:gap-8">
           {applications.map((app, index) => {
             const Icon = icons[app.slug] ?? GitBranch;
             return (
@@ -35,34 +35,38 @@ export function ServicesSection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: index * 0.06 }}
-                className="flex"
+                transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-                <article className="flex flex-col w-full bg-card border border-border rounded-3xl p-7 md:p-8 shadow-lg hover:border-brand/50 transition-colors">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand to-brand2 flex items-center justify-center shadow-lg shadow-brand/20 mb-6">
-                    <Icon size={24} strokeWidth={1.75} className="text-brand-foreground" aria-hidden="true" />
+                <article className="relative overflow-hidden rounded-3xl border border-brand/20 bg-gradient-to-br from-brand/10 via-card to-card shadow-2xl p-7 md:p-12 flex flex-col md:flex-row gap-8 md:gap-14 md:items-center hover:border-brand/40 transition-colors">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent pointer-events-none" aria-hidden="true" />
+
+                  <div className="relative flex-1 space-y-5">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-brand2 flex items-center justify-center shadow-lg shadow-brand/30">
+                      <Icon size={28} strokeWidth={1.75} className="text-brand-foreground drop-shadow-md" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-card-foreground mb-3 tracking-tight">{app.title}</h3>
+                      <p className="text-muted-foreground font-medium leading-relaxed text-base md:text-lg">{app.audience}</p>
+                    </div>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-card-foreground tracking-tight mb-5">{app.title}</h3>
-
-                  <dl className="space-y-4 text-base leading-relaxed flex-1">
-                    <div>
-                      <dt className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Para quem</dt>
-                      <dd className="text-card-foreground/90">{app.audience}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">O que entra em funcionamento</dt>
-                      <dd className="text-card-foreground/90">{app.delivers}</dd>
-                    </div>
-                  </dl>
-
-                  <Link
-                    href={app.href}
-                    className="group mt-7 inline-flex items-center gap-2 font-bold text-brand hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm"
-                  >
-                    {app.ctaText}
-                    <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                  </Link>
+                  <div className="relative flex-1 space-y-6 w-full">
+                    <p className="text-base md:text-lg text-card-foreground/90 leading-relaxed">{app.delivers}</p>
+                    <ul className="flex flex-wrap gap-2.5" aria-label="Itens da aplicação">
+                      {app.chips.map((chip) => (
+                        <li key={chip} className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs md:text-sm font-medium bg-foreground/5 border border-border text-foreground">
+                          {chip}
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      href={app.href}
+                      className="group inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-base font-bold text-brand-foreground shadow-lg shadow-brand/30 hover:bg-brand/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    >
+                      {app.ctaText}
+                      <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                    </Link>
+                  </div>
                 </article>
               </motion.li>
             );
