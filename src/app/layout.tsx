@@ -24,11 +24,11 @@ const figtree = Figtree({
 
 export const metadata: Metadata = {
   title: {
-    default: "TZOLKIN | Software de alto padrão",
+    default: "TZOLKIN | Software house de produtos digitais com IA",
     template: "%s | TZOLKIN",
   },
   description:
-    "Software de alto padrão: consultoria, produtos white-label e sob medida, e ferramentas próprias — de IA a cybersecurity, do desenvolvimento ao educacional.",
+    "Software house que desenha, cria e evolui produtos digitais com IA: CRMs, agentes de IA, lojas e marketplaces, com cibersegurança, infraestrutura dedicada e código limpo.",
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -38,16 +38,16 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: "TZOLKIN | Software de alto padrão",
+    title: "TZOLKIN | Software house de produtos digitais com IA",
     description:
-      "Consultoria, produtos white-label e sob medida, e ferramentas próprias — de IA a cybersecurity, do desenvolvimento ao educacional.",
+      "Software house que desenha, cria e evolui produtos digitais com IA: CRMs, agentes de IA, lojas e marketplaces, com cibersegurança, infraestrutura dedicada e código limpo.",
     siteName: "TZOLKIN",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "TZOLKIN — Software de alto padrão",
+        alt: "TZOLKIN — Software house de produtos digitais com IA",
       },
     ],
     locale: "pt_BR",
@@ -55,21 +55,21 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TZOLKIN | Software de alto padrão",
+    title: "TZOLKIN | Software house de produtos digitais com IA",
     description:
-      "Consultoria, produtos white-label e sob medida, e ferramentas próprias — de IA a cybersecurity, do desenvolvimento ao educacional.",
+      "Software house que desenha, cria e evolui produtos digitais com IA: CRMs, agentes de IA, lojas e marketplaces, com cibersegurança, infraestrutura dedicada e código limpo.",
     images: ["/og-image.jpg"],
   },
   keywords: [
-    "software",
     "software house",
-    "consultoria de software",
+    "produtos digitais",
     "desenvolvimento de software",
-    "white-label",
-    "SaaS",
-    "inteligência artificial",
-    "cybersecurity",
-    "web design",
+    "CRM com IA",
+    "agentes de IA",
+    "e-commerce",
+    "marketplaces",
+    "automação fiscal",
+    "cibersegurança",
     "TZOLKIN",
   ],
   authors: [{ name: "TZOLKIN" }],

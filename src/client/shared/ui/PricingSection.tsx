@@ -1,130 +1,81 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, Compass, Code2, Users } from 'lucide-react';
-import { PricingCard } from './PricingCard';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
+import { Button } from './Button';
+import { contractSuites } from '@/client/shared/data/homeData';
 
 export function PricingSection() {
-
-  const models = [
-    {
-      title: 'Consultoria e assessoria',
-      slug: 'consultoria',
-      icon: Compass,
-      price: 'Sob Medida',
-      paymentText: 'Visão Estratégica',
-      description: 'Análise e orientação para decisões de tecnologia, com acompanhamento conforme a necessidade.',
-      features: [
-        'Análise e orientação para decisões de tecnologia',
-        'Avaliação de soluções e ferramentas de mercado',
-        'Definição de prioridades e planejamento',
-        'Condução de mudanças com apoio especializado'
-      ],
-      ctaText: 'Conversar com a equipe',
-      ctaHref: '/forms?interesse=consultoria',
-      popular: false,
-    },
-    {
-      title: 'Terceirização de tecnologia',
-      slug: 'terceirizacao',
-      icon: Users,
-      price: 'Equipe Dedicada',
-      paymentText: 'Mensalidade recorrente',
-      description: 'Uma equipe externa para executar e acompanhar demandas de forma recorrente.',
-      features: [
-        'Equipe externa para execução contínua',
-        'Acompanhamento de demandas diárias',
-        'Frentes de atuação pré-definidas',
-        'Rotina de trabalho escalável conforme a necessidade'
-      ],
-      ctaText: 'Conversar com a equipe',
-      ctaHref: '/forms?interesse=terceirizacao',
-      popular: true,
-    },
-    {
-      title: 'Projetos sob demanda',
-      slug: 'projetos',
-      icon: Code2,
-      price: 'Escopo Fechado',
-      paymentText: 'Entrega Validada',
-      description: 'LPs, sites, integrações e soluções sob medida para uma entrega definida.',
-      features: [
-        'LPs, sites e e-commerces completos',
-        'Integrações e sistemas web sob medida',
-        'Entrega com escopo e etapas definidas',
-        'Critérios de validação claros e testes'
-      ],
-      ctaText: 'Ver Portfólio de Projetos',
-      ctaHref: 'https://sites.tzolkin.cloud/',
-      popular: false,
-    }
-  ];
-
   return (
-    <section id="products" className="py-12 md:py-32 bg-background border-t border-border/50 relative overflow-hidden">
-      {/* Background Decor - Glows to make it less boring */}
-      <div className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-40">
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-brand/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="container mx-auto px-6 md:px-12 relative z-10 mb-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center md:text-center max-w-3xl mx-auto"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-foreground/70 mb-6 text-sm font-medium tracking-wider uppercase text-white">
-            <Sparkles size={14} />
-            <span>Formas de Contratar</span>
-          </div>
-
-          <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6 text-foreground">
-            Três formas de trabalhar<br /> <span className="text-brand">com a TZOLKIN.</span>
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground">
-            O próximo passo depende do momento da sua empresa. Escolha o formato de trabalho adequado para a sua necessidade atual.
-          </p>
-        </motion.div>
-      </div>
-
-      {/* Premium Grid Layout */}
+    <section id="como-contratar" aria-labelledby="como-contratar-title" className="py-16 md:py-28 bg-background border-t border-border/50 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-7xl mx-auto">
-          {models.map((model, idx) => (
-            <motion.div 
-              key={model.title} 
-              className={`flex flex-col h-full ${idx === 2 ? 'mt-10 lg:mt-0 pt-10 lg:pt-0 border-t lg:border-none border-border/40 relative' : ''}`}
-              initial={{ opacity: 0, y: 30 }}
+        <div className="mb-12 max-w-3xl space-y-5">
+          <h2 id="como-contratar-title" className="text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tighter text-foreground">
+            Como contratar: <span className="text-brand">suítes de dois meses.</span>
+          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            Cada suíte tem escopo, prazo e valor definidos antes de começar. O preço cobre os dois meses de trabalho da equipe.
+          </p>
+        </div>
+
+        {/* TODO(PO): quarta faixa pendente. Acrescentar o card aqui quando nome e valor forem definidos. */}
+        <ul className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+          {contractSuites.map((suite, idx) => (
+            <motion.li
+              key={suite.slug}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.15 }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="flex"
             >
-              {idx === 2 && (
-                <div className="lg:hidden absolute -top-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-background text-muted-foreground text-[10px] font-bold uppercase tracking-widest">
-                  Ou
-                </div>
-              )}
-              <PricingCard 
-                title={model.title}
-                slug={model.slug}
-                icon={model.icon}
-                price={model.price}
-                paymentText={model.paymentText}
-                description={model.description}
-                features={model.features}
-                popular={model.popular}
-                ctaText={model.ctaText}
-                ctaHref={model.ctaHref}
-                fullWidth={true}
-              />
-            </motion.div>
+              <article
+                className={`flex flex-col w-full rounded-3xl p-7 md:p-8 bg-card border shadow-lg ${
+                  suite.highlight ? 'border-brand' : 'border-border'
+                }`}
+              >
+                <h3 className="text-2xl font-bold text-card-foreground tracking-tight">{suite.name}</h3>
+                <p className="mt-2 text-muted-foreground leading-relaxed">{suite.summary}</p>
+
+                <p className="mt-6 text-card-foreground">
+                  {suite.pricePrefix && (
+                    <span className="block text-sm font-semibold uppercase tracking-widest text-muted-foreground">{suite.pricePrefix}</span>
+                  )}
+                  <span className="text-4xl font-bold tracking-tight">{suite.price}</span>
+                  <span className="block text-sm text-muted-foreground mt-1">pelos dois meses, mais custos externos</span>
+                </p>
+
+                <dl className="mt-6 space-y-4 flex-1">
+                  {[
+                    ['Recorte', suite.scope],
+                    ['Integrações', suite.integrations],
+                    ['Acompanhamento', suite.followUp],
+                  ].map(([label, text]) => (
+                    <div key={label} className="flex gap-3">
+                      <Check size={18} className="text-brand shrink-0 mt-1" aria-hidden="true" />
+                      <div>
+                        <dt className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</dt>
+                        <dd className="text-card-foreground/90 leading-relaxed">{text}</dd>
+                      </div>
+                    </div>
+                  ))}
+                </dl>
+
+                <Link href={suite.href} className="block mt-8">
+                  <Button variant={suite.highlight ? 'brand' : 'outline'} size="lg" className="w-full">
+                    {suite.ctaText}
+                  </Button>
+                </Link>
+              </article>
+            </motion.li>
           ))}
-        </div>
+        </ul>
+
+        <p className="mt-8 text-sm text-muted-foreground max-w-3xl leading-relaxed">
+          Valores pelos dois meses de trabalho. Infraestrutura, APIs e serviços de terceiros (hospedagem, mensageria, emissão fiscal, entre outros) são cobrados à parte e discriminados na proposta.
+        </p>
       </div>
     </section>
   );
