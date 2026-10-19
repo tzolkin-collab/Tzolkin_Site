@@ -86,7 +86,7 @@ const KEYFRAMES = `@keyframes tz-bands-drift{from{transform:translate3d(-1.5%,0,
 export function GradientBands({
   variant = "hero",
   noise = true,
-  drift = true,
+  drift = false,
   className,
 }: GradientBandsProps) {
   const uid = useId().replace(/:/g, "");
