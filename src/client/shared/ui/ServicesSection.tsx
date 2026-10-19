@@ -52,8 +52,8 @@ export function ServicesSection() {
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.35, delay: Math.min(index, 2) * 0.05 }}
               >
-                <article className={`flex h-full flex-col gap-6 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8 ${big ? 'xl:flex-row xl:gap-10' : ''}`}>
-                  <div className={`flex flex-col ${big ? 'xl:w-[44%]' : 'flex-1'}`}>
+                <article className={`flex h-full flex-col gap-6 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8 ${big ? 'overflow-hidden xl:flex-row xl:gap-0 xl:p-0' : ''}`}>
+                  <div className={`flex flex-col ${big ? 'xl:w-[40%] xl:shrink-0 xl:justify-center xl:p-10' : 'flex-1'}`}>
                     <Icon size={20} strokeWidth={1.75} className="mb-5 text-muted-foreground" aria-hidden="true" />
                     <h3 className={`font-semibold tracking-tight text-card-foreground ${big ? 'text-2xl md:text-3xl' : 'text-xl'}`}>{app.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">{app.forWho}</p>
@@ -66,12 +66,12 @@ export function ServicesSection() {
                     </ul>
                     <Link
                       href={app.href}
-                      className="group mt-6 inline-flex items-center gap-1.5 self-start rounded-sm pt-1 text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background xl:mt-auto"
+                      className="group mt-6 inline-flex items-center gap-1.5 self-start rounded-sm pt-1 text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background xl:mt-8"
                     >
                       {app.ctaText} <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                     </Link>
                   </div>
-                  <div className={big ? 'xl:flex-1 xl:self-center' : 'order-first'}>
+                  <div className={big ? 'min-w-0 xl:flex-1' : 'order-first'}>
                     <Mock />
                   </div>
                 </article>
