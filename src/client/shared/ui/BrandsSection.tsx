@@ -5,12 +5,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from '@/client/shared/ui/SectionHeader';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Plus, X, Network, QrCode, FileText, Box, Activity } from 'lucide-react';
+import { ArrowRight, Plus, X, Network, FileText, Activity } from 'lucide-react';
 
 interface IntegrationItem {
   name: string;
   svg?: string;
   svgDark?: string;
+  /** Logo horizontal (wordmark), renderizado mais largo. */
+  wide?: boolean;
+  /** Logos escuros ganham um fundo claro no tema escuro. */
+  lightTileOnDark?: boolean;
   icon?: React.ComponentType<{ className?: string; strokeWidth?: number }>;
 }
 
@@ -21,9 +25,9 @@ const integrations: IntegrationItem[] = [
   { name: "TikTok", svg: "/integrations/tiktok-light.svg", svgDark: "/integrations/tiktok.svg" },
   { name: "Stripe", svg: "/integrations/stripe.svg" },
   { name: "Shopify", svg: "/integrations/shopify.svg" },
-  { name: "API do Pix", icon: QrCode },
+  { name: "API do Pix", svg: "/integrations/pix.svg" },
   { name: "API NFe", icon: FileText },
-  { name: "Ideris", icon: Box },
+  { name: "Ideris", svg: "/integrations/ideris.png", wide: true, lightTileOnDark: true },
   { name: "Vercel", svg: "/integrations/vercel.svg", svgDark: "/integrations/vercel-dark.svg" },
   { name: "Cloudflare", svg: "/integrations/cloudflare.svg" },
 ];
@@ -103,6 +107,14 @@ export function BrandsSection() {
                           <Image src={integration.svg} alt={`Logo ${integration.name}`} width={40} height={40} className="h-10 w-10 object-contain dark:hidden" />
                           <Image src={integration.svgDark} alt={`Logo ${integration.name}`} width={40} height={40} className="hidden h-10 w-10 object-contain dark:block" />
                         </>
+                      ) : integration.wide ? (
+                        <Image
+                          src={integration.svg}
+                          alt={`Logo ${integration.name}`}
+                          width={112}
+                          height={32}
+                          className={`h-8 w-28 object-contain ${integration.lightTileOnDark ? 'dark:rounded-md dark:bg-white dark:px-2' : ''}`}
+                        />
                       ) : (
                         <Image src={integration.svg} alt={`Logo ${integration.name}`} width={40} height={40} className="h-10 w-10 object-contain" />
                       )}

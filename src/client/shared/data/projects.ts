@@ -36,7 +36,7 @@ export const projects: Project[] = [
   },
   {
     name: "Kalidash",
-    logo: "",
+    logo: "/logo-kalidash.webp",
     year: "2024",
     decoration: "/bg-ecommerce.png",
     rotation: "rotate-[30deg]",
