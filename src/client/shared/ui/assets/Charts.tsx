@@ -151,6 +151,15 @@ export interface AreaChartProps {
   yTicks?: number;
   /** Formatação dos rótulos do eixo Y. */
   formatY?: (v: number) => string;
+  /** Largura/altura do viewBox (padrão 520x260). Use o tamanho renderizado para manter o texto 1:1. */
+  width?: number;
+  height?: number;
+  /** Tamanho dos rótulos dos eixos em unidades do viewBox (padrão 11.5). */
+  fontSize?: number;
+  /** Opacidade do traço da série de comparação (padrão 0.35). */
+  compareOpacity?: number;
+  /** Cor final do degradê da série principal (padrão vinho). Use um tom mais claro em fundos escuros. */
+  seriesEnd?: string;
   className?: string;
   ariaLabel?: string;
 }
@@ -162,12 +171,15 @@ export function AreaChart({
   tooltip,
   yTicks = 4,
   formatY = (v) => String(Math.round(v)),
+  width: W = 520,
+  height: H = 260,
+  fontSize = 11.5,
+  compareOpacity = 0.35,
+  seriesEnd = "#8a0a1c",
   className,
   ariaLabel = "Gráfico de área",
 }: AreaChartProps) {
   const uid = useId().replace(/:/g, "");
-  const W = 520;
-  const H = 260;
   const L = 44;
   const R = 18;
   const T = 26;
@@ -192,7 +204,7 @@ export function AreaChart({
     hi && highlightIndex !== undefined
       ? (tooltip ?? `${data[highlightIndex].label} · ${formatY(data[highlightIndex].value)}`)
       : "";
-  const tipW = tipText.length * 7.2 + 24;
+  const tipW = tipText.length * (fontSize * 0.63) + 24;
   const tipX = hi ? Math.min(Math.max(hi[0] - tipW / 2, L), W - R - tipW) : 0;
   const tipY = hi ? Math.max(hi[1] - 40, 2) : 0;
 
@@ -207,7 +219,7 @@ export function AreaChart({
         <linearGradient id={`${uid}-s`} x1="0" x2="1" y1="0" y2="0">
           <stop offset="0" stopColor="#ff8a96" />
           <stop offset="0.55" stopColor="var(--brand)" />
-          <stop offset="1" stopColor="#8a0a1c" />
+          <stop offset="1" stopColor={seriesEnd} />
         </linearGradient>
         <linearGradient id={`${uid}-f`} x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="var(--brand)" stopOpacity="0.32" />
@@ -221,7 +233,7 @@ export function AreaChart({
         return (
           <g key={tv}>
             <line x1={L} x2={W - R} y1={y} y2={y} stroke="currentColor" strokeOpacity={tv === 0 ? 0.22 : 0.09} strokeWidth={1} />
-            <text x={L - 10} y={y + 3.5} textAnchor="end" className="fill-muted-foreground font-mono" fontSize={11.5}>
+            <text x={L - 10} y={y + 3.5} textAnchor="end" className="fill-muted-foreground font-mono" fontSize={fontSize}>
               {formatY(tv)}
             </text>
           </g>
@@ -236,7 +248,7 @@ export function AreaChart({
             y={H - B + 19}
             textAnchor="middle"
             className="fill-muted-foreground font-mono"
-            fontSize={11.5}
+            fontSize={fontSize}
           >
             {d.label}
           </text>
@@ -244,7 +256,7 @@ export function AreaChart({
       )}
 
       {cmp ? (
-        <path d={cmp} fill="none" stroke="currentColor" strokeOpacity={0.35} strokeWidth={1.5} strokeDasharray="4 4" strokeLinecap="round" />
+        <path d={cmp} fill="none" stroke="currentColor" strokeOpacity={compareOpacity} strokeWidth={1.5} strokeDasharray="4 4" strokeLinecap="round" />
       ) : null}
 
       <path d={`${line} L${xs[xs.length - 1]},${H - B} L${xs[0]},${H - B} Z`} fill={`url(#${uid}-f)`} />
@@ -257,7 +269,7 @@ export function AreaChart({
           <circle cx={hi[0]} cy={hi[1]} r={4.5} className="fill-background" stroke="var(--brand)" strokeWidth={2.5} />
           <g transform={`translate(${tipX},${tipY})`}>
             <rect width={tipW} height={28} rx={7} className="fill-foreground" />
-            <text x={tipW / 2} y={18.5} textAnchor="middle" className="fill-background font-mono" fontSize={12} fontWeight={500}>
+            <text x={tipW / 2} y={18.5} textAnchor="middle" className="fill-background font-mono" fontSize={fontSize + 0.5} fontWeight={500}>
               {tipText}
             </text>
           </g>
