@@ -110,7 +110,7 @@ export const projects: Project[] = [
   },
   {
     name: "Assinatura Marca Própria",
-    logo: "",
+    logo: "/logo-assinatura-marca-propria.png",
     year: "2024",
     decoration: "/bg-institutional.png",
     rotation: "rotate-[25deg]",
