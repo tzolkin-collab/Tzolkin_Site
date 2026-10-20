@@ -3,7 +3,7 @@ import { flowSteps } from "./content";
 // Fluxo em linha: nós numerados ligados por conectores finos (vertical no celular, horizontal no desktop).
 export function FlowDiagram() {
   return (
-    <figure className="mt-14">
+    <figure>
       <ol className="grid gap-0 md:grid-cols-5" aria-label="Fluxo do CRM com IA">
         {flowSteps.map((s, i) => {
           const last = i === flowSteps.length - 1;
