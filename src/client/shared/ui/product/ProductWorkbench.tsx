@@ -1,10 +1,9 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowDownLeft,
-  ArrowRight,
   Check,
   CheckCheck,
   ChevronDown,
@@ -16,7 +15,6 @@ import {
   ListFilter,
   MessageCircle,
   MoreHorizontal,
-  RotateCcw,
   Search,
   ShieldCheck,
   Sparkles,
@@ -33,9 +31,25 @@ const backgroundDeals = [
 ];
 
 /** Demonstração local de uma jornada; não executa IA nem integrações reais. */
-export function ProductWorkbench({ compact = false }: { compact?: boolean }) {
-  const [step, setStep] = useState(0);
+export function ProductWorkbench({
+  compact = false,
+  step: controlledStep,
+}: {
+  compact?: boolean;
+  /** Etapa conduzida de fora (ex.: scroll). Sem ela, as etapas avançam sozinhas. */
+  step?: number;
+}) {
+  const [auto, setAuto] = useState(0);
   const reduceMotion = useReducedMotion();
+  const controlled = controlledStep !== undefined;
+  const step = controlledStep ?? auto;
+
+  useEffect(() => {
+    if (controlled || reduceMotion) return;
+    const timer = setInterval(() => setAuto((n) => (n + 1) % steps.length), 3600);
+    return () => clearInterval(timer);
+  }, [controlled, reduceMotion]);
+
   const id = useId();
   const transition = {
     duration: reduceMotion ? 0 : 0.28,
@@ -47,27 +61,20 @@ export function ProductWorkbench({ compact = false }: { compact?: boolean }) {
       className={`${s.demo} ${compact ? s.compact : ""}`}
       aria-label="Demonstração interativa de atendimento e CRM"
     >
-      <div
-        className={s.steps}
-        role="group"
-        aria-label="Explorar etapas do atendimento"
-      >
+      <ol className={s.steps} aria-label="Etapas do atendimento">
         {steps.map((label, index) => (
-          <button
+          <li
             key={label}
             className={s.step}
-            type="button"
-            aria-pressed={step === index}
-            aria-controls={`${id}-detail`}
-            onClick={() => setStep(index)}
+            aria-current={step === index ? "step" : undefined}
           >
             <span className={s.stepNumber} aria-hidden="true">
               {index < step ? <Check size={12} /> : `0${index + 1}`}
             </span>
             {label}
-          </button>
+          </li>
         ))}
-      </div>
+      </ol>
       <div className={s.workspace}>
         <div className={s.app}>
           <div className={s.topbar}>
@@ -183,7 +190,7 @@ export function ProductWorkbench({ compact = false }: { compact?: boolean }) {
             </div>
           </div>
         </div>
-        <div className={s.insight} id={`${id}-detail`}>
+        <div className={s.insight}>
           <div className={s.insightHeader}>
             <span className={s.channelIcon}>
               {step === 0 ? (
@@ -269,22 +276,6 @@ export function ProductWorkbench({ compact = false }: { compact?: boolean }) {
                 ? "Responsável definido"
                 : "Você acompanha cada etapa"}
             </span>
-            <button
-              className={s.action}
-              type="button"
-              onClick={() => setStep((step + 1) % steps.length)}
-            >
-              {step === 0
-                ? "Preparar contexto"
-                : step === 1
-                  ? "Encaminhar para Ana"
-                  : "Ver novamente"}
-              {step === 2 ? (
-                <RotateCcw size={12} aria-hidden="true" />
-              ) : (
-                <ArrowRight size={12} aria-hidden="true" />
-              )}
-            </button>
           </div>
         </div>
       </div>
@@ -292,7 +283,7 @@ export function ProductWorkbench({ compact = false }: { compact?: boolean }) {
         <span>Exemplo interativo · dados ilustrativos</span>
         <span>
           <ArrowDownLeft size={12} aria-hidden="true" />
-          Explore as etapas
+          {controlled ? "Role para avançar" : "Etapas em sequência"}
         </span>
       </figcaption>
     </figure>

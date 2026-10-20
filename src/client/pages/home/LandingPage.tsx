@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMotionValueEvent, useScroll } from 'framer-motion';
 import Link from 'next/link';
 import { LogoMarquee } from '@/client/shared/ui/LogoMarquee';
 import { Header } from '@/client/shared/ui/Header';
@@ -34,14 +35,29 @@ export function LandingPage() {
     };
   }, []);
 
+  // No desktop o hero fica fixo e o scroll percorre as 3 etapas antes de seguir a página.
+  const heroRef = useRef<HTMLElement>(null);
+  const [pinned, setPinned] = useState(false);
+  const [heroStep, setHeroStep] = useState(0);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end end'] });
+  useMotionValueEvent(scrollYProgress, 'change', (v) => setHeroStep(Math.min(2, Math.floor(v * 3))));
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 1024px)');
+    const update = () => setPinned(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+
   return (
     <div className="min-h-screen w-full overflow-x-clip flex flex-col font-sans">
       <Header />
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-background px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-40">
+      <section ref={heroRef} className="relative bg-background lg:h-[280vh]">
+      <div className="relative overflow-clip px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-40 lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:pb-10 lg:pt-24">
         <HeroBackground />
-        <div className="relative mx-auto grid w-full max-w-[1200px] grid-cols-[minmax(0,1fr)] items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
+        <div className="relative mx-auto grid w-full w-full max-w-[1200px] grid-cols-[minmax(0,1fr)] items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
           <div>
             <p className="mb-6 inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
               Software house · Produtos digitais e IA
@@ -68,8 +84,9 @@ export function LandingPage() {
             </p>
           </div>
 
-          <HeroMockups />
+          <HeroMockups step={pinned ? heroStep : undefined} />
         </div>
+      </div>
       </section>
 
       {/* Clientes */}
