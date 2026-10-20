@@ -151,6 +151,15 @@ export interface AreaChartProps {
   yTicks?: number;
   /** Formatação dos rótulos do eixo Y. */
   formatY?: (v: number) => string;
+  /** Tamanho do viewBox (padrão 520x260). Use menor para gráficos pequenos manterem o texto legível. */
+  viewWidth?: number;
+  viewHeight?: number;
+  /** Tamanho dos rótulos em unidades do viewBox (padrão 11.5). */
+  fontSize?: number;
+  /** Margem esquerda do eixo Y (padrão 44). */
+  marginLeft?: number;
+  /** Máximo de rótulos no eixo X (padrão 7). */
+  maxLabels?: number;
   className?: string;
   ariaLabel?: string;
 }
@@ -162,13 +171,18 @@ export function AreaChart({
   tooltip,
   yTicks = 4,
   formatY = (v) => String(Math.round(v)),
+  viewWidth = 520,
+  viewHeight = 260,
+  fontSize = 11.5,
+  marginLeft = 44,
+  maxLabels = 7,
   className,
   ariaLabel = "Gráfico de área",
 }: AreaChartProps) {
   const uid = useId().replace(/:/g, "");
-  const W = 520;
-  const H = 260;
-  const L = 44;
+  const W = viewWidth;
+  const H = viewHeight;
+  const L = marginLeft;
   const R = 18;
   const T = 26;
   const B = 32;
@@ -185,14 +199,14 @@ export function AreaChart({
     ? smoothPath(xs.map((x, i) => [x, scale([compare[i]], 0, max, H - B, T)[0]] as Pt))
     : null;
   const ticks = Array.from({ length: yTicks + 1 }, (_, i) => i * step);
-  const labelEvery = Math.ceil(data.length / 7);
+  const labelEvery = Math.ceil(data.length / maxLabels);
 
   const hi = highlightIndex !== undefined ? pts[highlightIndex] : undefined;
   const tipText =
     hi && highlightIndex !== undefined
       ? (tooltip ?? `${data[highlightIndex].label} · ${formatY(data[highlightIndex].value)}`)
       : "";
-  const tipW = tipText.length * 7.2 + 24;
+  const tipW = tipText.length * (fontSize * 0.63) + 24;
   const tipX = hi ? Math.min(Math.max(hi[0] - tipW / 2, L), W - R - tipW) : 0;
   const tipY = hi ? Math.max(hi[1] - 40, 2) : 0;
 
@@ -221,7 +235,7 @@ export function AreaChart({
         return (
           <g key={tv}>
             <line x1={L} x2={W - R} y1={y} y2={y} stroke="currentColor" strokeOpacity={tv === 0 ? 0.22 : 0.09} strokeWidth={1} />
-            <text x={L - 10} y={y + 3.5} textAnchor="end" className="fill-muted-foreground font-mono" fontSize={11.5}>
+            <text x={L - 10} y={y + 3.5} textAnchor="end" className="fill-muted-foreground font-mono" fontSize={fontSize}>
               {formatY(tv)}
             </text>
           </g>
@@ -236,7 +250,7 @@ export function AreaChart({
             y={H - B + 19}
             textAnchor="middle"
             className="fill-muted-foreground font-mono"
-            fontSize={11.5}
+            fontSize={fontSize}
           >
             {d.label}
           </text>
@@ -257,7 +271,7 @@ export function AreaChart({
           <circle cx={hi[0]} cy={hi[1]} r={4.5} className="fill-background" stroke="var(--brand)" strokeWidth={2.5} />
           <g transform={`translate(${tipX},${tipY})`}>
             <rect width={tipW} height={28} rx={7} className="fill-foreground" />
-            <text x={tipW / 2} y={18.5} textAnchor="middle" className="fill-background font-mono" fontSize={12} fontWeight={500}>
+            <text x={tipW / 2} y={18.5} textAnchor="middle" className="fill-background font-mono" fontSize={fontSize + 0.5} fontWeight={500}>
               {tipText}
             </text>
           </g>
