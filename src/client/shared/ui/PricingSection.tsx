@@ -12,7 +12,7 @@ const ctaBase =
 
 export function PricingSection() {
   return (
-    <section id="como-contratar" aria-labelledby="como-contratar-title" className="border-t border-border bg-background py-20 md:py-28">
+    <section id="como-contratar" aria-labelledby="como-contratar-title" className="bg-background py-16 md:py-24">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12">
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
           <SectionHeader
@@ -24,7 +24,7 @@ export function PricingSection() {
         </motion.div>
 
         {/* TODO(PO): quarta faixa pendente. Acrescentar o card aqui quando nome e valor forem definidos. */}
-        <ul className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <ul className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {contractSuites.map((suite, idx) => {
             const hl = !!suite.highlight;
             return (

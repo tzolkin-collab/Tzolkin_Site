@@ -36,7 +36,7 @@ function PartnerLogo({ project }: { project: Project }) {
 
 export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
   return (
-    <section aria-labelledby="parcerias-title" className="bg-background py-20 md:py-28">
+    <section aria-labelledby="parcerias-title" className="border-t border-border bg-muted/80 dark:bg-white/[0.04] py-16 md:py-20">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12">
         <SectionHeader
           id="parcerias-title"
@@ -45,7 +45,7 @@ export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
           muted="mantemos parceria em tecnologia."
         />
 
-        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
           {partnerships.map((project, index) => (
             <motion.div
               key={project.name}

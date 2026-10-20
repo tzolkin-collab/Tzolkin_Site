@@ -65,7 +65,7 @@ export function BrandsSection() {
   }, [isModalOpen]);
 
   return (
-    <section aria-labelledby="integracoes-title" className="border-t border-border bg-background py-20 md:py-28">
+    <section aria-labelledby="integracoes-title" className="border-y border-border bg-muted/80 dark:bg-white/[0.04] py-16 md:py-24">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12">
         <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-20">
           <div className="min-w-0 flex-1 lg:sticky lg:top-24">
