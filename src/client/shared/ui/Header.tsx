@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import { motion, useScroll } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import Link from 'next/link';
@@ -22,26 +24,67 @@ const mobileMenuItems: MenuItem[] = [
   { label: 'Contato', href: '/forms' },
 ];
 
+// Seções da home, na ordem da página. O header mostra 3 por vez, acompanhando o scroll.
+const sectionLinks = [
+  { id: 'aplicacoes', label: 'Aplicações' },
+  { id: 'como-construimos', label: 'Como construímos' },
+  { id: 'cases', label: 'Cases' },
+  { id: 'parcerias', label: 'Parcerias' },
+  { id: 'como-contratar', label: 'Como contratar' },
+  { id: 'integracoes', label: 'Integrações' },
+  { id: 'about', label: 'Quem somos' },
+];
+const VISIBLE_LINKS = 3;
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const rafRef = useRef<number | null>(null);
+  const isHome = usePathname() === '/';
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     const BANNER_HEIGHT = 40;
+    const update = () => {
+      // Na home o hero fica fixo enquanto o scroll percorre as etapas: o header
+      // só muda de modo quando a página realmente começa a descer.
+      const pin = document.querySelector<HTMLElement>('[data-hero-pin]');
+      const pinned = pin && window.matchMedia('(min-width: 1024px)').matches;
+      const threshold = pinned ? pin.offsetHeight - window.innerHeight : BANNER_HEIGHT;
+      setScrolled(window.scrollY > Math.max(threshold, BANNER_HEIGHT));
+
+      if (isHome) {
+        const line = window.innerHeight * 0.4;
+        let current = -1;
+        sectionLinks.forEach((link, i) => {
+          const el = document.getElementById(link.id);
+          if (el && el.getBoundingClientRect().top <= line) current = i;
+        });
+        setActiveIndex(current);
+      }
+    };
     const handleScroll = () => {
       if (rafRef.current) return;
       rafRef.current = requestAnimationFrame(() => {
-        setScrolled(window.scrollY > BANNER_HEIGHT);
+        update();
         rafRef.current = null;
       });
     };
+    update();
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [isHome]);
+
+  const windowStart = Math.min(
+    Math.max(activeIndex - 1, 0),
+    sectionLinks.length - VISIBLE_LINKS,
+  );
 
   useLockBody(isMenuOpen);
 
@@ -57,6 +100,12 @@ export function Header() {
           : 'top-0 bg-transparent py-6'
           }`}
       >
+        {/* Progresso da página: linha vermelha que entra pela esquerda na borda de cima */}
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-0 h-[0.8px] w-full origin-left bg-[#ff2a2a] shadow-[0_0_6px_1px_rgba(255,42,42,0.85),0_0_14px_2px_rgba(255,42,42,0.45)]"
+          style={{ scaleX: scrollYProgress }}
+        />
         <div className="px-6 md:px-12 max-w-[1400px] mx-auto flex justify-between items-center gap-8">
           {/* Logo — Futuristic Geometric Monolith */}
           <Link
@@ -73,27 +122,72 @@ export function Header() {
           <>
               {/* Desktop Navigation */}
               <nav className="hidden lg:flex items-center gap-6">
-                {menuItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-sm font-medium tracking-wide text-foreground hover:text-brand transition-colors uppercase"
-                  >
-                    {item.label}
-                    {item.badge && (
-                      <span className="ml-1.5 align-super text-[10px] font-semibold tracking-widest text-brand whitespace-nowrap">
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                ))}
-                <Link
-                  href="/forms"
-                  className="rounded-full bg-foreground text-background hover:bg-brand hover:text-white transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
-                >
-                  Iniciar projeto
-                </Link>
-                <div className="pl-4 border-l border-foreground/20">
+                {isHome ? (
+                  scrolled && (
+                    <>
+                      <div
+                        className="w-[30rem] overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]"
+                        aria-label="Seções da página"
+                      >
+                        <div
+                          className="flex transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                          style={{ transform: `translateX(-${windowStart * (100 / VISIBLE_LINKS)}%)` }}
+                        >
+                          {sectionLinks.map((link, i) => {
+                            const active = i === activeIndex;
+                            return (
+                              <Link
+                                key={link.id}
+                                href={`/#${link.id}`}
+                                aria-current={active ? 'true' : undefined}
+                                className={`relative w-1/3 shrink-0 py-1 text-center text-[13px] font-medium uppercase tracking-wide transition-[color,text-shadow] duration-300 ${active
+                                  ? 'text-foreground [text-shadow:0_0_12px_rgba(255,42,42,0.95),0_0_24px_rgba(255,42,42,0.5)]'
+                                  : 'text-foreground/50 hover:text-foreground/80'
+                                  }`}
+                              >
+                                {link.label}
+                                <span
+                                  aria-hidden="true"
+                                  className={`absolute inset-x-6 -bottom-0.5 h-px rounded-full bg-[#ff2a2a] shadow-[0_0_8px_2px_rgba(255,42,42,0.8)] transition-opacity duration-300 ${active ? 'opacity-100' : 'opacity-0'}`}
+                                />
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <Link
+                        href="/forms"
+                        className="rounded-full bg-foreground text-background hover:bg-brand hover:text-white transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
+                      >
+                        Iniciar projeto
+                      </Link>
+                    </>
+                  )
+                ) : (
+                  <>
+                    {menuItems.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        className="text-sm font-medium tracking-wide text-foreground hover:text-brand transition-colors uppercase"
+                      >
+                        {item.label}
+                        {item.badge && (
+                          <span className="ml-1.5 align-super text-[10px] font-semibold tracking-widest text-brand whitespace-nowrap">
+                            {item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    ))}
+                    <Link
+                      href="/forms"
+                      className="rounded-full bg-foreground text-background hover:bg-brand hover:text-white transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
+                    >
+                      Iniciar projeto
+                    </Link>
+                  </>
+                )}
+                <div className={isHome && !scrolled ? '' : 'pl-4 border-l border-foreground/20'}>
                   <ModeToggle />
                 </div>
               </nav>

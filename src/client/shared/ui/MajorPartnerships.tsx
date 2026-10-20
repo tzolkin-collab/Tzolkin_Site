@@ -36,7 +36,7 @@ function PartnerLogo({ project }: { project: Project }) {
 
 export function MajorPartnerships({ partnerships }: MajorPartnershipsProps) {
   return (
-    <section aria-labelledby="parcerias-title" className="border-t border-border bg-muted/80 dark:bg-white/[0.04] py-16 md:py-20">
+    <section id="parcerias" aria-labelledby="parcerias-title" className="border-t border-border bg-muted/80 dark:bg-white/[0.04] py-16 md:py-20">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12">
         <SectionHeader
           id="parcerias-title"

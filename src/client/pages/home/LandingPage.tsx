@@ -54,7 +54,7 @@ export function LandingPage() {
       <Header />
 
       {/* ── Hero ── */}
-      <section ref={heroRef} className="relative bg-background lg:h-[280vh]">
+      <section ref={heroRef} data-hero-pin className="relative bg-background lg:h-[280vh]">
       <div className="relative overflow-clip px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-40 lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:pb-10 lg:pt-24">
         <HeroBackground />
         <div className="relative mx-auto grid w-full w-full max-w-[1200px] grid-cols-[minmax(0,1fr)] items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
