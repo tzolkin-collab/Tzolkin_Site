@@ -1,7 +1,7 @@
 import { useId } from "react";
 import { cn } from "@/lib/utils";
 
-export type GradientBandsVariant = "hero" | "band" | "subtle";
+export type GradientBandsVariant = "hero" | "heroDark" | "band" | "subtle";
 
 export interface GradientBandsProps {
   /** hero: 7 faixas densas; band: 5 faixas para seções; subtle: 5 faixas translúcidas. */
@@ -60,6 +60,20 @@ const HERO: readonly Band[] = [
   { d: 610, t: 260, cl: 160, cr: 380, stops: [[0, INK, 0.0], [0.5, INK, 0.7], [1, BRAND, 0.55]] },
 ];
 
+// Versão para fundos escuros: sem faixas "ink" (viram lama sobre o preto), cores mais saturadas.
+const HOT = "#ff4457";
+const CRIMSON = "#e0112b";
+const WINE_LIT = "#8f1030";
+
+const HERO_DARK: readonly Band[] = [
+  { d: -40, t: 190, cl: 60, cr: 260, stops: [[0, ROSE, 0.0], [0.45, ROSE_DEEP, 0.55], [1, AMBER, 0.8]] },
+  { d: 40, t: 200, cl: 240, cr: 90, stops: [[0, HOT, 0.1], [0.5, HOT, 0.7], [1, CRIMSON, 0.9]] },
+  { d: 140, t: 210, cl: 80, cr: 300, stops: [[0, CRIMSON, 0.2], [0.55, CRIMSON, 0.85], [1, WINE_LIT, 0.9]] },
+  { d: 250, t: 220, cl: 300, cr: 120, stops: [[0, WINE_LIT, 0.1], [0.5, CRIMSON, 0.7], [1, HOT, 0.85]] },
+  { d: 360, t: 230, cl: 120, cr: 340, stops: [[0, WINE_LIT, 0.0], [0.4, WINE_LIT, 0.7], [1, CRIMSON, 0.8]] },
+  { d: 480, t: 240, cl: 360, cr: 140, stops: [[0, WINE, 0.0], [0.5, WINE, 0.6], [1, WINE_LIT, 0.7]] },
+];
+
 const BAND: readonly Band[] = [
   { d: 60, t: 230, cl: 80, cr: 280, stops: [[0, ROSE, 0.0], [0.5, ROSE_DEEP, 0.65], [1, AMBER, 0.7]] },
   { d: 180, t: 240, cl: 280, cr: 100, stops: [[0, BRAND, 0.3], [0.55, BRAND, 0.85], [1, ROSE_DEEP, 0.8]] },
@@ -75,6 +89,7 @@ const SUBTLE: readonly Band[] = BAND.map((b) => ({
 
 const SETS: Record<GradientBandsVariant, readonly Band[]> = {
   hero: HERO,
+  heroDark: HERO_DARK,
   band: BAND,
   subtle: SUBTLE,
 };
@@ -91,7 +106,7 @@ export function GradientBands({
 }: GradientBandsProps) {
   const uid = useId().replace(/:/g, "");
   const bands = SETS[variant];
-  const hasNoise = noise && variant !== "subtle";
+  const hasNoise = noise && variant !== "subtle" && variant !== "heroDark";
 
   return (
     <div

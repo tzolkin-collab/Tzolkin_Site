@@ -253,3 +253,8 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     scroll-padding-top: 5rem;
   }
 }
+/* Texto em vermelho no tema escuro: o brand (#c50d0d) tem contraste baixo sobre fundo preto.
+   Só o texto ganha um vermelho mais claro; preenchimentos e anéis seguem com --brand. */
+.dark .text-brand {
+  color: #ff7a7a;
+}

@@ -151,15 +151,22 @@ export interface AreaChartProps {
   yTicks?: number;
   /** Formatação dos rótulos do eixo Y. */
   formatY?: (v: number) => string;
-  /** Tamanho do viewBox (padrão 520x260). Use menor para gráficos pequenos manterem o texto legível. */
+  /** Tamanho do viewBox (padrão 520x260). Use o tamanho renderizado para manter o texto 1:1. */
   viewWidth?: number;
   viewHeight?: number;
+  /** Aliases de viewWidth/viewHeight. */
+  width?: number;
+  height?: number;
   /** Tamanho dos rótulos em unidades do viewBox (padrão 11.5). */
   fontSize?: number;
   /** Margem esquerda do eixo Y (padrão 44). */
   marginLeft?: number;
   /** Máximo de rótulos no eixo X (padrão 7). */
   maxLabels?: number;
+  /** Opacidade do traço da série de comparação (padrão 0.35). */
+  compareOpacity?: number;
+  /** Cor final do degradê da série principal (padrão vinho). Use um tom mais claro em fundos escuros. */
+  seriesEnd?: string;
   className?: string;
   ariaLabel?: string;
 }
@@ -171,17 +178,21 @@ export function AreaChart({
   tooltip,
   yTicks = 4,
   formatY = (v) => String(Math.round(v)),
-  viewWidth = 520,
-  viewHeight = 260,
+  viewWidth,
+  viewHeight,
+  width,
+  height,
   fontSize = 11.5,
   marginLeft = 44,
   maxLabels = 7,
+  compareOpacity = 0.35,
+  seriesEnd = "#8a0a1c",
   className,
   ariaLabel = "Gráfico de área",
 }: AreaChartProps) {
   const uid = useId().replace(/:/g, "");
-  const W = viewWidth;
-  const H = viewHeight;
+  const W = viewWidth ?? width ?? 520;
+  const H = viewHeight ?? height ?? 260;
   const L = marginLeft;
   const R = 18;
   const T = 26;
@@ -221,7 +232,7 @@ export function AreaChart({
         <linearGradient id={`${uid}-s`} x1="0" x2="1" y1="0" y2="0">
           <stop offset="0" stopColor="#ff8a96" />
           <stop offset="0.55" stopColor="var(--brand)" />
-          <stop offset="1" stopColor="#8a0a1c" />
+          <stop offset="1" stopColor={seriesEnd} />
         </linearGradient>
         <linearGradient id={`${uid}-f`} x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="var(--brand)" stopOpacity="0.32" />
@@ -258,7 +269,7 @@ export function AreaChart({
       )}
 
       {cmp ? (
-        <path d={cmp} fill="none" stroke="currentColor" strokeOpacity={0.35} strokeWidth={1.5} strokeDasharray="4 4" strokeLinecap="round" />
+        <path d={cmp} fill="none" stroke="currentColor" strokeOpacity={compareOpacity} strokeWidth={1.5} strokeDasharray="4 4" strokeLinecap="round" />
       ) : null}
 
       <path d={`${line} L${xs[xs.length - 1]},${H - B} L${xs[0]},${H - B} Z`} fill={`url(#${uid}-f)`} />
