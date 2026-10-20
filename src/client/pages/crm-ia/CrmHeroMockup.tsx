@@ -161,7 +161,7 @@ export function CrmHeroMockup() {
         <div className="grid gap-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-1 lg:gap-10 xl:grid-cols-2 xl:gap-12">
           <div className="relative">
             <ContextPanel />
-            <Step n={1} className="-top-4 right-3">IA organiza</Step>
+            <Step n={1} className="-top-[30px] right-3">IA organiza</Step>
           </div>
 
           <div className="relative">
@@ -172,7 +172,7 @@ export function CrmHeroMockup() {
               ariaLabel="Registro de exemplo no CRM"
               className="h-full [&_[role=tab]]:!text-xs [&_pre]:!text-[13px]"
             />
-            <Step n={2} className="-top-4 right-3">Registra e avisa</Step>
+            <Step n={2} className="-top-[30px] right-3">Registra e avisa</Step>
             {/* Conector entre as etapas 1 e 2: horizontal lado a lado, vertical quando empilhado */}
             <div className="pointer-events-none absolute -left-[50px] top-14 z-30 hidden sm:block lg:hidden xl:block">
               <ConnectorLine width={52} height={14} from={[5, 7]} to={[47, 7]} curve="straight" dashed />
@@ -185,7 +185,7 @@ export function CrmHeroMockup() {
 
         <div className="relative">
           <PipelinePanel />
-          <Step n={3} className="-top-4 right-3">Acompanha</Step>
+          <Step n={3} className="-top-[30px] right-3">Acompanha</Step>
           <div className="pointer-events-none absolute -top-[42px] left-1/2 z-30 -ml-[7px] xl:left-3/4">
             <ConnectorLine width={14} height={44} from={[7, 5]} to={[7, 39]} curve="straight" dashed />
           </div>

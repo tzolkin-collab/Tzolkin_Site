@@ -121,7 +121,7 @@ export function CodeBlock({
                   {showLineNumbers ? (
                     <span
                       aria-hidden="true"
-                      className="mr-4 inline-block shrink-0 select-none pl-3 text-right text-[#74747f]"
+                      className="mr-4 inline-block shrink-0 select-none pl-3 text-right text-[#84848f]"
                       style={{ width: `${numWidth + 2}ch`, boxSizing: "content-box" }}
                     >
                       {n}
