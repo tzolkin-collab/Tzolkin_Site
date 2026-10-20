@@ -7,10 +7,10 @@
 :root {
   /* Minimalist Monochrome Palette - Light Mode Default */
 
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted: oklch(0.972 0.003 20);
+  --muted-foreground: oklch(0.5 0.01 20);
 
-  --border: oklch(0.922 0 0);
+  --border: oklch(0.915 0.004 20);
 
   --brand: #c90000;            /* TZOLKIN highlight — fills, bg, ícones, glows (violeta) */
   --brand-ink: #f15656;        /* violeta p/ TEXTO/links sobre fundo claro (AA 4.8:1) */
@@ -27,12 +27,12 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.972 0.003 20);
   --secondary-foreground: oklch(0.205 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.972 0.003 20);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --input: oklch(0.922 0 0);
+  --input: oklch(0.915 0.004 20);
   --ring: oklch(0.708 0 0);
   /* TZOLKIN chart palette — monocromática branco/cinza (light: superfície branca → tons escuros) */
   --chart-1: var(--foreground);     /* preto (série primária) */

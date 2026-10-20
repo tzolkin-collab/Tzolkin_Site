@@ -34,8 +34,8 @@ const TOKEN_COLOR: Record<TokenKind, string> = {
   fn: "text-[#ffc47e]",
   str: "text-[#94d9ae]",
   num: "text-[#d4a5ff]",
-  cm: "text-[#6f6f7b] italic",
-  punct: "text-[#8d8d99]",
+  cm: "text-[#8c8c9a] italic",
+  punct: "text-[#a5a5b2]",
   var: "text-[#f6dede]",
   plain: "text-[#e6e6ea]",
 };
@@ -121,7 +121,7 @@ export function CodeBlock({
                   {showLineNumbers ? (
                     <span
                       aria-hidden="true"
-                      className="mr-4 inline-block shrink-0 select-none pl-3 text-right text-[#55555f]"
+                      className="mr-4 inline-block shrink-0 select-none pl-3 text-right text-[#74747f]"
                       style={{ width: `${numWidth + 2}ch`, boxSizing: "content-box" }}
                     >
                       {n}

@@ -55,9 +55,9 @@ const HERO: readonly Band[] = [
   { d: 40, t: 200, cl: 240, cr: 90, stops: [[0, ROSE_DEEP, 0.15], [0.5, ROSE_DEEP, 0.7], [1, BRAND, 0.85]] },
   { d: 140, t: 210, cl: 80, cr: 300, stops: [[0, BRAND, 0.35], [0.55, BRAND, 0.9], [1, WINE, 0.95]] },
   { d: 250, t: 220, cl: 300, cr: 120, stops: [[0, WINE, 0.2], [0.5, BRAND, 0.8], [1, ROSE_DEEP, 0.85]] },
-  { d: 360, t: 230, cl: 120, cr: 340, stops: [[0, INK, 0.0], [0.4, WINE, 0.85], [1, BRAND, 0.8]] },
-  { d: 480, t: 240, cl: 360, cr: 140, stops: [[0, INK, 0.3], [0.5, INK, 0.92], [1, WINE, 0.9]] },
-  { d: 610, t: 260, cl: 160, cr: 380, stops: [[0, INK, 0.0], [0.5, INK, 0.7], [1, BRAND, 0.55]] },
+  { d: 360, t: 230, cl: 120, cr: 340, stops: [[0, WINE, 0.0], [0.4, WINE, 0.85], [1, BRAND, 0.8]] },
+  { d: 480, t: 240, cl: 360, cr: 140, stops: [[0, WINE, 0.3], [0.5, WINE, 0.92], [1, WINE, 0.9]] },
+  { d: 610, t: 260, cl: 160, cr: 380, stops: [[0, WINE, 0.0], [0.5, WINE, 0.7], [1, BRAND, 0.55]] },
 ];
 
 // Versão para fundos escuros: sem faixas "ink" (viram lama sobre o preto), cores mais saturadas.
@@ -82,10 +82,15 @@ const BAND: readonly Band[] = [
   { d: 600, t: 280, cl: 140, cr: 340, stops: [[0, INK, 0.0], [0.6, INK, 0.7], [1, BRAND, 0.6]] },
 ];
 
-const SUBTLE: readonly Band[] = BAND.map((b) => ({
-  ...b,
-  stops: b.stops.map(([o, c, a]) => [o, c, +(a * 0.38).toFixed(3)] as const),
-}));
+// Palco discreto dos mockups (claro e escuro). Só tons quentes e saturados: ink/vinho com transparência
+// parcial sobre o branco misturam para cinza-malva ("sujo"), então ficam de fora.
+const SUBTLE: readonly Band[] = [
+  { d: 60, t: 230, cl: 80, cr: 280, stops: [[0, ROSE, 0.0], [0.5, ROSE, 0.42], [1, AMBER, 0.38]] },
+  { d: 180, t: 240, cl: 280, cr: 100, stops: [[0, ROSE_DEEP, 0.1], [0.55, ROSE_DEEP, 0.5], [1, ROSE, 0.45]] },
+  { d: 310, t: 250, cl: 100, cr: 320, stops: [[0, BRAND, 0.06], [0.5, BRAND, 0.34], [1, ROSE_DEEP, 0.42]] },
+  { d: 450, t: 260, cl: 320, cr: 120, stops: [[0, ROSE, 0.08], [0.5, BRAND, 0.3], [1, ROSE_DEEP, 0.36]] },
+  { d: 600, t: 280, cl: 140, cr: 340, stops: [[0, ROSE, 0.0], [0.6, ROSE_DEEP, 0.26], [1, BRAND, 0.3]] },
+];
 
 const SETS: Record<GradientBandsVariant, readonly Band[]> = {
   hero: HERO,
