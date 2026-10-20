@@ -26,9 +26,9 @@ const mocks: Record<string, () => JSX.Element> = {
 
 export function ServicesSection() {
   return (
-    <section className="relative z-10 w-full bg-background py-20 md:py-32" id="aplicacoes" aria-labelledby="aplicacoes-title">
+    <section className="relative z-10 w-full bg-background py-16 md:py-24" id="aplicacoes" aria-labelledby="aplicacoes-title">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12">
-        <div className="mb-12 md:mb-16">
+        <div className="mb-10 md:mb-12">
           <SectionHeader
             id="aplicacoes-title"
             eyebrow="Aplicações"

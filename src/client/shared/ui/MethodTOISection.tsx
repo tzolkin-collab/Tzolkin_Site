@@ -10,9 +10,9 @@ const panels = [PermissionsPanel, ResourcesPanel, RepoPanel];
 
 export function MethodTOISection() {
   return (
-    <section id="como-construimos" aria-labelledby="como-construimos-title" className="relative border-t border-border bg-background py-20 md:py-32">
+    <section id="como-construimos" aria-labelledby="como-construimos-title" className="dark relative border-y border-white/10 bg-[#111116] py-16 md:py-24">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12">
-        <div className="mb-12 md:mb-16">
+        <div className="mb-10 md:mb-12">
           <SectionHeader
             id="como-construimos-title"
             eyebrow="Como construímos"

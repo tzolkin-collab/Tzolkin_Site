@@ -73,7 +73,7 @@ export function LandingPage() {
       </section>
 
       {/* Clientes */}
-      <section aria-label="Clientes" className="border-y border-border bg-background py-8">
+      <section aria-label="Clientes" className="border-y border-border bg-muted/80 dark:bg-white/[0.04] py-8">
         <p className="px-6 text-center text-sm text-muted-foreground">Empresas que já construíram com a TZOLKIN</p>
         <LogoMarquee items={brands} speed={0.8} />
       </section>
@@ -85,10 +85,10 @@ export function LandingPage() {
       <MethodTOISection />
 
       {/* Cases */}
-      <section id="cases" aria-labelledby="cases-title" className="bg-background py-20 md:py-28">
+      <section id="cases" aria-labelledby="cases-title" className="bg-background pb-16 pt-16 md:pb-20 md:pt-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12">
           <SectionHeader id="cases-title" eyebrow="Cases" title="Projetos em que" muted="já atuamos." />
-          <div className="mt-12">
+          <div className="mt-10 md:mt-12">
             <PortfolioCarousel projects={regularProjects} />
           </div>
         </div>
