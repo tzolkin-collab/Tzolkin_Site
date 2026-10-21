@@ -78,7 +78,7 @@ function MacStore() {
   return (
     <div className={`flex h-full flex-col ${INK}`}>
       <div className="flex h-11 shrink-0 items-center justify-between border-b border-[#ececec] px-6">
-        <span className="text-[15px] font-semibold tracking-tight">Atelier Areia</span>
+        <span className="text-[15px] font-semibold tracking-tight">Loja</span>
         <nav className={`flex gap-5 text-[12px] ${MUTED}`}><span>Novidades</span><span className="text-[#171717]">Camisetas</span><span>Calçados</span><span>Acessórios</span></nav>
         <span className="flex items-center gap-3"><Search size={15} /><span className="relative"><ShoppingBag size={16} /><i className="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand text-[8px] not-italic text-white">1</i></span></span>
       </div>
@@ -106,8 +106,8 @@ function MacCheckout() {
   return (
     <div className={`flex h-full flex-col ${INK}`}>
       <div className="flex h-11 shrink-0 items-center justify-between border-b border-[#ececec] px-6">
-        <span className="text-[15px] font-semibold tracking-tight">Atelier Areia</span>
-        <span className={`text-[12px] ${MUTED}`}>Finalizar compra</span>
+        <span className="text-[15px] font-semibold tracking-tight">Loja</span>
+        <span className={`text-[12px] ${MUTED}`}>Checkout</span>
       </div>
       <div className="grid flex-1 grid-cols-[1.15fr_1fr]">
         <div className="space-y-4 p-6">
@@ -200,7 +200,7 @@ function PhoneStore() {
   return (
     <div className={`flex h-full flex-col ${INK}`}>
       <PhoneBar />
-      <div className="flex h-9 shrink-0 items-center justify-between px-4"><span className="text-[13px] font-semibold">Atelier Areia</span><ShoppingBag size={15} /></div>
+      <div className="flex h-9 shrink-0 items-center justify-between px-4"><span className="text-[13px] font-semibold">Loja</span><ShoppingBag size={15} /></div>
       <Image src="/ecommerce/camiseta-lg.jpg" alt="Camiseta Básica Branca" width={246} height={246} unoptimized className="h-[230px] w-full object-cover" />
       <div className="flex-1 px-4 pt-3">
         <h4 className="text-[15px] font-semibold leading-tight">Camiseta Básica Branca</h4>
@@ -217,7 +217,7 @@ function PhoneCheckout() {
   return (
     <div className={`flex h-full flex-col ${INK}`}>
       <PhoneBar />
-      <div className="flex h-9 shrink-0 items-center justify-center border-b border-[#ececec] text-[13px] font-semibold">Pagamento</div>
+      <div className="flex h-9 shrink-0 items-center justify-center border-b border-[#ececec] text-[13px] font-semibold">Checkout</div>
       <div className="flex flex-1 flex-col items-center px-5 pt-5">
         <p className="text-[15px] font-semibold">Pague com Pix</p>
         <p className={`mt-0.5 text-[11px] ${MUTED}`}>Abra o app do seu banco e escaneie</p>

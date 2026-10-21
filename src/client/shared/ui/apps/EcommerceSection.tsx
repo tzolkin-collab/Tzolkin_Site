@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMotionValueEvent, useScroll } from 'framer-motion';
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { EcommerceDevices } from './EcommerceDevices';
 import { FitBox } from './FitBox';
@@ -35,9 +35,6 @@ const STEPS = [
   },
 ];
 
-const ctaClass =
-  'group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand px-6 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
-
 /**
  * Seção fixa conduzida pelo scroll em qualquer tela (mesmo padrão do hero): 3 etapas.
  * Em telas pequenas o layout é compacto: etapas em linha e a demonstração escalada para caber na altura que sobra.
@@ -56,15 +53,6 @@ export function EcommerceSection() {
     q.addEventListener('change', update);
     return () => q.removeEventListener('change', update);
   }, []);
-
-  const goTo = (i: number) => {
-    setStep(i);
-    const el = ref.current;
-    if (el) {
-      const total = el.offsetHeight - window.innerHeight;
-      window.scrollTo({ top: el.offsetTop + total * ((i + 0.5) / 3), behavior: 'smooth' });
-    }
-  };
 
   const current = STEPS[step];
   const devices = <EcommerceDevices step={step} />;
@@ -88,27 +76,7 @@ export function EcommerceSection() {
               Cada pedido, de qualquer canal, na mesma fila.
             </h2>
 
-            <ol className="mt-4 flex gap-2 xl:mt-8 xl:block xl:border-t xl:border-border" aria-label="Etapas da demonstração">
-              {STEPS.map((s, i) => (
-                <li key={s.label} className="flex-1 xl:border-b xl:border-border">
-                  <button
-                    type="button"
-                    aria-current={step === i ? 'step' : undefined}
-                    onClick={() => goTo(i)}
-                    className={`flex min-h-10 w-full items-center justify-center gap-2 rounded-full border px-2 text-[13px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand xl:min-h-12 xl:justify-start xl:gap-4 xl:rounded-none xl:border-0 xl:px-0 xl:py-3 xl:text-[15px] ${
-                      step === i ? 'border-brand text-foreground' : 'border-border text-foreground/50'
-                    }`}
-                  >
-                    <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold tabular-nums xl:h-6 xl:w-6 xl:text-xs ${step === i ? 'bg-brand text-brand-foreground' : 'border border-border'}`}>
-                      {i + 1}
-                    </span>
-                    {s.label}
-                  </button>
-                </li>
-              ))}
-            </ol>
-
-            <div className="mt-3 xl:mt-6 xl:min-h-[140px]" aria-live="polite">
+            <div className="mt-4 xl:mt-8 xl:min-h-[190px]" aria-live="polite">
               <p className="text-base font-semibold tracking-tight xl:text-xl">{current.title}</p>
               <p className="mt-1 text-sm leading-relaxed text-foreground/70 xl:mt-2 xl:text-base">{current.text}</p>
               {step === 2 && (
@@ -121,23 +89,27 @@ export function EcommerceSection() {
                   ))}
                 </ul>
               )}
-            </div>
-
-            <Link
-              href="/forms?aplicacao=ecommerce-marketplace"
-              className="group mt-1 inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background xl:hidden"
-            >
-              Conversar sobre minha loja
-              <ArrowRight size={16} aria-hidden="true" />
-            </Link>
-
-            <div className="hidden xl:block">
-              <Link href="/forms?aplicacao=ecommerce-marketplace" className={`${ctaClass} mt-6`}>
+              <Link
+                href="/forms?aplicacao=ecommerce-marketplace"
+                className="group mt-1 inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
                 Conversar sobre minha loja
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
-              <p className="mt-4 text-sm text-foreground/55">Telas de exemplo, com loja, clientes e valores fictícios.</p>
             </div>
+
+            {/* só a barra: o nome de cada etapa já está dentro das telas */}
+            <div
+              role="progressbar"
+              aria-label="Progresso da demonstração"
+              aria-valuemin={1}
+              aria-valuemax={3}
+              aria-valuenow={step + 1}
+              className="mt-2 h-1 w-full overflow-hidden rounded-full bg-border xl:mt-3"
+            >
+              <motion.div className="h-full origin-left bg-brand" style={{ scaleX: scrollYProgress }} />
+            </div>
+            <p className="mt-4 hidden text-sm text-foreground/55 xl:block">Telas de exemplo, com loja, clientes e valores fictícios.</p>
           </div>
 
           {wide ? (
