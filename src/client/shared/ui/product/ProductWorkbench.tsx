@@ -280,7 +280,6 @@ export function ProductWorkbench({
         </div>
       </div>
       <figcaption className={s.caption}>
-        <span>Exemplo interativo · dados ilustrativos</span>
         <span>
           <ArrowDownLeft size={12} aria-hidden="true" />
           {controlled ? "Role para avançar" : "Etapas em sequência"}

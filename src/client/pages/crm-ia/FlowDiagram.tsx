@@ -103,8 +103,7 @@ export function FlowDiagram() {
         </div>
       </div>
       <figcaption className={`${m.caption} mt-6`}>
-        Exemplo interativo · dados ilustrativos. O fluxo contratado é definido
-        conforme sua operação.
+        O fluxo contratado é definido conforme sua operação.
       </figcaption>
     </figure>
   );

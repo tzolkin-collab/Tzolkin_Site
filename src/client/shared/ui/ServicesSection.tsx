@@ -6,21 +6,17 @@ import { useMotionValueEvent, useScroll } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { applications } from '@/client/shared/data/homeData';
 import { SectionHeader } from '@/client/shared/ui/SectionHeader';
-import { ChatMock, FunnelMock, InvoiceMock, PilotMock } from '@/client/shared/ui/apps/AppMockups';
+import { AgentsDevices, CrmDevices, FiscalDevices, PilotDevices } from '@/client/shared/ui/apps/ProductDevices';
 import { EcommerceDevices } from '@/client/shared/ui/apps/EcommerceDevices';
 import { FitBox } from '@/client/shared/ui/apps/FitBox';
 import { HeroBands } from '@/client/shared/ui/hero/HeroBackground';
 
 const mocks: Record<string, () => JSX.Element> = {
-  'crm-com-ia': FunnelMock,
-  'agentes-ia': ChatMock,
-  'ecommerce-marketplace': () => (
-    <div className="p-2 md:p-4">
-      <EcommerceDevices step={0} />
-    </div>
-  ),
-  fiscal: InvoiceMock,
-  piloto: PilotMock,
+  'crm-com-ia': () => <CrmDevices step={1} />,
+  'agentes-ia': AgentsDevices,
+  'ecommerce-marketplace': () => <EcommerceDevices step={0} />,
+  fiscal: FiscalDevices,
+  piloto: PilotDevices,
 };
 
 const COUNT = applications.length;
@@ -70,7 +66,7 @@ export function ServicesSection() {
   }, [active]);
 
   const app = applications[active];
-  const Preview = mocks[app.slug] ?? PilotMock;
+  const Preview = mocks[app.slug] ?? PilotDevices;
   const linkClass =
     'group inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
@@ -82,10 +78,19 @@ export function ServicesSection() {
       className="relative z-10 h-[360svh] w-full bg-background"
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pb-4 pt-[72px] xl:justify-center xl:pb-6 xl:pt-[76px]">
-        {/* desktop: laje à direita, sangrando até a borda da tela */}
-        <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[46%] overflow-hidden border-l border-dashed border-border bg-muted/60 xl:block">
-          <div className="absolute inset-0 opacity-80" style={{ WebkitMaskImage: SLAB_MASK, maskImage: SLAB_MASK }}>
-            <HeroBands />
+        {/* desktop: laje à direita (52% da tela, sangrando até a borda) com a demonstração dentro dela */}
+        <div className="absolute inset-y-0 right-0 hidden w-[52%] xl:block">
+          <div aria-hidden="true" className="absolute inset-0 overflow-hidden border-l border-dashed border-border bg-muted/60">
+            <div className="absolute inset-0 opacity-80" style={{ WebkitMaskImage: SLAB_MASK, maskImage: SLAB_MASK }}>
+              <HeroBands />
+            </div>
+          </div>
+          <div className="absolute inset-0 flex items-center px-6" aria-live="polite">
+            <FitBox center className="!flex-none h-[min(700px,calc(100svh-120px))] w-full">
+              <div key={app.slug} className="overflow-hidden rounded-lg">
+                <Preview />
+              </div>
+            </FitBox>
           </div>
         </div>
         {/* celular e tablet: faixas embaixo, atrás da demonstração */}
@@ -148,13 +153,6 @@ export function ServicesSection() {
 
           </div>
 
-          <div className="relative hidden xl:col-span-6 xl:block xl:pl-14" aria-live="polite">
-            <FitBox center className={`!flex-none xl:h-[min(640px,calc(100svh-130px))] ${app.slug === 'ecommerce-marketplace' ? 'xl:-ml-10 xl:-mr-10' : ''}`}>
-              <div key={app.slug} className="overflow-hidden rounded-lg">
-                <Preview />
-              </div>
-            </FitBox>
-          </div>
           <FitBox className="mt-1 xl:hidden">
             <div key={app.slug} className="overflow-hidden rounded-lg">
               <Preview />

@@ -25,10 +25,6 @@ function Stage({ children, label }: { children: ReactNode; label: string }) {
   return (
     <figure className={`${s.demo} ${m.stage}`} aria-label={label}>
       {children}
-      <figcaption className={m.caption}>
-        <Info size={12} aria-hidden="true" />
-        Exemplo interativo · dados ilustrativos
-      </figcaption>
     </figure>
   );
 }

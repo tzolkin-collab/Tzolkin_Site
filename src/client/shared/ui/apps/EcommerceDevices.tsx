@@ -20,7 +20,7 @@ const SIZES = ['P', 'M', 'G', 'GG'];
 const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 /** Escala o palco para a largura disponível, sem passar de 1. */
-function useFit(base: number) {
+export function useFit(base: number) {
   const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   useEffect(() => {
@@ -33,7 +33,7 @@ function useFit(base: number) {
   return { ref, scale };
 }
 
-function Screen({ active, children }: { active: boolean; children: ReactNode }) {
+export function Screen({ active, children }: { active: boolean; children: ReactNode }) {
   return (
     <div aria-hidden={!active} className={`absolute inset-0 bg-white transition-opacity duration-200 motion-reduce:transition-none ${active ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
       {children}
@@ -251,30 +251,26 @@ function PhoneDone() {
 }
 
 /* ---------- Quadros ---------- */
-function MacFrame({ step }: { step: number }) {
+/** Quadro de MacBook (tela 682 x 438) para qualquer conteúdo. */
+export function MacShell({ children }: { children: ReactNode }) {
   return (
     <div className="w-[700px]">
-      <div className="rounded-[16px] bg-[#0f0f10] p-[9px] shadow-[0_40px_80px_-30px_rgba(10,20,40,0.55)] ring-1 ring-white/10">
-        <div className="relative h-[438px] w-full overflow-hidden rounded-[8px] bg-white">
-          <Screen active={step === 0}><MacStore /></Screen>
-          <Screen active={step === 1}><MacCheckout /></Screen>
-          <Screen active={step === 2}><MacAdmin /></Screen>
-        </div>
+      <div className="rounded-[16px] bg-[#0f0f10] p-[9px] ring-1 ring-white/10">
+        <div className="relative h-[438px] w-full overflow-hidden rounded-[8px] bg-white">{children}</div>
       </div>
-      <div className="mx-auto h-[13px] w-[760px] -translate-x-[30px] rounded-b-[14px] bg-gradient-to-b from-[#d9d9de] to-[#a9a9b0] shadow-[0_16px_30px_-10px_rgba(0,0,0,0.5)]">
+      <div className="mx-auto h-[13px] w-[760px] -translate-x-[30px] rounded-b-[14px] bg-gradient-to-b from-[#d9d9de] to-[#a9a9b0]">
         <div className="mx-auto h-[5px] w-[110px] rounded-b-md bg-[#8e8e95]" />
       </div>
     </div>
   );
 }
 
-function PhoneFrame({ step }: { step: number }) {
+/** Quadro de iPhone (tela 246 x 524) para qualquer conteúdo. */
+export function PhoneShell({ children }: { children: ReactNode }) {
   return (
-    <div className="w-[262px] rounded-[42px] bg-[#0f0f10] p-[8px] shadow-[0_40px_80px_-24px_rgba(10,20,40,0.65)] ring-1 ring-white/15">
+    <div className="w-[262px] rounded-[42px] bg-[#0f0f10] p-[8px] ring-1 ring-white/15">
       <div className="relative h-[524px] w-full overflow-hidden rounded-[34px] bg-white">
-        <Screen active={step === 0}><PhoneStore /></Screen>
-        <Screen active={step === 1}><PhoneCheckout /></Screen>
-        <Screen active={step === 2}><PhoneDone /></Screen>
+        {children}
         <span aria-hidden="true" className="absolute left-1/2 top-2 z-10 h-[20px] w-[72px] -translate-x-1/2 rounded-full bg-[#0f0f10]" />
         <span aria-hidden="true" className="absolute bottom-1.5 left-1/2 z-10 h-1 w-[84px] -translate-x-1/2 rounded-full bg-[#171717]/80" />
       </div>
@@ -282,18 +278,48 @@ function PhoneFrame({ step }: { step: number }) {
   );
 }
 
-/** Palco: Mac e iPhone sobrepostos. Abaixo de md mostra só o iPhone, em tamanho real. */
-export function EcommerceDevices({ step }: { step: number }) {
+function MacFrame({ step }: { step: number }) {
+  return (
+    <MacShell>
+      <Screen active={step === 0}><MacStore /></Screen>
+      <Screen active={step === 1}><MacCheckout /></Screen>
+      <Screen active={step === 2}><MacAdmin /></Screen>
+    </MacShell>
+  );
+}
+
+function PhoneFrame({ step }: { step: number }) {
+  return (
+    <PhoneShell>
+      <Screen active={step === 0}><PhoneStore /></Screen>
+      <Screen active={step === 1}><PhoneCheckout /></Screen>
+      <Screen active={step === 2}><PhoneDone /></Screen>
+    </PhoneShell>
+  );
+}
+
+/** Palco: Mac e iPhone lado a lado (iPhone sobre a moldura do Mac). Abaixo de md mostra só o iPhone, em tamanho real. */
+export function DeviceStage({ mac, phone, label }: { mac: ReactNode; phone: ReactNode; label: string }) {
   const { ref, scale } = useFit(STAGE_W);
   return (
-    <div role="group" aria-label="Loja de exemplo no computador e no celular: página de produto, checkout com Pix e pedido na fila">
-      <div className="flex justify-center md:hidden"><PhoneFrame step={step} /></div>
-      <div ref={ref} className="hidden w-full md:block" style={{ height: STAGE_H * scale }}>
+    <div role="group" aria-label={label}>
+      <div className="flex justify-center md:hidden">{phone}</div>
+      <div ref={ref} className="hidden w-full md:block" style={{ aspectRatio: `${STAGE_W} / ${STAGE_H}`, maxWidth: STAGE_W }}>
         <div className="relative origin-top-left" style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${scale})` }}>
-          <div className="absolute left-0 top-0"><MacFrame step={step} /></div>
-          <div className="absolute right-0 top-[70px]"><PhoneFrame step={step} /></div>
+          <div className="absolute left-0 top-0">{mac}</div>
+          <div className="absolute right-0 top-[70px]">{phone}</div>
         </div>
       </div>
     </div>
+  );
+}
+
+export function EcommerceDevices({ step }: { step: number }) {
+  return (
+    <DeviceStage
+      label="Loja de exemplo no computador e no celular: página de produto, checkout com Pix e pedido na fila"
+      mac={<MacFrame step={step} />}
+      phone={<PhoneFrame step={step} />}
+    />
   );
 }
