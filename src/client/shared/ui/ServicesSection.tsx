@@ -112,7 +112,7 @@ export function ServicesSection() {
             <SectionHeader id="aplicacoes-title" eyebrow="Aplicações" title="Software para vender," muted="atender e operar." />
 
             {/* acordeão: a aplicação ativa abre sem empurrar a página */}
-            <ol ref={listRef} className="relative mt-4 border-t border-border xl:mt-8" style={{ paddingBottom: detailH }} aria-label="Aplicações">
+            <ol ref={listRef} className="relative mt-4 xl:mt-8" style={{ paddingBottom: detailH }} aria-label="Aplicações">
               {applications.map((a, i) => {
                 const on = i === active;
                 return (
@@ -121,7 +121,7 @@ export function ServicesSection() {
                     ref={(el) => {
                       rowRefs.current[i] = el;
                     }}
-                    className={on ? '' : 'border-b border-border'}
+                    className={i > 0 ? 'border-t border-border' : ''}
                     style={{ transform: i > active ? `translateY(${detailH}px)` : undefined }}
                   >
                     <button
@@ -139,7 +139,7 @@ export function ServicesSection() {
               <div
                 ref={detailRef}
                 aria-live="polite"
-                className="absolute inset-x-0 top-0 grid border-b border-border pb-3 pl-10 xl:pb-5 xl:pl-11"
+                className="absolute inset-x-0 top-0 grid pb-3 pl-10 xl:pb-5 xl:pl-11"
                 style={{ transform: `translateY(${detailY}px)` }}
               >
                 {applications.map((a, i) => (
@@ -158,7 +158,7 @@ export function ServicesSection() {
 
           </div>
 
-          <FitBox className="mt-1 xl:hidden">
+          <FitBox className="mt-6 xl:hidden">
             <div key={app.slug} className="overflow-hidden rounded-lg">
               <Preview />
             </div>
