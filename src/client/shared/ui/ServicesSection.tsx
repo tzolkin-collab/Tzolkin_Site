@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type JSX, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type JSX } from 'react';
 import Link from 'next/link';
 import { useMotionValueEvent, useScroll } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -29,38 +29,6 @@ const COUNT = applications.length;
 const SLAB_MASK = 'linear-gradient(to top left, #000 0%, rgba(0,0,0,0.55) 38%, transparent 72%)';
 const MOBILE_MASK = 'linear-gradient(to top, #000 20%, rgba(0,0,0,0.6) 55%, transparent 96%)';
 
-// Escala-base de cada demonstração (as baixas crescem, a do CRM é alta). O ajuste ainda reduz o que não couber na tela.
-const ZOOM: Record<string, number> = { 'crm-com-ia': 1, 'agentes-ia': 1.2, 'ecommerce-marketplace': 1.05, fiscal: 1.1, piloto: 1.1 };
-
-/** Desktop: escala a demonstração para a escala-base, mas nunca além do que cabe na altura da tela fixa. */
-function FitPreview({ base, children }: { base: number; children: ReactNode }) {
-  const inner = useRef<HTMLDivElement>(null);
-  const [h, setH] = useState(0);
-  const [vh, setVh] = useState(900);
-  useEffect(() => {
-    const el = inner.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => setH(el.offsetHeight));
-    ro.observe(el);
-    setH(el.offsetHeight);
-    const onResize = () => setVh(window.innerHeight);
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', onResize);
-    };
-  }, []);
-  const avail = vh - 76 - 24; // topo sob o header e respiro
-  const scale = h > 0 ? Math.min(base, avail / h) : base;
-  return (
-    <div style={{ height: h > 0 ? h * scale : undefined }}>
-      <div ref={inner} style={{ width: `${100 / scale}%`, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-        {children}
-      </div>
-    </div>
-  );
-}
 
 /**
  * Índice editorial das aplicações, fixo e conduzido pelo scroll em qualquer tela (mesmo padrão do hero):
@@ -69,18 +37,10 @@ function FitPreview({ base, children }: { base: number; children: ReactNode }) {
  */
 export function ServicesSection() {
   const ref = useRef<HTMLElement>(null);
-  const [wide, setWide] = useState(false);
   const [active, setActive] = useState(0);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
   useMotionValueEvent(scrollYProgress, 'change', (v) => setActive(Math.min(COUNT - 1, Math.max(0, Math.floor(v * COUNT)))));
-  useEffect(() => {
-    const q = window.matchMedia('(min-width: 1280px)');
-    const update = () => setWide(q.matches);
-    update();
-    q.addEventListener('change', update);
-    return () => q.removeEventListener('change', update);
-  }, []);
 
   const goTo = (i: number) => {
     setActive(i);
@@ -90,6 +50,24 @@ export function ServicesSection() {
       window.scrollTo({ top: el.offsetTop + total * ((i + 0.5) / COUNT), behavior: 'smooth' });
     }
   };
+
+  // Acordeão sem layout shift: as linhas têm altura fixa e o painel de detalhes (altura reservada) e as linhas
+  // abaixo dele só se movem por transform. O espaço do painel já está reservado no fim da lista.
+  const listRef = useRef<HTMLOListElement>(null);
+  const rowRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const [detailY, setDetailY] = useState(0);
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const place = () => {
+      const li = rowRefs.current[active];
+      if (li) setDetailY(li.offsetTop + li.offsetHeight);
+    };
+    place();
+    const ro = new ResizeObserver(place);
+    ro.observe(list);
+    return () => ro.disconnect();
+  }, [active]);
 
   const app = applications[active];
   const Preview = mocks[app.slug] ?? PilotMock;
@@ -101,7 +79,7 @@ export function ServicesSection() {
       ref={ref}
       id="aplicacoes"
       aria-labelledby="aplicacoes-title"
-      className="relative z-10 h-[360vh] w-full bg-background"
+      className="relative z-10 h-[360svh] w-full bg-background"
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pb-4 pt-[72px] xl:justify-center xl:pb-6 xl:pt-[76px]">
         {/* desktop: laje à direita, sangrando até a borda da tela */}
@@ -123,12 +101,24 @@ export function ServicesSection() {
           <div className="xl:col-span-6 xl:pr-16">
             <SectionHeader id="aplicacoes-title" eyebrow="Aplicações" title="Software para vender," muted="atender e operar." />
 
-            {/* desktop: lista com a aplicação ativa aberta */}
-            <ol className="mt-4 border-t border-border xl:mt-8" aria-label="Aplicações">
+            {/* acordeão: a aplicação ativa abre sem empurrar a página (altura reservada, movimento só por transform) */}
+            <ol
+              ref={listRef}
+              className="relative mt-4 border-t border-border [--dh:7.5rem] xl:mt-8 xl:[--dh:11.5rem]"
+              style={{ paddingBottom: 'var(--dh)' }}
+              aria-label="Aplicações"
+            >
               {applications.map((a, i) => {
                 const on = i === active;
                 return (
-                  <li key={a.slug} className="border-b border-border">
+                  <li
+                    key={a.slug}
+                    ref={(el) => {
+                      rowRefs.current[i] = el;
+                    }}
+                    className="border-b border-border"
+                    style={{ transform: i > active ? 'translateY(var(--dh))' : undefined }}
+                  >
                     <button
                       type="button"
                       aria-expanded={on}
@@ -138,39 +128,38 @@ export function ServicesSection() {
                       <span className={`w-6 shrink-0 text-sm font-semibold tabular-nums ${on ? 'text-brand' : 'text-foreground/35'}`}>{String(i + 1).padStart(2, '0')}</span>
                       <span className={`text-lg font-semibold leading-snug tracking-tight xl:text-2xl ${on ? 'text-foreground' : 'text-foreground/45'}`}>{a.title}</span>
                     </button>
-                    {on && (
-                      <div className="pb-3 pl-10 xl:pb-6 xl:pl-11">
-                        <p className="text-sm font-medium xl:text-base">{a.forWho}</p>
-                        <p className="mt-2 hidden max-w-xl text-[15px] leading-relaxed text-foreground/70 xl:block">{a.delivers}</p>
-                        <Link href={a.href} className={`${linkClass} mt-1 xl:mt-4`}>
-                          {a.ctaText}
-                          <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                        </Link>
-                      </div>
-                    )}
                   </li>
                 );
               })}
+              <div
+                aria-live="polite"
+                className="absolute inset-x-0 top-0 overflow-hidden pl-10 pt-1 xl:pl-11"
+                style={{ height: 'var(--dh)', transform: `translateY(${detailY}px)` }}
+              >
+                <p className="text-sm font-medium xl:text-base">{app.forWho}</p>
+                <p className="mt-2 hidden max-w-xl text-[15px] leading-relaxed text-foreground/70 xl:block">{app.delivers}</p>
+                <Link href={app.href} className={`${linkClass} mt-1 xl:mt-3`}>
+                  {app.ctaText}
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </Link>
+              </div>
             </ol>
             <p className="mt-4 hidden text-sm text-foreground/55 xl:block">Cinco frentes em que já desenhamos e entregamos. O escopo final é definido em conversa.</p>
 
           </div>
 
-          {wide ? (
-            <div className="relative xl:col-span-6 xl:pl-14" aria-live="polite">
-              <div key={app.slug} className={`overflow-hidden rounded-lg ${app.slug === 'ecommerce-marketplace' ? 'xl:-ml-10 xl:-mr-10' : ''}`}>
-                <FitPreview base={ZOOM[app.slug] ?? 1}>
-                  <Preview />
-                </FitPreview>
-              </div>
-            </div>
-          ) : (
-            <FitBox className="mt-1">
+          <div className="relative hidden xl:col-span-6 xl:block xl:pl-14" aria-live="polite">
+            <FitBox center className={`!flex-none xl:h-[min(640px,calc(100svh-130px))] ${app.slug === 'ecommerce-marketplace' ? 'xl:-ml-10 xl:-mr-10' : ''}`}>
               <div key={app.slug} className="overflow-hidden rounded-lg">
                 <Preview />
               </div>
             </FitBox>
-          )}
+          </div>
+          <FitBox className="mt-1 xl:hidden">
+            <div key={app.slug} className="overflow-hidden rounded-lg">
+              <Preview />
+            </div>
+          </FitBox>
         </div>
       </div>
     </section>

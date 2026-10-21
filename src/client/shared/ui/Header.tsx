@@ -140,16 +140,12 @@ export function Header() {
                                 key={link.id}
                                 href={`/#${link.id}`}
                                 aria-current={active ? 'true' : undefined}
-                                className={`relative w-1/3 shrink-0 py-1 text-center text-[13px] font-medium uppercase tracking-wide transition-[color,text-shadow] duration-300 ${active
-                                  ? 'text-foreground [text-shadow:0_0_12px_rgba(255,42,42,0.95),0_0_24px_rgba(255,42,42,0.5)]'
+                                className={`relative w-1/3 shrink-0 py-1 text-center text-[13px] font-medium uppercase tracking-wide transition-colors duration-300 ${active
+                                  ? 'text-brand'
                                   : 'text-foreground/50 hover:text-foreground/80'
                                   }`}
                               >
                                 {link.label}
-                                <span
-                                  aria-hidden="true"
-                                  className={`absolute inset-x-6 -bottom-0.5 h-px rounded-full bg-[#ff2a2a] shadow-[0_0_8px_2px_rgba(255,42,42,0.8)] transition-opacity duration-300 ${active ? 'opacity-100' : 'opacity-0'}`}
-                                />
                               </Link>
                             );
                           })}

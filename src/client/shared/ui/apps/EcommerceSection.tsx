@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
@@ -41,20 +41,11 @@ const STEPS = [
  */
 export function EcommerceSection() {
   const ref = useRef<HTMLElement>(null);
-  const [wide, setWide] = useState(false);
   const [step, setStep] = useState(0);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
   useMotionValueEvent(scrollYProgress, 'change', (v) => setStep(Math.min(2, Math.max(0, Math.floor(v * 3)))));
-  useEffect(() => {
-    const q = window.matchMedia('(min-width: 1280px)');
-    const update = () => setWide(q.matches);
-    update();
-    q.addEventListener('change', update);
-    return () => q.removeEventListener('change', update);
-  }, []);
 
-  const current = STEPS[step];
   const devices = <EcommerceDevices step={step} />;
 
   return (
@@ -62,7 +53,7 @@ export function EcommerceSection() {
       ref={ref}
       id="ecommerce-marketplace"
       aria-labelledby="ecommerce-title"
-      className="relative border-t border-border bg-muted/40 h-[300vh]"
+      className="relative border-t border-border bg-muted/40 h-[300svh]"
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pb-4 pt-[72px] xl:justify-center xl:py-0">
         {/* cunha de cor no fundo da seção, encostada na borda de baixo, em qualquer tela */}
@@ -76,19 +67,25 @@ export function EcommerceSection() {
               Cada pedido, de qualquer canal, na mesma fila.
             </h2>
 
-            <div className="mt-4 xl:mt-8 xl:min-h-[190px]" aria-live="polite">
-              <p className="text-base font-semibold tracking-tight xl:text-xl">{current.title}</p>
-              <p className="mt-1 text-sm leading-relaxed text-foreground/70 xl:mt-2 xl:text-base">{current.text}</p>
-              {step === 2 && (
-                <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 xl:mt-4 xl:gap-x-5 xl:gap-y-2" aria-label="Canais de exemplo">
-                  {LOGOS.map((l) => (
-                    <li key={l.name} className="flex items-center gap-1.5 text-xs text-foreground/70 xl:gap-2 xl:text-sm">
-                      <Image src={l.src} alt="" width={16} height={16} unoptimized className={`h-4 w-4 object-contain ${l.mono ? 'dark:invert' : ''}`} />
-                      {l.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
+            {/* os três textos ocupam a mesma célula: a altura é a do maior e nada se mexe ao trocar de etapa */}
+            <div className="mt-4 grid xl:mt-8" aria-live="polite">
+              {STEPS.map((s, i) => (
+                <div key={s.label} aria-hidden={i !== step} className={`col-start-1 row-start-1 ${i === step ? '' : 'invisible'}`}>
+                  <p className="text-base font-semibold tracking-tight xl:text-xl">{s.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/70 xl:mt-2 xl:text-base">{s.text}</p>
+                  {i === 2 && (
+                    <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 xl:mt-4 xl:gap-x-5 xl:gap-y-2" aria-label="Canais de exemplo">
+                      {LOGOS.map((l) => (
+                        <li key={l.name} className="flex items-center gap-1.5 text-xs text-foreground/70 xl:gap-2 xl:text-sm">
+                          <Image src={l.src} alt="" width={16} height={16} unoptimized className={`h-4 w-4 object-contain ${l.mono ? 'dark:invert' : ''}`} />
+                          {l.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
               <Link
                 href="/forms?aplicacao=ecommerce-marketplace"
                 className="group mt-1 inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -96,7 +93,6 @@ export function EcommerceSection() {
                 Conversar sobre minha loja
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
-            </div>
 
             {/* só a barra: o nome de cada etapa já está dentro das telas */}
             <div
@@ -112,12 +108,8 @@ export function EcommerceSection() {
             <p className="mt-4 hidden text-sm text-foreground/55 xl:block">Telas de exemplo, com loja, clientes e valores fictícios.</p>
           </div>
 
-          {wide ? (
-            <div className="relative min-w-0 xl:col-span-8 xl:-mr-16">{devices}</div>
-          ) : (
-            <FitBox className="mt-3">{devices}</FitBox>
-          )}
-
+          <div className="relative hidden min-w-0 xl:col-span-8 xl:-mr-16 xl:block">{devices}</div>
+          <FitBox className="mt-3 xl:hidden">{devices}</FitBox>
         </div>
       </div>
     </section>
