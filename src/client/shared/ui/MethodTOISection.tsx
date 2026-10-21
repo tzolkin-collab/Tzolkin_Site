@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { Check, FileText, KeyRound, Lock, Server, Users } from 'lucide-react';
 import { FitBox } from '@/client/shared/ui/apps/FitBox';
-import { HeroBands } from '@/client/shared/ui/hero/HeroBackground';
 
 /*
  * "Como construímos", escrito como as três dúvidas que o cliente tem antes de contratar (acessos, custos, continuidade),
@@ -120,8 +119,6 @@ function HandoffSheet() {
 }
 
 const SHEETS = [TeamSheet, CostsSheet, HandoffSheet];
-const SLAB_MASK = 'linear-gradient(to top right, #000 0%, rgba(0,0,0,0.55) 40%, transparent 74%)';
-const MOBILE_MASK = 'linear-gradient(to top, #000 20%, rgba(0,0,0,0.6) 55%, transparent 96%)';
 
 function Sheets({ step }: { step: number }) {
   return (
@@ -153,15 +150,9 @@ export function MethodTOISection() {
       className="relative h-[300svh] border-y border-border bg-muted/40"
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pb-4 pt-[72px] xl:justify-center xl:py-0">
-        {/* desktop: laje à esquerda com as faixas do hero; celular: faixas embaixo */}
-        <div aria-hidden="true" className="absolute inset-y-0 left-0 hidden w-[48%] overflow-hidden border-r border-dashed border-border bg-muted/60 xl:block">
-          <div className="absolute inset-0 opacity-80" style={{ WebkitMaskImage: SLAB_MASK, maskImage: SLAB_MASK, transform: 'scaleX(-1)' }}>
-            <HeroBands />
-          </div>
-        </div>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] xl:hidden" style={{ WebkitMaskImage: MOBILE_MASK, maskImage: MOBILE_MASK }}>
-          <HeroBands />
-        </div>
+        {/* disco chapado atrás da folha (outra forma, sem as faixas do hero); ecoa os círculos dos Cases */}
+        <div aria-hidden="true" className="pointer-events-none absolute left-[-22vh] top-1/2 hidden h-[86vh] w-[86vh] -translate-y-1/2 rounded-full bg-brand/[0.07] ring-1 ring-brand/20 xl:block" />
+        <div aria-hidden="true" className="pointer-events-none absolute left-[-6vh] top-1/2 hidden h-[60vh] w-[60vh] -translate-y-1/2 rounded-full bg-brand/[0.06] ring-1 ring-brand/15 xl:block" />
 
         <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
           {/* texto (à direita no desktop) */}

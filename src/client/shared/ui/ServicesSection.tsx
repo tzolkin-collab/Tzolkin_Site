@@ -9,7 +9,6 @@ import { SectionHeader } from '@/client/shared/ui/SectionHeader';
 import { AgentsDevices, CrmDevices, FiscalDevices, PilotDevices } from '@/client/shared/ui/apps/ProductDevices';
 import { EcommerceDevices } from '@/client/shared/ui/apps/EcommerceDevices';
 import { FitBox } from '@/client/shared/ui/apps/FitBox';
-import { HeroBands } from '@/client/shared/ui/hero/HeroBackground';
 
 const mocks: Record<string, () => JSX.Element> = {
   'crm-com-ia': () => <CrmDevices step={1} />,
@@ -21,9 +20,6 @@ const mocks: Record<string, () => JSX.Element> = {
 
 const COUNT = applications.length;
 
-// As faixas do hero reaparecem na laje (desktop) ou embaixo da demonstração (celular) e se dissolvem rumo ao texto.
-const SLAB_MASK = 'linear-gradient(to top left, #000 0%, rgba(0,0,0,0.55) 38%, transparent 72%)';
-const MOBILE_MASK = 'linear-gradient(to top, #000 20%, rgba(0,0,0,0.6) 55%, transparent 96%)';
 
 
 /**
@@ -86,9 +82,6 @@ export function ServicesSection() {
         {/* desktop: laje à direita (52% da tela, sangrando até a borda) com a demonstração dentro dela */}
         <div className="absolute inset-y-0 right-0 hidden w-[52%] xl:block">
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden border-l border-dashed border-border bg-muted/60">
-            <div className="absolute inset-0 opacity-80" style={{ WebkitMaskImage: SLAB_MASK, maskImage: SLAB_MASK }}>
-              <HeroBands />
-            </div>
           </div>
           <div className="absolute inset-0 flex items-center px-6" aria-live="polite">
             <FitBox center className="!flex-none h-[min(700px,calc(100svh-120px))] w-full">
@@ -98,15 +91,6 @@ export function ServicesSection() {
             </FitBox>
           </div>
         </div>
-        {/* celular e tablet: faixas embaixo, atrás da demonstração */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] xl:hidden"
-          style={{ WebkitMaskImage: MOBILE_MASK, maskImage: MOBILE_MASK }}
-        >
-          <HeroBands />
-        </div>
-
         <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
           <div className="xl:col-span-6 xl:pr-16">
             <SectionHeader id="aplicacoes-title" eyebrow="Aplicações" title="Software para vender," muted="atender e operar." />
