@@ -15,7 +15,7 @@ const mocks: Record<string, () => JSX.Element> = {
   'crm-com-ia': FunnelMock,
   'agentes-ia': ChatMock,
   'ecommerce-marketplace': () => (
-    <div className="bg-muted/40 p-4 md:p-6">
+    <div className="p-2 md:p-4">
       <EcommerceDevices step={0} />
     </div>
   ),
@@ -51,7 +51,7 @@ function FitPreview({ base, children }: { base: number; children: ReactNode }) {
       window.removeEventListener('resize', onResize);
     };
   }, []);
-  const avail = vh - 76 - 24 - 84; // topo sob o header, respiro, linha de fatos
+  const avail = vh - 76 - 24; // topo sob o header e respiro
   const scale = h > 0 ? Math.min(base, avail / h) : base;
   return (
     <div style={{ height: h > 0 ? h * scale : undefined }}>
@@ -158,20 +158,15 @@ export function ServicesSection() {
 
           {wide ? (
             <div className="relative xl:col-span-6 xl:pl-14" aria-live="polite">
-              <div key={app.slug} className="overflow-hidden rounded-lg border border-border bg-card shadow-[0_40px_80px_-40px_rgba(10,20,40,0.4)]">
+              <div key={app.slug} className={`overflow-hidden rounded-lg ${app.slug === 'ecommerce-marketplace' ? 'xl:-ml-10 xl:-mr-10' : ''}`}>
                 <FitPreview base={ZOOM[app.slug] ?? 1}>
                   <Preview />
                 </FitPreview>
               </div>
-              <ul className="mt-5 grid grid-cols-3 divide-x divide-border overflow-hidden rounded-lg border border-border bg-card text-[13px] font-medium leading-snug shadow-[0_16px_40px_-24px_rgba(10,20,40,0.35)]" aria-label="O que a aplicação inclui">
-                {app.chips.map((c) => (
-                  <li key={c} className="px-4 py-3 text-foreground/80">{c}</li>
-                ))}
-              </ul>
             </div>
           ) : (
             <FitBox className="mt-1">
-              <div key={app.slug} className="overflow-hidden rounded-lg border border-border bg-card shadow-[0_24px_60px_-30px_rgba(10,20,40,0.4)]">
+              <div key={app.slug} className="overflow-hidden rounded-lg">
                 <Preview />
               </div>
             </FitBox>
