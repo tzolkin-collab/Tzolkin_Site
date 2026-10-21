@@ -17,7 +17,7 @@ import { SectionHeader } from '@/client/shared/ui/SectionHeader';
 import { HeroBackground } from '@/client/shared/ui/hero/HeroBackground';
 import { HeroMockups } from '@/client/shared/ui/hero/HeroMockups';
 import { HeroBands } from '@/client/shared/ui/hero/HeroBackground';
-import { FitBox } from '@/client/shared/ui/apps/FitBox';
+import { HeroPhoneRise } from '@/client/shared/ui/hero/HeroPhoneRise';
 import { FinalCta } from '@/client/shared/ui/FinalCta';
 import { Footer } from '@/client/shared/ui/Footer';
 
@@ -28,19 +28,13 @@ export function LandingPage() {
     [],
   );
 
-  // O hero fica fixo e o scroll percorre as 3 etapas em qualquer tela. No desktop a seção inteira fixa;
-  // no celular o texto rola normalmente e só o aparelho fica fixo (bloco logo abaixo do texto).
+  // No desktop o hero fica fixo e o scroll percorre as 3 etapas. No celular não há pin: o aparelho sobe com o scroll normal.
   const heroRef = useRef<HTMLElement>(null);
-  const mobileRef = useRef<HTMLDivElement>(null);
   const [pinned, setPinned] = useState(false);
   const [heroStep, setHeroStep] = useState(0);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end end'] });
-  const { scrollYProgress: mobileProgress } = useScroll({ target: mobileRef, offset: ['start start', 'end end'] });
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     if (pinned) setHeroStep(Math.min(2, Math.floor(v * 3)));
-  });
-  useMotionValueEvent(mobileProgress, 'change', (v) => {
-    if (!pinned) setHeroStep(Math.min(2, Math.max(0, Math.floor(v * 3))));
   });
   useEffect(() => {
     const query = window.matchMedia('(min-width: 1024px)');
@@ -91,21 +85,8 @@ export function LandingPage() {
         </div>
       </div>
 
-      {/* celular: o aparelho fica fixo e o scroll conduz as etapas */}
-      <div ref={mobileRef} className="relative h-[260svh] lg:hidden">
-        <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden px-6 pb-6 pt-[72px]">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[72%]"
-            style={{ WebkitMaskImage: 'linear-gradient(to top, #000 22%, rgba(0,0,0,0.6) 55%, transparent 96%)', maskImage: 'linear-gradient(to top, #000 22%, rgba(0,0,0,0.6) 55%, transparent 96%)' }}
-          >
-            <HeroBands />
-          </div>
-          <FitBox className="relative z-10">
-            <HeroMockups step={heroStep} />
-          </FitBox>
-        </div>
-      </div>
+      {/* celular: o aparelho sobe no fluxo normal da página, com zoom, 3D e motion blur (o scroll não é preso) */}
+      <HeroPhoneRise />
       </section>
 
       {/* Cases (inclui as parcerias) */}
