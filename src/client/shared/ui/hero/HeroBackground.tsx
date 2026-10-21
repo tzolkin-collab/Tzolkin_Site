@@ -26,7 +26,7 @@ export function HeroBackground() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-y-0 right-0 hidden w-[60%] opacity-25 lg:block dark:opacity-40"
+      className="pointer-events-none absolute inset-y-0 right-0 hidden w-[66%] lg:block"
       style={{
         WebkitMaskImage: MASK,
         maskImage: MASK,
