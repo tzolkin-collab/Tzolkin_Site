@@ -3,13 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMotionValueEvent, useScroll } from 'framer-motion';
 import Link from 'next/link';
-import { LogoMarquee } from '@/client/shared/ui/LogoMarquee';
 import { Header } from '@/client/shared/ui/Header';
 import { projects } from '@/client/shared/data/projects';
-import { brands } from '@/client/shared/data/brands';
 
 import { PortfolioCarousel } from '@/client/shared/ui/PortfolioCarousel';
-import { MajorPartnerships } from '@/client/shared/ui/MajorPartnerships';
 import { ServicesSection } from '@/client/shared/ui/ServicesSection';
 import { EcommerceSection } from '@/client/shared/ui/apps/EcommerceSection';
 import { MethodTOISection } from '@/client/shared/ui/MethodTOISection';
@@ -19,29 +16,32 @@ import { PricingSection } from '@/client/shared/ui/PricingSection';
 import { SectionHeader } from '@/client/shared/ui/SectionHeader';
 import { HeroBackground } from '@/client/shared/ui/hero/HeroBackground';
 import { HeroMockups } from '@/client/shared/ui/hero/HeroMockups';
+import { HeroBands } from '@/client/shared/ui/hero/HeroBackground';
+import { FitBox } from '@/client/shared/ui/apps/FitBox';
 import { FinalCta } from '@/client/shared/ui/FinalCta';
 import { Footer } from '@/client/shared/ui/Footer';
 
 export function LandingPage() {
-  const { regularProjects, partnershipProjects } = useMemo(() => {
-    const groups = new Map<string, typeof projects>();
-    projects.forEach(p => {
-      const category = p.category || 'case';
-      if (!groups.has(category)) groups.set(category, []);
-      groups.get(category)!.push(p);
-    });
-    return {
-      regularProjects: groups.get('case') || [],
-      partnershipProjects: groups.get('partnership') || [],
-    };
-  }, []);
+  // Cases e parcerias numa só lista: os cases primeiro, depois as parcerias.
+  const allProjects = useMemo(
+    () => [...projects.filter((p) => (p.category || 'case') === 'case'), ...projects.filter((p) => p.category === 'partnership')],
+    [],
+  );
 
-  // No desktop o hero fica fixo e o scroll percorre as 3 etapas antes de seguir a página.
+  // O hero fica fixo e o scroll percorre as 3 etapas em qualquer tela. No desktop a seção inteira fixa;
+  // no celular o texto rola normalmente e só o aparelho fica fixo (bloco logo abaixo do texto).
   const heroRef = useRef<HTMLElement>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
   const [pinned, setPinned] = useState(false);
   const [heroStep, setHeroStep] = useState(0);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end end'] });
-  useMotionValueEvent(scrollYProgress, 'change', (v) => setHeroStep(Math.min(2, Math.floor(v * 3))));
+  const { scrollYProgress: mobileProgress } = useScroll({ target: mobileRef, offset: ['start start', 'end end'] });
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (pinned) setHeroStep(Math.min(2, Math.floor(v * 3)));
+  });
+  useMotionValueEvent(mobileProgress, 'change', (v) => {
+    if (!pinned) setHeroStep(Math.min(2, Math.max(0, Math.floor(v * 3))));
+  });
   useEffect(() => {
     const query = window.matchMedia('(min-width: 1024px)');
     const update = () => setPinned(query.matches);
@@ -85,36 +85,47 @@ export function LandingPage() {
             </p>
           </div>
 
-          <HeroMockups step={pinned ? heroStep : undefined} />
+          <div className="hidden lg:block">
+            <HeroMockups step={heroStep} />
+          </div>
+        </div>
+      </div>
+
+      {/* celular: o aparelho fica fixo e o scroll conduz as etapas */}
+      <div ref={mobileRef} className="relative h-[260svh] lg:hidden">
+        <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden px-6 pb-6 pt-[72px]">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[72%]"
+            style={{ WebkitMaskImage: 'linear-gradient(to top, #000 22%, rgba(0,0,0,0.6) 55%, transparent 96%)', maskImage: 'linear-gradient(to top, #000 22%, rgba(0,0,0,0.6) 55%, transparent 96%)' }}
+          >
+            <HeroBands />
+          </div>
+          <FitBox className="relative z-10">
+            <HeroMockups step={heroStep} />
+          </FitBox>
         </div>
       </div>
       </section>
 
-      {/* Clientes */}
-      <section aria-label="Clientes" className="border-y border-border bg-muted/80 dark:bg-white/[0.04] py-8">
-        <p className="px-6 text-center text-sm text-muted-foreground">Empresas que já construíram com a TZOLKIN</p>
-        <LogoMarquee items={brands} speed={0.8} />
-      </section>
-
-      {/* Aplicações */}
-      <ServicesSection />
-      <EcommerceSection />
-
-      {/* Como construímos */}
-      <MethodTOISection />
-
-      {/* Cases */}
-      <section id="cases" aria-labelledby="cases-title" className="bg-background pb-16 pt-16 md:pb-20 md:pt-24">
+      {/* Cases (inclui as parcerias) */}
+      <section id="cases" aria-labelledby="cases-title" className="overflow-x-clip bg-background pb-16 pt-16 md:pb-20 md:pt-24">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12">
           <SectionHeader id="cases-title" eyebrow="Cases" title="Projetos em que" muted="já atuamos." />
           <div className="mt-10 md:mt-12">
-            <PortfolioCarousel projects={regularProjects} />
+            <PortfolioCarousel projects={allProjects} />
           </div>
         </div>
       </section>
 
-      {/* Parcerias */}
-      <MajorPartnerships partnerships={partnershipProjects} />
+      {/* Aplicações */}
+      <ServicesSection />
+
+      {/* Como construímos */}
+      <MethodTOISection />
+
+      {/* E-commerce */}
+      <EcommerceSection />
 
       {/* Como contratar */}
       <PricingSection />

@@ -26,10 +26,9 @@ const mobileMenuItems: MenuItem[] = [
 
 // Seções da home, na ordem da página. O header mostra 3 por vez, acompanhando o scroll.
 const sectionLinks = [
+  { id: 'cases', label: 'Cases' },
   { id: 'aplicacoes', label: 'Aplicações' },
   { id: 'como-construimos', label: 'Como construímos' },
-  { id: 'cases', label: 'Cases' },
-  { id: 'parcerias', label: 'Parcerias' },
   { id: 'como-contratar', label: 'Como contratar' },
   { id: 'integracoes', label: 'Integrações' },
   { id: 'about', label: 'Quem somos' },

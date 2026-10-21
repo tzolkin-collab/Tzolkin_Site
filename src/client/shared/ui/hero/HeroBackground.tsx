@@ -30,7 +30,7 @@ export function HeroBackground() {
     <>
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-0 h-[64%] lg:hidden"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] lg:hidden"
       style={{ WebkitMaskImage: MASK_MOBILE, maskImage: MASK_MOBILE }}
     >
       <HeroBands />
