@@ -39,11 +39,14 @@ export function HeroPhoneRise({ target }: { target: RefObject<HTMLElement | null
   const rotateX = useTransform(enter, [0, 1], [14, 0]);
   const rotateZ = useTransform(enter, [0, 1], [-2, 0]);
   
-  // Motion blur real, só durante o movimento: acompanha a velocidade do scroll (até 3,5px) e some ao parar.
+  // Motion blur real, só durante o movimento da subida: acompanha a velocidade do scroll (até 3,5px), some ao parar e some de vez quando o aparelho assenta.
   const velocity = useSpring(useVelocity(scrollY), { stiffness: 220, damping: 40 });
-  // Zona morta: parado ou quase parado não tem desfoque nenhum.
-  const blur = useTransform(velocity, (v) => {
-    const b = Math.min(3.5, Math.max(0, Math.abs(v) - 80) / 420);
+  // Zona morta: parado ou quase parado não tem desfoque nenhum. E só vale durante a subida do aparelho:
+  // o peso cai a zero quando ele assenta, então rolar durante as etapas da conversa não desfoca nada.
+  const blur = useTransform([velocity, p], ([v, prog]: number[]) => {
+    // Progresso linear da subida (0.04 a 0.40 da pista): o peso cai de 1 a 0 ao longo dela.
+    const live = Math.min(1, Math.max(0, 1 - (prog - 0.04) / 0.34));
+    const b = Math.min(3.5, Math.max(0, Math.abs(v) - 80) / 420) * live;
     return b < 0.15 ? 'none' : `blur(${b.toFixed(2)}px)`;
   });
 
