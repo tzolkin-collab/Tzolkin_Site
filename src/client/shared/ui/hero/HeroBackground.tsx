@@ -23,18 +23,10 @@ export function HeroBands({ className = '' }: { className?: string }) {
 /**
  * Faixas diagonais estáticas no canto superior direito, atrás da composição.
  * A máscara (alpha) dissolve as faixas rumo à coluna de texto e à seção abaixo.
- * Em lg+ ficam no canto superior direito; no celular, embaixo, atrás do mockup.
+ * Só em lg+ (canto superior direito). No celular as faixas ficam no bloco do aparelho (LandingPage).
  */
 export function HeroBackground() {
   return (
-    <>
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] lg:hidden"
-      style={{ WebkitMaskImage: MASK_MOBILE, maskImage: MASK_MOBILE }}
-    >
-      <HeroBands />
-    </div>
     <div
       aria-hidden="true"
       className="pointer-events-none absolute inset-y-0 right-0 hidden w-[66%] lg:block"
@@ -47,6 +39,5 @@ export function HeroBackground() {
     >
       <HeroBands />
     </div>
-    </>
   );
 }
