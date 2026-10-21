@@ -50,7 +50,7 @@ export const applications: ApplicationItem[] = [
       'Loja ou tema Shopify no ar, com catálogo, estoque e pedidos integrados aos canais de venda que você usa.',
     chips: ['Loja ou tema Shopify', 'Catálogo e estoque', 'Pedidos de marketplaces'],
     ctaText: 'Conversar sobre minha loja',
-    href: '/forms?aplicacao=ecommerce-marketplace',
+    href: '/ecommerce-marketplace',
   },
   {
     slug: 'fiscal',
