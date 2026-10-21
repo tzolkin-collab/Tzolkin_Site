@@ -95,9 +95,7 @@
   border: 1px solid var(--pd-line);
   border-radius: var(--pd-radius);
   background: var(--pd-surface);
-  box-shadow:
-    0 2px 4px #18203506,
-    0 24px 64px -28px #17233840;
+  box-shadow: none;
 }
 .topbar {
   display: flex;
@@ -302,7 +300,7 @@
 }
 .dealActive {
   border-color: color-mix(in srgb, var(--pd-accent) 35%, var(--pd-line));
-  box-shadow: 0 3px 12px #8b24240b;
+  box-shadow: none;
 }
 .dealTag {
   display: inline-flex;
@@ -337,9 +335,7 @@
   border: 1px solid var(--pd-line);
   border-radius: 12px;
   background: var(--pd-surface);
-  box-shadow:
-    0 4px 8px #18203506,
-    0 20px 48px -24px #17233855;
+  box-shadow: none;
 }
 .insightHeader {
   display: flex;

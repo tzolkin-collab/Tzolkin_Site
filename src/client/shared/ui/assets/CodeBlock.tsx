@@ -61,7 +61,6 @@ export function CodeBlock({
     <div
       className={cn(
         "relative overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0f] text-left",
-        "shadow-[0_1px_1px_rgba(0,0,0,.2),0_16px_32px_-8px_rgba(0,0,0,.35),0_40px_80px_-30px_rgba(60,0,10,.4)]",
         "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/25 before:to-transparent",
         className,
       )}

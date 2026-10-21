@@ -130,10 +130,12 @@ export function ServicesSection() {
                   <div key={a.slug} aria-hidden={i !== active} className={`col-start-1 row-start-1 ${i === active ? '' : 'invisible'}`}>
                     <p className="text-sm font-medium xl:text-base">{a.forWho}</p>
                     <p className="mt-2 hidden max-w-xl text-[15px] leading-relaxed text-foreground/70 xl:block">{a.delivers}</p>
-                    <Link href={a.href} tabIndex={i === active ? 0 : -1} className={`${linkClass} mt-1 xl:mt-3`}>
-                      {a.ctaText}
-                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                    </Link>
+                    {!a.href.startsWith('/forms') && (
+                      <Link href={a.href} tabIndex={i === active ? 0 : -1} className={`${linkClass} mt-1 xl:mt-3`}>
+                        {a.ctaText}
+                        <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                      </Link>
+                    )}
                   </div>
                 ))}
               </div>

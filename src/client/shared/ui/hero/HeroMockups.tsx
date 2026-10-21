@@ -17,7 +17,7 @@ export function HeroMockups({ step }: { step?: number }) {
         aria-valuemin={1}
         aria-valuemax={3}
         aria-valuenow={current + 1}
-        className="mx-auto mt-5 h-1 w-[min(420px,100%)] overflow-hidden rounded-full bg-border"
+        className="mx-auto mt-5 h-1 w-[min(240px,100%)] overflow-hidden rounded-full bg-border"
       >
         <div
           className="h-full origin-left rounded-full bg-brand transition-transform duration-300 motion-reduce:transition-none"

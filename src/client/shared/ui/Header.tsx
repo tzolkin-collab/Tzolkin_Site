@@ -38,6 +38,8 @@ const VISIBLE_LINKS = 3;
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
   const [activeIndex, setActiveIndex] = useState(-1);
   const rafRef = useRef<number | null>(null);
   const isHome = usePathname() === '/';
@@ -52,6 +54,14 @@ export function Header() {
       const pinned = pin && window.matchMedia('(min-width: 1024px)').matches;
       const threshold = pinned ? pin.offsetHeight - window.innerHeight : BANNER_HEIGHT;
       setScrolled(window.scrollY > Math.max(threshold, BANNER_HEIGHT));
+
+      // Descendo, o header sobe; subindo, volta. Pequenos tremores de scroll não contam.
+      const y = window.scrollY;
+      const dy = y - lastY.current;
+      if (Math.abs(dy) > 6) {
+        setHidden(dy > 0 && y > 120);
+        lastY.current = y;
+      }
 
       if (isHome) {
         const line = window.innerHeight * 0.4;
@@ -94,7 +104,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed w-full z-50 transition-[top,padding,background-color,backdrop-filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${scrolled
+        className={`fixed w-full z-50 transition-[top,padding,background-color,backdrop-filter,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${hidden && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'} ${scrolled
           ? 'top-0 py-1 pt-2.5 bg-background backdrop-blur-md'
           : 'top-0 bg-transparent py-6'
           }`}

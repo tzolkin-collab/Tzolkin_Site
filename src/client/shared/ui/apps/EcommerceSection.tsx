@@ -2,9 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import { EcommerceDevices } from './EcommerceDevices';
 import { FitBox } from './FitBox';
 
@@ -86,13 +84,6 @@ export function EcommerceSection() {
                 </div>
               ))}
             </div>
-              <Link
-                href="/forms?aplicacao=ecommerce-marketplace"
-                className="group mt-1 inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                Conversar sobre minha loja
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
 
             {/* só a barra: o nome de cada etapa já está dentro das telas */}
             <div
@@ -101,7 +92,7 @@ export function EcommerceSection() {
               aria-valuemin={1}
               aria-valuemax={3}
               aria-valuenow={step + 1}
-              className="mt-2 h-1 w-full overflow-hidden rounded-full bg-border xl:mt-3"
+              className="mt-2 h-1 w-[min(240px,100%)] overflow-hidden rounded-full bg-border xl:mt-3"
             >
               <motion.div className="h-full origin-left bg-brand" style={{ scaleX: scrollYProgress }} />
             </div>

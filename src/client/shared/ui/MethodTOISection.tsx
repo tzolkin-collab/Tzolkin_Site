@@ -2,8 +2,9 @@
 
 import { useRef, useState } from 'react';
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { Check, FileText, KeyRound, Lock, Server, Users } from 'lucide-react';
+import { Check, PackageCheck, ReceiptText, ShieldCheck } from 'lucide-react';
 import { FitBox } from '@/client/shared/ui/apps/FitBox';
+import { RepoPanel } from '@/client/shared/ui/apps/MethodPanels';
 
 /*
  * "Como construímos", escrito como as três dúvidas que o cliente tem antes de contratar (acessos, custos, continuidade),
@@ -34,14 +35,18 @@ const STEPS = [
   },
 ];
 
-const sheet = 'overflow-hidden rounded-xl border border-border bg-card text-[13px] shadow-[0_30px_70px_-32px_rgba(10,20,40,0.4)]';
-const sheetHead = 'flex items-center gap-2.5 border-b border-border px-5 py-3.5 text-[13px] font-semibold';
+const sheet = 'overflow-hidden rounded-xl border border-border bg-card text-[13px]';
 
-function TeamSheet() {
-  const people: Array<[string, string, string, string]> = [
-    ['AS', 'Ana Souza', 'Administradora', 'Vê e altera tudo'],
-    ['PR', 'Paulo Reis', 'Gestor', 'Vê todas as vendas'],
-    ['CR', 'Camila Ribeiro', 'Vendedora', 'Vê só as próprias'],
+/* 1. Quem pode o quê: uma matriz função x ação, mais o registro do que aconteceu. */
+function AccessMatrix() {
+  const roles = ['Administradora', 'Gestor', 'Vendedora'];
+  // 2 = tudo, 1 = só o que é seu, 0 = não
+  const rows: Array<[string, [number, number, number]]> = [
+    ['Ver vendas', [2, 2, 1]],
+    ['Editar pedidos', [2, 2, 1]],
+    ['Exportar relatórios', [2, 2, 0]],
+    ['Apagar registros', [2, 0, 0]],
+    ['Chaves e senhas', [2, 0, 0]],
   ];
   const log: Array<[string, string]> = [
     ['14:02', 'Ana editou o pedido #4821'],
@@ -50,75 +55,93 @@ function TeamSheet() {
   ];
   return (
     <div className={sheet}>
-      <p className={sheetHead}><Users size={15} className="text-brand" aria-hidden="true" />Acessos da equipe</p>
-      <ul className="divide-y divide-border">
-        {people.map(([ini, name, role, sees]) => (
-          <li key={name} className="flex items-center gap-3.5 px-5 py-3.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground/[0.07] text-xs font-semibold">{ini}</span>
-            <span className="min-w-0 flex-1 leading-tight"><span className="block font-medium">{name}</span><span className="text-muted-foreground">{sees}</span></span>
-            <span className="rounded-md border border-border px-2 py-1 text-xs font-medium text-foreground/80">{role}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="border-y border-border bg-muted/50 px-5 py-2.5 text-xs font-semibold text-muted-foreground">Atividade recente</p>
-      <ul className="divide-y divide-border">
+      <div className="flex items-baseline justify-between border-b border-border px-5 py-3.5">
+        <p className="text-sm font-semibold">Quem pode o quê</p>
+        <p className="text-xs text-muted-foreground">por função</p>
+      </div>
+      <table className="w-full table-fixed text-left">
+        <thead>
+          <tr className="text-xs text-muted-foreground">
+            <th className="w-[38%] px-5 py-2.5 font-medium"><span className="sr-only">Ação</span></th>
+            {roles.map((r) => (
+              <th key={r} className="px-1 py-2.5 text-center font-medium">{r}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(([what, v]) => (
+            <tr key={what} className="border-t border-border">
+              <td className="px-5 py-3 font-medium">{what}</td>
+              {v.map((x, i) => (
+                <td key={i} className="px-1 py-3 text-center">
+                  {x === 2 && <span className="mx-auto flex h-5 w-5 items-center justify-center rounded-full bg-brand text-brand-foreground"><Check size={12} strokeWidth={3} aria-label="pode" /></span>}
+                  {x === 1 && <span className="text-xs font-medium text-foreground/80">só as suas</span>}
+                  {x === 0 && <span className="text-muted-foreground/60" aria-label="não pode">—</span>}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="border-y border-border bg-muted/50 px-5 py-2.5 text-xs font-semibold text-muted-foreground">Registro de ações</p>
+      <ul>
         {log.map(([t, what]) => (
-          <li key={t} className="flex items-baseline gap-3 px-5 py-2.5"><span className="font-mono text-xs text-muted-foreground">{t}</span><span>{what}</span></li>
+          <li key={t} className="flex items-baseline gap-3 px-5 py-2"><span className="font-mono text-xs tabular-nums text-muted-foreground">{t}</span><span>{what}</span></li>
         ))}
       </ul>
-      <p className="flex items-center gap-2 border-t border-border bg-muted/50 px-5 py-3 text-xs text-muted-foreground"><KeyRound size={13} className="shrink-0 text-foreground" aria-hidden="true" />Senhas e chaves ficam guardadas fora do código.</p>
     </div>
   );
 }
 
-function CostsSheet() {
-  const rows: Array<[string, string, boolean]> = [
-    ['Hospedagem', 'Onde o sistema roda', true],
-    ['Banco de dados', 'Onde os seus dados ficam', true],
-    ['Tarefas em segundo plano', 'Envios e avisos automáticos', true],
-    ['Domínio', 'O seu endereço na internet', false],
-    ['WhatsApp e IA', 'Cobrados pelo fornecedor de cada um', false],
+/* 2. Custos: uma folha de proposta em papel (fixa clara nos dois temas), com outra folha atrás. */
+function ProposalPaper() {
+  const rows: Array<[string, string, string]> = [
+    ['Hospedagem', 'TZOLKIN', 'Incluída'],
+    ['Banco de dados', 'TZOLKIN', 'Incluída'],
+    ['Tarefas em segundo plano', 'TZOLKIN', 'Incluída'],
+    ['Domínio', 'Você', 'Sua conta'],
+    ['WhatsApp e IA', 'Você', 'Fornecedor'],
   ];
   return (
-    <div className={sheet}>
-      <p className={sheetHead}><Server size={15} className="text-brand" aria-hidden="true" />Quem cuida de cada parte</p>
-      <ul className="divide-y divide-border">
-        {rows.map(([what, desc, tz]) => (
-          <li key={what} className="flex items-center gap-3.5 px-5 py-3.5">
-            <span className="min-w-0 flex-1 leading-tight"><span className="block font-medium">{what}</span><span className="text-muted-foreground">{desc}</span></span>
-            <span className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-semibold ${tz ? 'bg-foreground text-background' : 'border border-border text-foreground/80'}`}>{tz ? 'TZOLKIN' : 'Sua conta'}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="flex items-center gap-2 border-t border-border bg-muted/50 px-5 py-3 text-xs text-muted-foreground"><FileText size={13} className="shrink-0 text-foreground" aria-hidden="true" />Cada custo aparece separado na proposta, item a item.</p>
+    <div className="relative px-3 pb-3 pt-4">
+      <div aria-hidden="true" className="absolute inset-x-5 bottom-0 top-6 -rotate-[1.6deg] rounded-md bg-neutral-200" />
+      <div className="relative overflow-hidden rounded-md bg-white text-[13px] text-neutral-900">
+        <div className="flex items-start justify-between gap-4 px-6 pb-4 pt-6">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-neutral-500">Proposta · exemplo</p>
+            <p className="mt-1 text-lg font-semibold leading-tight tracking-tight">Cada custo, item a item</p>
+          </div>
+          <span className="shrink-0 rounded border border-neutral-300 px-2 py-1 text-[11px] font-semibold text-neutral-600">Anexo 2</span>
+        </div>
+        <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 border-y border-neutral-200 bg-neutral-50 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-neutral-500">
+          <span>Item</span><span>Opera</span><span className="text-right">Custo</span>
+        </div>
+        <ul className="divide-y divide-neutral-200">
+          {rows.map(([what, who, cost]) => (
+            <li key={what} className="grid grid-cols-[1fr_auto_auto] items-baseline gap-x-6 px-6 py-3">
+              <span className="font-medium">{what}</span>
+              <span className={who === 'TZOLKIN' ? 'font-semibold' : 'text-neutral-600'}>{who}</span>
+              <span className="text-right text-neutral-600">{cost}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="border-t border-neutral-200 px-6 py-3.5 text-xs text-neutral-600">Valores de terceiros entram na proposta, separados dos nossos.</p>
+      </div>
     </div>
   );
 }
 
-function HandoffSheet() {
-  const rows: Array<[string, string]> = [
-    ['Repositório', 'Todo o código, no nome da sua empresa'],
-    ['Documentação', 'Como instalar, usar e manter'],
-    ['Testes', 'Verificam o que não pode quebrar'],
-    ['Reunião de passagem', 'Repassamos tudo à sua equipe ou a outra'],
-  ];
+/* 3. Continuidade: o repositório de verdade, num terminal (painel do kit). */
+function HandoffTerminal() {
   return (
-    <div className={sheet}>
-      <p className={sheetHead}><Lock size={15} className="text-brand" aria-hidden="true" />Pacote de entrega</p>
-      <ul className="divide-y divide-border">
-        {rows.map(([what, desc]) => (
-          <li key={what} className="flex items-center gap-3.5 px-5 py-4">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-brand-foreground"><Check size={13} strokeWidth={3} aria-hidden="true" /></span>
-            <span className="leading-tight"><span className="block font-medium">{what}</span><span className="text-muted-foreground">{desc}</span></span>
-          </li>
-        ))}
-      </ul>
-      <p className="border-t border-border bg-muted/50 px-5 py-3 text-xs text-muted-foreground">Outra equipe consegue assumir sem começar do zero.</p>
+    <div>
+      <RepoPanel />
+      <p className="mt-3 text-sm text-foreground/70">Repositório no nome da sua empresa, com documentação e reunião de passagem.</p>
     </div>
   );
 }
 
-const SHEETS = [TeamSheet, CostsSheet, HandoffSheet];
+const SHEETS = [AccessMatrix, ProposalPaper, HandoffTerminal];
 
 function Sheets({ step }: { step: number }) {
   return (
@@ -180,15 +203,28 @@ export function MethodTOISection() {
               ))}
             </div>
 
-            <div
-              role="progressbar"
-              aria-label="Progresso das três respostas"
-              aria-valuemin={1}
-              aria-valuemax={3}
-              aria-valuenow={step + 1}
-              className="mt-4 h-1 w-full overflow-hidden rounded-full bg-border xl:mt-8"
-            >
-              <motion.div className="h-full origin-left bg-brand" style={{ scaleX: scrollYProgress }} />
+            <div className="mt-4 w-[min(280px,100%)] xl:mt-8">
+              <ol className="flex justify-between text-[13px] font-semibold" aria-hidden="true">
+                {[
+                  { label: 'Acessos', Icon: ShieldCheck },
+                  { label: 'Custos', Icon: ReceiptText },
+                  { label: 'Entrega', Icon: PackageCheck },
+                ].map(({ label, Icon }, i) => (
+                  <li key={label} className={`flex items-center gap-1.5 ${i === step ? 'text-foreground' : 'text-muted-foreground/70'}`}>
+                    <Icon size={15} className={i === step ? 'text-brand' : ''} aria-hidden="true" />{label}
+                  </li>
+                ))}
+              </ol>
+              <div
+                role="progressbar"
+                aria-label="Progresso das três respostas"
+                aria-valuemin={1}
+                aria-valuemax={3}
+                aria-valuenow={step + 1}
+                className="mt-2 h-1 w-full overflow-hidden rounded-full bg-border"
+              >
+                <motion.div className="h-full origin-left bg-brand" style={{ scaleX: scrollYProgress }} />
+              </div>
             </div>
           </div>
 

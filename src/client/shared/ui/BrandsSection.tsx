@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from '@/client/shared/ui/SectionHeader';
-import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ChevronUp, Plus, X, Network, FileText } from 'lucide-react';
 
@@ -152,13 +151,6 @@ export function BrandsSection() {
               <p>Os produtos que construímos se conectam a CRM, meios de pagamento, nota fiscal, marketplaces, plataformas de anúncios, mensageria e modelos de IA.</p>
               <p>Cada integração é listada na proposta, com o serviço externo envolvido e o custo, quando houver.</p>
             </div>
-            <Link
-              href="/forms"
-              className="mt-8 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background transition-colors hover:bg-foreground/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              Conversar sobre integrações
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
           </div>
 
           <div className="w-full min-w-0 flex-1">

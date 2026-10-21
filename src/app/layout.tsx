@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MobileCta } from "@/client/shared/ui/MobileCta";
 import { Source_Sans_3, Figtree } from "next/font/google";
 import { ThemeProvider } from "@/client/shared/providers/ThemeProvider";
 import { SmoothScrolling } from "@/client/shared/ui/SmoothScrolling";
@@ -89,7 +90,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${sourceSans3.className} antialiased bg-background text-foreground overflow-x-hidden relative w-full`}
+        className={`${sourceSans3.className} antialiased bg-background text-foreground overflow-x-hidden relative w-full pb-10 lg:pb-0`}
       >
         <ThemeProvider
           attribute="class"
@@ -100,6 +101,7 @@ export default function RootLayout({
           <ScrollToTop />
           <SmoothScrolling />
           {children}
+          <MobileCta />
         </ThemeProvider>
       </body>
     </html>
