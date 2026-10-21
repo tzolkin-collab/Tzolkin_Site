@@ -49,11 +49,11 @@ export function LandingPage() {
       <Header />
 
       {/* ── Hero ── */}
-      <section ref={heroRef} data-hero-pin className="relative bg-background lg:h-[280vh]">
-      <div className="relative overflow-clip px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-40 lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:pb-10 lg:pt-24">
+      <section ref={heroRef} data-hero-pin className="relative h-[300svh] bg-background lg:h-[280vh]">
+      <div className="sticky top-0 relative h-[100svh] overflow-clip px-6 pt-24 md:px-12 md:pt-32 lg:flex lg:h-screen lg:items-center lg:pb-10 lg:pt-24">
         <HeroBackground />
         <div className="relative mx-auto grid w-full w-full max-w-[1200px] grid-cols-[minmax(0,1fr)] items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
-          <div>
+          <div id="hero-copy" className="origin-top will-change-[opacity,transform]">
             <p className="mb-6 inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
               Software house · Produtos digitais e IA
             </p>
@@ -83,10 +83,10 @@ export function LandingPage() {
             <HeroMockups step={heroStep} />
           </div>
         </div>
+        {/* celular: o aparelho sobe por cima do hero, conduzido pelo scroll (zoom, 3D, motion blur, curvas bézier) */}
+        <HeroPhoneRise target={heroRef} />
       </div>
 
-      {/* celular: o aparelho sobe no fluxo normal da página, com zoom, 3D e motion blur (o scroll não é preso) */}
-      <HeroPhoneRise />
       </section>
 
       {/* Cases (inclui as parcerias) */}

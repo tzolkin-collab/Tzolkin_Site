@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState, type RefObject } from 'react';
 import {
   cubicBezier,
   motion,
@@ -14,73 +14,87 @@ import {
 import { HeroBands } from './HeroBackground';
 import { HeroMockups } from './HeroMockups';
 
-// Curva de saída suave (ease-out-cubic): arranca firme e assenta devagar, sem terminar cedo demais.
+// Curva de saída suave (ease-out-cubic): arranca firme e assenta devagar.
 const SETTLE = cubicBezier(0.33, 1, 0.68, 1);
-const BANDS_MASK = 'linear-gradient(to top, transparent 0%, #000 22%, #000 62%, transparent 100%)';
+const BANDS_MASK = 'linear-gradient(to top, #000 0%, #000 35%, transparent 100%)';
 
 /**
- * Hero do celular. O aparelho sobe no fluxo normal da página (o scroll não é sequestrado): conforme entra na tela,
- * ganha escala, perde a inclinação 3D e o desfoque, e linhas bézier se desenham atrás dele. O desfoque também
- * acompanha a velocidade do scroll (motion blur) e some quando para. Depois de assentar, as três etapas da conversa
- * avançam com o próprio scroll. Só transform, opacity e filter; sem animação contínua parada.
+ * Palco do hero no celular. Fica DENTRO do bloco fixo do hero (o texto continua atrás) e é conduzido pelo scroll
+ * da seção inteira: o aparelho entra de baixo da tela por cima do texto, com zoom, inclinação 3D, desfoque que também
+ * acompanha a velocidade do scroll e curvas bézier que se desenham; o texto (#hero-copy) esmaece e recua.
+ * Depois as três etapas da conversa avançam. Só transform, opacity e filter; nada se move sozinho.
  */
-export function HeroPhoneRise() {
-  const ref = useRef<HTMLDivElement>(null);
+export function HeroPhoneRise({ target }: { target: RefObject<HTMLElement | null> }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
 
-  // 0 quando o topo do bloco chega a 80% da altura da tela, 1 quando o bloco sai pelo topo.
-  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start 0.8', 'end start'] });
+  const { scrollYProgress: p } = useScroll({ target, offset: ['start start', 'end end'] });
   const { scrollY } = useScroll();
 
-  // Entrada: acontece no primeiro terço do trajeto.
-  const enter = useTransform(p, [0, 0.36], [0, 1], { clamp: true, ease: SETTLE });
-  const y = useTransform(enter, [0, 1], [150, 0]);
+  // Entrada: primeiros 32% da pista.
+  const enter = useTransform(p, [0, 0.32], [0, 1], { clamp: true, ease: SETTLE });
+  const y = useTransform(enter, [0, 1], ['88svh', '0svh']);
   const scale = useTransform(enter, [0, 1], [0.8, 1]);
-  const rotateX = useTransform(enter, [0, 1], [32, 0]);
-  const rotateZ = useTransform(enter, [0, 1], [-4, 0]);
-  const enterBlur = useTransform(enter, [0, 1], [7, 0]);
+  const rotateX = useTransform(enter, [0, 1], [34, 0]);
+  const rotateZ = useTransform(enter, [0, 1], [-5, 0]);
+  const enterBlur = useTransform(enter, [0, 1], [8, 0]);
 
-  // Motion blur: quanto mais rápido o scroll, mais desfoque (até 3px), suavizado por mola.
+  // Motion blur real: acompanha a velocidade do scroll (até 3px), suavizado por mola.
   const velocity = useSpring(useVelocity(scrollY), { stiffness: 220, damping: 40 });
   const velBlur = useTransform(velocity, (v) => Math.min(3, Math.abs(v) / 450));
   const blur = useTransform([enterBlur, velBlur], ([a, b]: number[]) => `blur(${(a + b).toFixed(2)}px)`);
 
-  // Linhas bézier: se desenham durante a entrada e ficam.
-  const draw = useTransform(p, [0.02, 0.4], [0, 1], { clamp: true, ease: SETTLE });
-  const lineOpacity = useTransform(p, [0, 0.12, 0.8, 1], [0, 1, 1, 0]);
+  // Linhas bézier e faixas acompanham a entrada.
+  const draw = useTransform(enter, [0.05, 1], [0, 1]);
+  const bandsOpacity = useTransform(enter, [0, 0.7], [0, 1]);
 
-  // Etapas da conversa: depois que o aparelho assentou.
+  // O texto do hero recua e esmaece enquanto o aparelho sobe por cima dele.
+  useMotionValueEvent(enter, 'change', (e) => {
+    const el = document.getElementById('hero-copy');
+    if (!el) return;
+    // Só no celular (abaixo de lg). No desktop o texto não é mexido e qualquer resto é limpo.
+    if (reduce || !window.matchMedia('(max-width: 1023px)').matches) {
+      el.style.opacity = '';
+      el.style.transform = '';
+      return;
+    }
+    el.style.opacity = String(1 - 0.78 * e);
+    el.style.transform = `translateY(${(-18 * e).toFixed(1)}px) scale(${(1 - 0.05 * e).toFixed(3)})`;
+  });
+
+  // Etapas: depois que o aparelho assentou.
   useMotionValueEvent(p, 'change', (v) => {
-    const s = Math.min(1, Math.max(0, (v - 0.5) / 0.3));
+    const s = Math.min(1, Math.max(0, (v - 0.42) / 0.46));
     setStep(Math.min(2, Math.floor(s * 3)));
   });
 
-  const motionStyle = reduce ? undefined : { y, scale, rotateX, rotateZ, filter: blur, transformPerspective: 900 };
+  const phoneStyle = reduce ? undefined : { y, scale, rotateX, rotateZ, filter: blur, transformPerspective: 900 };
 
   return (
-    <div ref={ref} className="relative overflow-hidden pb-16 pt-10 lg:hidden">
-      {/* faixas do hero embaixo, dissolvidas nas duas pontas */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[78%]" style={{ WebkitMaskImage: BANDS_MASK, maskImage: BANDS_MASK }}>
+    <div className="pointer-events-none absolute inset-0 z-20 lg:hidden">
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-[70%]"
+        style={{ opacity: reduce ? 1 : bandsOpacity, WebkitMaskImage: BANDS_MASK, maskImage: BANDS_MASK }}
+      >
         <HeroBands />
-      </div>
+      </motion.div>
 
-      {/* linhas bézier atrás do aparelho */}
       <motion.svg
         aria-hidden="true"
-        viewBox="0 0 390 640"
+        viewBox="0 0 390 844"
         preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-0 h-full w-full text-brand"
-        style={{ opacity: reduce ? 0 : lineOpacity }}
+        className="absolute inset-0 h-full w-full text-brand"
+        style={{ opacity: reduce ? 0 : bandsOpacity }}
         fill="none"
       >
-        <motion.path d="M -20 560 C 90 520, 40 330, 190 300 S 330 140, 410 40" stroke="currentColor" strokeWidth="1.25" style={{ pathLength: draw }} />
-        <motion.path d="M -20 610 C 130 590, 70 400, 215 360 S 360 200, 410 120" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" style={{ pathLength: draw }} />
-        <motion.path d="M 60 650 C 120 560, 250 540, 290 430 S 330 250, 410 210" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" style={{ pathLength: draw }} />
+        <motion.path d="M -20 800 C 90 740, 40 520, 190 470 S 330 260, 410 120" stroke="currentColor" strokeWidth="1.25" style={{ pathLength: draw }} />
+        <motion.path d="M -20 840 C 130 800, 70 600, 215 540 S 360 360, 410 250" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" style={{ pathLength: draw }} />
+        <motion.path d="M 60 860 C 120 760, 250 740, 290 620 S 330 430, 410 360" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" style={{ pathLength: draw }} />
       </motion.svg>
 
-      <div className="relative z-10 flex justify-center px-6" style={{ perspective: 900 }}>
-        <motion.div style={motionStyle} className="will-change-transform">
+      <div className="absolute inset-x-0 bottom-3 flex justify-center px-6" style={{ perspective: 900 }}>
+        <motion.div style={phoneStyle} className="will-change-transform">
           <HeroMockups step={step} />
         </motion.div>
       </div>
