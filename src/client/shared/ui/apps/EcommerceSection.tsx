@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Backpack, Check, Footprints, Glasses, Shirt, type LucideIcon } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 
 type Channel = 'Loja Shopify' | 'Mercado Livre' | 'Amazon' | 'Shopee';
 type Tone = 'go' | 'wait' | 'plain';
@@ -13,7 +14,7 @@ interface Order {
   customer: string;
   product: string;
   more?: string;
-  Icon: LucideIcon;
+  photo: string;
   total: number;
   payment: string;
   status: string;
@@ -24,12 +25,27 @@ interface Order {
 
 // Dados ilustrativos: mostram como a tela se comporta, não resultados de cliente.
 const ORDERS: Order[] = [
-  { id: '#4821', channel: 'Loja Shopify', customer: 'Camila R.', product: 'Camiseta Linho Areia', more: '+2 itens', Icon: Shirt, total: 489.9, payment: 'Pix', status: 'Separando', tone: 'plain', done: 4 },
-  { id: '#4820', channel: 'Mercado Livre', customer: 'Rafael T.', product: 'Tênis Urbano Preto', Icon: Footprints, total: 129, payment: 'Cartão 3x', status: 'Pronto para envio', tone: 'go', done: 5 },
-  { id: '#4819', channel: 'Amazon', customer: 'Juliana M.', product: 'Mochila Lona 22L', more: '+1 item', Icon: Backpack, total: 246.8, payment: 'Cartão', status: 'Nota emitida', tone: 'go', done: 4 },
-  { id: '#4818', channel: 'Shopee', customer: 'Bruno A.', product: 'Óculos Acetato Mel', Icon: Glasses, total: 59.9, payment: 'Cartão', status: 'Em análise', tone: 'wait', done: 1 },
-  { id: '#4817', channel: 'Loja Shopify', customer: 'Patrícia S.', product: 'Jaqueta Sarja Cru', more: '+3 itens', Icon: Shirt, total: 712.4, payment: 'Boleto', status: 'Aguardando boleto', tone: 'wait', done: 2 },
+  { id: '#4821', channel: 'Loja Shopify', customer: 'Camila R.', product: 'Camiseta Básica Branca', more: '+2 itens', photo: 'camiseta', total: 489.9, payment: 'Pix', status: 'Separando', tone: 'plain', done: 4 },
+  { id: '#4820', channel: 'Mercado Livre', customer: 'Rafael T.', product: 'Tênis Urbano Laranja', photo: 'tenis', total: 129, payment: 'Cartão 3x', status: 'Pronto para envio', tone: 'go', done: 5 },
+  { id: '#4819', channel: 'Amazon', customer: 'Juliana M.', product: 'Mochila Urbana Preta', more: '+1 item', photo: 'mochila', total: 246.8, payment: 'Cartão', status: 'Nota emitida', tone: 'go', done: 4 },
+  { id: '#4818', channel: 'Shopee', customer: 'Bruno A.', product: 'Óculos Acetato Preto', photo: 'oculos', total: 59.9, payment: 'Cartão', status: 'Em análise', tone: 'wait', done: 1 },
+  { id: '#4817', channel: 'Loja Shopify', customer: 'Patrícia S.', product: 'Jaqueta Jeans', more: '+3 itens', photo: 'jaqueta', total: 712.4, payment: 'Boleto', status: 'Aguardando boleto', tone: 'wait', done: 2 },
 ];
+
+// Logos: Shopify e Mercado Livre do svgl.app; Amazon e Shopee do Simple Icons (CC0). Marcas dos respectivos donos, usadas só para indicar o canal.
+const LOGO: Record<Channel, { src: string; mono?: boolean }> = {
+  'Loja Shopify': { src: '/ecommerce/logos/shopify.svg' },
+  'Mercado Livre': { src: '/ecommerce/logos/mercado-libre.svg' },
+  Amazon: { src: '/ecommerce/logos/amazon.svg', mono: true },
+  Shopee: { src: '/ecommerce/logos/shopee.svg', mono: true },
+};
+
+function ChannelMark({ channel, size = 16 }: { channel: Channel; size?: number }) {
+  const l = LOGO[channel];
+  return (
+    <Image src={l.src} alt="" width={size} height={size} unoptimized className={`inline-block shrink-0 object-contain ${l.mono ? 'dark:invert' : ''}`} style={{ width: size, height: size }} />
+  );
+}
 
 const STEPS = ['Pedido recebido', 'Pagamento confirmado', 'Estoque reservado', 'Nota fiscal solicitada', 'Etiqueta gerada'];
 const TABS: Array<'Todos' | Channel> = ['Todos', 'Loja Shopify', 'Mercado Livre', 'Amazon', 'Shopee'];
@@ -108,17 +124,18 @@ export function EcommerceSection() {
                       role="tab"
                       aria-selected={tab === t}
                       onClick={() => setTab(t)}
-                      className={`min-h-9 rounded-md px-2.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
+                      className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
                         tab === t ? 'bg-foreground/[0.08] text-foreground' : 'text-foreground/55 hover:text-foreground'
                       }`}
                     >
+                      {t !== 'Todos' && <ChannelMark channel={t} size={14} />}
                       {t}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+              <div className="grid grid-cols-[minmax(0,1fr)] md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                 <ul aria-label="Pedidos" className="divide-y divide-border">
                   {rows.map((o) => {
                     const active = selected?.id === o.id;
@@ -133,15 +150,15 @@ export function EcommerceSection() {
                           }`}
                         >
                           {active && <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px] bg-brand" />}
-                          <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-foreground/[0.06] text-foreground/70">
-                            <o.Icon size={20} strokeWidth={1.5} />
-                          </span>
+                          <Image src={`/ecommerce/${o.photo}.jpg`} alt={o.product} width={44} height={44} unoptimized className="h-11 w-11 shrink-0 rounded-md object-cover" />
                           <span className="min-w-0 flex-1">
                             <span className="block truncate text-[15px] font-medium">
                               {o.product} {o.more && <span className="font-normal text-foreground/50">{o.more}</span>}
                             </span>
-                            <span className="block truncate text-sm text-foreground/60">
-                              {o.customer} · {o.channel}
+                            <span className="flex min-w-0 items-center gap-1.5 text-sm text-foreground/60">
+                              <span className="shrink-0">{o.customer} ·</span>
+                              <ChannelMark channel={o.channel} size={13} />
+                              <span className="truncate">{o.channel}</span>
                             </span>
                           </span>
                           <span className="shrink-0 text-right">
@@ -187,7 +204,7 @@ export function EcommerceSection() {
 
                     <div className="mt-6 border-t border-border pt-4">
                       <div className="flex items-baseline justify-between text-sm">
-                        <span className="whitespace-nowrap font-medium">Camiseta Areia · M</span>
+                        <span className="whitespace-nowrap font-medium">Camiseta Básica · M</span>
                         <span className="whitespace-nowrap tabular-nums text-foreground/60">24 em estoque</span>
                       </div>
                       <div
