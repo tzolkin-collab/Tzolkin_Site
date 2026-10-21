@@ -11,6 +11,7 @@ import { brands } from '@/client/shared/data/brands';
 import { PortfolioCarousel } from '@/client/shared/ui/PortfolioCarousel';
 import { MajorPartnerships } from '@/client/shared/ui/MajorPartnerships';
 import { ServicesSection } from '@/client/shared/ui/ServicesSection';
+import { EcommerceSection } from '@/client/shared/ui/apps/EcommerceSection';
 import { MethodTOISection } from '@/client/shared/ui/MethodTOISection';
 import { BrandsSection } from '@/client/shared/ui/BrandsSection';
 import { FounderSection } from '@/client/shared/ui/FounderSection';
@@ -97,6 +98,7 @@ export function LandingPage() {
 
       {/* Aplicações */}
       <ServicesSection />
+      <EcommerceSection />
 
       {/* Como construímos */}
       <MethodTOISection />
