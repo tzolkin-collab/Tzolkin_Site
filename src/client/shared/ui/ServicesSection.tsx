@@ -47,21 +47,26 @@ export function ServicesSection() {
     }
   };
 
-  // Acordeão sem layout shift: as linhas têm altura fixa e o painel de detalhes (altura reservada) e as linhas
-  // abaixo dele só se movem por transform. O espaço do painel já está reservado no fim da lista.
+  // Acordeão sem layout shift e sem espaço sobrando: os detalhes das cinco aplicações ocupam a mesma célula (a altura
+  // é a do maior), e as linhas abaixo da aberta só se movem por transform. O item aberto tem uma linha só, no fim.
   const listRef = useRef<HTMLOListElement>(null);
   const rowRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const detailRef = useRef<HTMLDivElement>(null);
   const [detailY, setDetailY] = useState(0);
+  const [detailH, setDetailH] = useState(0);
   useLayoutEffect(() => {
     const list = listRef.current;
-    if (!list) return;
+    const detail = detailRef.current;
+    if (!list || !detail) return;
     const place = () => {
       const li = rowRefs.current[active];
       if (li) setDetailY(li.offsetTop + li.offsetHeight);
+      setDetailH(detail.offsetHeight);
     };
     place();
     const ro = new ResizeObserver(place);
     ro.observe(list);
+    ro.observe(detail);
     return () => ro.disconnect();
   }, [active]);
 
@@ -106,13 +111,8 @@ export function ServicesSection() {
           <div className="xl:col-span-6 xl:pr-16">
             <SectionHeader id="aplicacoes-title" eyebrow="Aplicações" title="Software para vender," muted="atender e operar." />
 
-            {/* acordeão: a aplicação ativa abre sem empurrar a página (altura reservada, movimento só por transform) */}
-            <ol
-              ref={listRef}
-              className="relative mt-4 border-t border-border [--dh:7.5rem] xl:mt-8 xl:[--dh:11.5rem]"
-              style={{ paddingBottom: 'var(--dh)' }}
-              aria-label="Aplicações"
-            >
+            {/* acordeão: a aplicação ativa abre sem empurrar a página */}
+            <ol ref={listRef} className="relative mt-4 border-t border-border xl:mt-8" style={{ paddingBottom: detailH }} aria-label="Aplicações">
               {applications.map((a, i) => {
                 const on = i === active;
                 return (
@@ -121,8 +121,8 @@ export function ServicesSection() {
                     ref={(el) => {
                       rowRefs.current[i] = el;
                     }}
-                    className="border-b border-border"
-                    style={{ transform: i > active ? 'translateY(var(--dh))' : undefined }}
+                    className={on ? '' : 'border-b border-border'}
+                    style={{ transform: i > active ? `translateY(${detailH}px)` : undefined }}
                   >
                     <button
                       type="button"
@@ -137,16 +137,21 @@ export function ServicesSection() {
                 );
               })}
               <div
+                ref={detailRef}
                 aria-live="polite"
-                className="absolute inset-x-0 top-0 overflow-hidden pl-10 pt-1 xl:pl-11"
-                style={{ height: 'var(--dh)', transform: `translateY(${detailY}px)` }}
+                className="absolute inset-x-0 top-0 grid border-b border-border pb-3 pl-10 xl:pb-5 xl:pl-11"
+                style={{ transform: `translateY(${detailY}px)` }}
               >
-                <p className="text-sm font-medium xl:text-base">{app.forWho}</p>
-                <p className="mt-2 hidden max-w-xl text-[15px] leading-relaxed text-foreground/70 xl:block">{app.delivers}</p>
-                <Link href={app.href} className={`${linkClass} mt-1 xl:mt-3`}>
-                  {app.ctaText}
-                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                </Link>
+                {applications.map((a, i) => (
+                  <div key={a.slug} aria-hidden={i !== active} className={`col-start-1 row-start-1 ${i === active ? '' : 'invisible'}`}>
+                    <p className="text-sm font-medium xl:text-base">{a.forWho}</p>
+                    <p className="mt-2 hidden max-w-xl text-[15px] leading-relaxed text-foreground/70 xl:block">{a.delivers}</p>
+                    <Link href={a.href} tabIndex={i === active ? 0 : -1} className={`${linkClass} mt-1 xl:mt-3`}>
+                      {a.ctaText}
+                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    </Link>
+                  </div>
+                ))}
               </div>
             </ol>
             <p className="mt-4 hidden text-sm text-foreground/55 xl:block">Cinco frentes em que já desenhamos e entregamos. O escopo final é definido em conversa.</p>
