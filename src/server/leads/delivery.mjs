@@ -74,7 +74,8 @@ const esperar = ms => new Promise(resolve => setTimeout(resolve, ms));
  * repetem: tentar de novo não muda a resposta.
  */
 export async function submitToCore(payload, key, { env = process.env, fetchImpl = fetch, sleep = esperar, tentativas = 3, alternate = null } = {}) {
-  const base = env.CORE_INTAKE_URL, token = env.CORE_INTAKE_KEY;
+  // Espaço ou quebra de linha colados com o valor (comum ao copiar a chave) deixam o cabeçalho Authorization inválido.
+  const base = env.CORE_INTAKE_URL?.trim(), token = env.CORE_INTAKE_KEY?.trim();
   if (!base || !token) return { ok: false, reason: 'not_configured' };
   let url;
   try { url = new URL('/v1/commercial/intake', base); } catch { return { ok: false, reason: 'invalid_url' }; }
@@ -101,8 +102,11 @@ export async function submitToCore(payload, key, { env = process.env, fetchImpl 
       else if (resposta.status === 409) return { ok: false, reason: 'conflict', status: 409 };
       else if (resposta.status === 408 || resposta.status >= 500) ultimo = { ok: false, reason: `http_${resposta.status}`, status: resposta.status };
       else return { ok: false, reason: `http_${resposta.status}`, status: resposta.status };
-    } catch {
-      ultimo = { ok: false, reason: 'unreachable' };
+    } catch (erro) {
+      // Só o NOME do erro (nunca a mensagem, que pode ter endereço): TypeError = pedido malformado (cabeçalho ou URL inválidos),
+      // TimeoutError = o Core não respondeu a tempo, o resto = rede.
+      const nome = erro?.name === 'TypeError' ? 'bad_request' : erro?.name === 'TimeoutError' || erro?.name === 'AbortError' ? 'timeout' : 'unreachable';
+      ultimo = { ok: false, reason: nome };
     }
     if (tentativa < tentativas) await sleep(300 * 3 ** (tentativa - 1));
   }
