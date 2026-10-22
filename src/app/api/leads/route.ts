@@ -3,7 +3,7 @@ import { deliverLead } from '@/server/leads/delivery.mjs';
 import { LEAD_SUBMISSIONS_ENABLED, LEAD_SUBMISSIONS_PAUSED_MESSAGE } from '@/lib/lead-submissions.mjs';
 
 export const runtime = 'nodejs';
-const reply = (status: number, message: string) => Response.json({ message }, { status, headers: { 'Cache-Control': 'no-store' } });
+const reply = (status: number, message: string, code?: string) => Response.json(code ? { message, code } : { message }, { status, headers: { 'Cache-Control': 'no-store' } });
 
 // O lead não passa mais por banco do site: vai direto ao intake do Core (ADR 0011), com e-mail interno
 // de segurança se o Core não confirmar. Ver src/server/leads/delivery.mjs.
@@ -20,15 +20,18 @@ export async function POST(request: Request) {
     return error instanceof Error && error.message === 'BODY_TOO_LARGE'
       ? reply(413, 'Formulário muito extenso.') : reply(400, 'Revise os dados de contato e os campos do formulário.');
   }
+  let motivo = 'delivery_error';
   try {
     const result = await deliverLead(data, key);
     if (result.status === 200) return reply(200, 'Recebemos sua solicitação.');
     if (result.status === 429) return reply(429, 'Muitos envios. Aguarde antes de tentar novamente.');
     if (result.status === 409) return reply(409, 'Este envio já foi recebido com outros dados. Atualize a página para iniciar outro.');
     // Never log request payloads or provider details (may contain contact data): só o motivo.
+    motivo = result.reason;
     console.error('[leads] delivery_failed', result.reason);
   } catch {
     console.error('[leads] delivery_error');
   }
-  return reply(503, 'Não foi possível enviar agora. Seus dados continuam no formulário; tente novamente.');
+  // `code` é só o motivo técnico (ex.: http_403+email_not_configured), sem dado de contato nem segredo: aparece na aba Rede do navegador e basta para o suporte.
+  return reply(503, 'Não foi possível enviar agora. Seus dados continuam no formulário; tente novamente.', motivo);
 }
