@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     if (result.status === 429) return reply(429, 'Muitos envios. Aguarde antes de tentar novamente.');
     if (result.status === 409) return reply(409, 'Este envio já foi recebido com outros dados. Atualize a página para iniciar outro.');
     // Never log request payloads or provider details (may contain contact data): só o motivo.
-    motivo = result.reason;
+    motivo = result.reason ?? 'delivery_failed';
     console.error('[leads] delivery_failed', result.reason);
   } catch {
     console.error('[leads] delivery_error');
