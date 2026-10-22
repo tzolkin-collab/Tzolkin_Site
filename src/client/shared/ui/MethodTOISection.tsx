@@ -1,10 +1,9 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { Check, PackageCheck, ReceiptText, ShieldCheck } from 'lucide-react';
+import { motion, type MotionValue } from 'framer-motion';
+import { Building2, Check, Download, FileCheck2, FileText, GitBranch, Lock, PackageCheck, Receipt, ReceiptText, ShieldCheck } from 'lucide-react';
 import { FitBox } from '@/client/shared/ui/apps/FitBox';
-import { RepoPanel } from '@/client/shared/ui/apps/MethodPanels';
+import { SectionHeader } from '@/client/shared/ui/SectionHeader';
 
 /*
  * "Como construímos", escrito como as três dúvidas que o cliente tem antes de contratar (acessos, custos, continuidade),
@@ -15,133 +14,85 @@ import { RepoPanel } from '@/client/shared/ui/apps/MethodPanels';
  */
 
 const STEPS = [
-  {
-    kicker: 'Acessos e segurança',
-    title: 'Cada pessoa vê só o que precisa.',
-    text: 'Sua equipe trabalha com os acessos certos e você sabe o que cada um fez. Menos risco de erro e de vazamento.',
-    checks: ['Acesso por função: vendedor, gestor e administrador', 'Senhas e chaves guardadas fora do código', 'Registro de cada ação sensível'],
-  },
-  {
-    kicker: 'Custos e responsabilidades',
-    title: 'Cada custo na mesa, item a item.',
-    text: 'Antes de assinar, você sabe quem cuida de cada parte e quanto cada serviço custa, inclusive os de terceiros.',
-    checks: ['Ambiente só do seu projeto, separado de outros clientes', 'Custos de infraestrutura e serviços externos separados na proposta', 'Quem opera o quê, combinado por escrito'],
-  },
-  {
-    kicker: 'Continuidade',
-    title: 'Dá para seguir sem a gente.',
-    text: 'No fim do ciclo, a sua equipe, ou outra, consegue assumir o produto sem começar do zero.',
-    checks: ['Repositório em nome da sua empresa', 'Documentação de instalação, uso e manutenção', 'Testes dos fluxos que não podem quebrar', 'Reunião de passagem no fim do ciclo'],
-  },
+  { title: 'Cada pessoa vê só o que precisa.', text: 'E o que cada um fez fica registrado.' },
+  { title: 'Cada custo na mesa, item a item.', text: 'Você sabe quem cuida de cada parte e quanto custa.' },
+  { title: 'Dá para seguir sem a gente.', text: 'O código, a documentação e os testes ficam com você.' },
 ];
 
 const sheet = 'overflow-hidden rounded-xl border border-border bg-card text-[13px]';
 
-/* 1. Quem pode o quê: uma matriz função x ação, mais o registro do que aconteceu. */
-function AccessMatrix() {
-  const roles = ['Administradora', 'Gestor', 'Vendedora'];
-  // 2 = tudo, 1 = só o que é seu, 0 = não
-  const rows: Array<[string, [number, number, number]]> = [
-    ['Ver vendas', [2, 2, 1]],
-    ['Editar pedidos', [2, 2, 1]],
-    ['Exportar relatórios', [2, 2, 0]],
-    ['Apagar registros', [2, 0, 0]],
-    ['Chaves e senhas', [2, 0, 0]],
-  ];
-  const log: Array<[string, string]> = [
-    ['14:02', 'Ana editou o pedido #4821'],
-    ['13:48', 'Paulo exportou o relatório do mês'],
-    ['13:20', 'Camila consultou 3 contatos'],
-  ];
+/* 1. Acessos: a mesma tela vista por duas funções. */
+function AccessCompare() {
   return (
     <div className={sheet}>
-      <div className="flex items-baseline justify-between border-b border-border px-5 py-3.5">
-        <p className="text-sm font-semibold">Quem pode o quê</p>
-        <p className="text-xs text-muted-foreground">por função</p>
+      <p className="border-b border-border px-5 py-3.5 text-sm font-semibold">Vendas do mês</p>
+      <div className="grid grid-cols-2 divide-x divide-border">
+        <div className="px-5 py-5">
+          <p className="text-xs font-semibold text-muted-foreground">Camila · Vendedora</p>
+          <p className="mt-3 whitespace-nowrap text-2xl font-semibold tracking-tight tabular-nums sm:text-3xl">R$ 13.900</p>
+          <p className="mt-1 text-xs text-muted-foreground">só as suas vendas</p>
+          <p className="mt-5 flex items-center gap-1.5 text-xs text-muted-foreground"><Lock size={13} aria-hidden="true" />Exportar: sem permissão</p>
+        </div>
+        <div className="px-5 py-5">
+          <p className="text-xs font-semibold text-muted-foreground">Ana · Administradora</p>
+          <p className="mt-3 whitespace-nowrap text-2xl font-semibold tracking-tight tabular-nums sm:text-3xl">R$ 187.400</p>
+          <p className="mt-1 text-xs text-muted-foreground">toda a equipe</p>
+          <p className="mt-5 flex items-center gap-1.5 text-xs font-semibold text-brand"><Download size={13} aria-hidden="true" />Exportar relatório</p>
+        </div>
       </div>
-      <table className="w-full table-fixed text-left">
-        <thead>
-          <tr className="text-xs text-muted-foreground">
-            <th className="w-[38%] px-5 py-2.5 font-medium"><span className="sr-only">Ação</span></th>
-            {roles.map((r) => (
-              <th key={r} className="px-1 py-2.5 text-center font-medium">{r}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(([what, v]) => (
-            <tr key={what} className="border-t border-border">
-              <td className="px-5 py-3 font-medium">{what}</td>
-              {v.map((x, i) => (
-                <td key={i} className="px-1 py-3 text-center">
-                  {x === 2 && <span className="mx-auto flex h-5 w-5 items-center justify-center rounded-full bg-brand text-brand-foreground"><Check size={12} strokeWidth={3} aria-label="pode" /></span>}
-                  {x === 1 && <span className="text-xs font-medium text-foreground/80">só as suas</span>}
-                  {x === 0 && <span className="text-muted-foreground/60" aria-label="não pode">—</span>}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="border-y border-border bg-muted/50 px-5 py-2.5 text-xs font-semibold text-muted-foreground">Registro de ações</p>
-      <ul>
-        {log.map(([t, what]) => (
-          <li key={t} className="flex items-baseline gap-3 px-5 py-2"><span className="font-mono text-xs tabular-nums text-muted-foreground">{t}</span><span>{what}</span></li>
-        ))}
+      <p className="flex items-baseline gap-3 border-t border-border bg-muted/50 px-5 py-3 text-xs"><span className="font-mono tabular-nums text-muted-foreground">14:02</span><span className="min-w-0 flex-1">Camila tentou exportar</span><span className="font-semibold text-brand">bloqueado</span></p>
+    </div>
+  );
+}
+
+/* 2. Custos: para quem se paga, em papel (fixo claro nos dois temas). */
+function CostStatement() {
+  return (
+    <div className="relative px-3 pb-3 pt-4">
+      <div aria-hidden="true" className="absolute inset-x-5 bottom-0 top-6 -rotate-[1.6deg] rounded-md bg-neutral-200" />
+      <div className="relative overflow-hidden rounded-md bg-white text-[14px] text-neutral-900">
+        <p className="px-6 pb-4 pt-6 text-lg font-semibold leading-tight tracking-tight">Para quem você paga</p>
+        <div className="flex items-center gap-2 border-y border-neutral-200 bg-neutral-50 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-neutral-500">
+          <Building2 size={13} aria-hidden="true" />À TZOLKIN, no contrato
+        </div>
+        <ul className="divide-y divide-neutral-200">
+          <li className="px-6 py-3 font-medium">Hospedagem e banco de dados</li>
+        </ul>
+        <div className="flex items-center gap-2 border-y border-neutral-200 bg-neutral-50 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-neutral-500">
+          <Receipt size={13} aria-hidden="true" />Direto ao fornecedor
+        </div>
+        <ul className="divide-y divide-neutral-200">
+          <li className="px-6 py-3 font-medium">WhatsApp e IA</li>
+          <li className="px-6 py-3 font-medium">Domínio</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+/* 3. Entrega: de quem é o código. */
+function RepoOwnership() {
+  return (
+    <div className={sheet}>
+      <div className="flex items-center gap-2.5 border-b border-border px-5 py-3.5">
+        <GitBranch size={16} className="shrink-0 text-muted-foreground" aria-hidden="true" />
+        <p className="min-w-0 flex-1 truncate text-sm"><span className="text-muted-foreground">sua-empresa /</span> <span className="font-semibold">crm-vendas</span></p>
+        <span className="shrink-0 rounded border border-border px-1.5 py-0.5 text-xs font-medium text-muted-foreground">Privado</span>
+      </div>
+      <div className="px-5 py-5">
+        <p className="text-xs font-semibold text-muted-foreground">Proprietário</p>
+        <p className="mt-1 text-2xl font-semibold tracking-tight">Sua empresa</p>
+        <p className="mt-4 text-xs text-muted-foreground">Acesso da TZOLKIN: você revoga quando quiser</p>
+      </div>
+      <ul className="divide-y divide-border border-t border-border">
+        <li className="flex items-center gap-3 px-5 py-3"><FileText size={16} className="shrink-0 text-muted-foreground" aria-hidden="true" /><span className="font-medium">Documentação</span></li>
+        <li className="flex items-center gap-3 px-5 py-3"><FileCheck2 size={16} className="shrink-0 text-brand" aria-hidden="true" /><span className="font-medium">Testes passando</span></li>
       </ul>
     </div>
   );
 }
 
-/* 2. Custos: uma folha de proposta em papel (fixa clara nos dois temas), com outra folha atrás. */
-function ProposalPaper() {
-  const rows: Array<[string, string, string]> = [
-    ['Hospedagem', 'TZOLKIN', 'Incluída'],
-    ['Banco de dados', 'TZOLKIN', 'Incluída'],
-    ['Tarefas em segundo plano', 'TZOLKIN', 'Incluída'],
-    ['Domínio', 'Você', 'Sua conta'],
-    ['WhatsApp e IA', 'Você', 'Fornecedor'],
-  ];
-  return (
-    <div className="relative px-3 pb-3 pt-4">
-      <div aria-hidden="true" className="absolute inset-x-5 bottom-0 top-6 -rotate-[1.6deg] rounded-md bg-neutral-200" />
-      <div className="relative overflow-hidden rounded-md bg-white text-[13px] text-neutral-900">
-        <div className="flex items-start justify-between gap-4 px-6 pb-4 pt-6">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-neutral-500">Proposta · exemplo</p>
-            <p className="mt-1 text-lg font-semibold leading-tight tracking-tight">Cada custo, item a item</p>
-          </div>
-          <span className="shrink-0 rounded border border-neutral-300 px-2 py-1 text-[11px] font-semibold text-neutral-600">Anexo 2</span>
-        </div>
-        <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 border-y border-neutral-200 bg-neutral-50 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-neutral-500">
-          <span>Item</span><span>Opera</span><span className="text-right">Custo</span>
-        </div>
-        <ul className="divide-y divide-neutral-200">
-          {rows.map(([what, who, cost]) => (
-            <li key={what} className="grid grid-cols-[1fr_auto_auto] items-baseline gap-x-6 px-6 py-3">
-              <span className="font-medium">{what}</span>
-              <span className={who === 'TZOLKIN' ? 'font-semibold' : 'text-neutral-600'}>{who}</span>
-              <span className="text-right text-neutral-600">{cost}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="border-t border-neutral-200 px-6 py-3.5 text-xs text-neutral-600">Valores de terceiros entram na proposta, separados dos nossos.</p>
-      </div>
-    </div>
-  );
-}
-
-/* 3. Continuidade: o repositório de verdade, num terminal (painel do kit). */
-function HandoffTerminal() {
-  return (
-    <div>
-      <RepoPanel />
-      <p className="mt-3 text-sm text-foreground/70">Repositório no nome da sua empresa, com documentação e reunião de passagem.</p>
-    </div>
-  );
-}
-
-const SHEETS = [AccessMatrix, ProposalPaper, HandoffTerminal];
+const SHEETS = [AccessCompare, CostStatement, RepoOwnership];
 
 function Sheets({ step }: { step: number }) {
   return (
@@ -159,84 +110,61 @@ function Sheets({ step }: { step: number }) {
   );
 }
 
-export function MethodTOISection() {
-  const ref = useRef<HTMLElement>(null);
-  const [step, setStep] = useState(0);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
-  useMotionValueEvent(scrollYProgress, 'change', (v) => setStep(Math.min(2, Math.max(0, Math.floor(v * 3)))));
+const ICONS = [ShieldCheck, ReceiptText, PackageCheck];
 
+/**
+ * Conteúdo de Como construímos, no mesmo layout de Aplicações: texto e lista à esquerda, folha na laje à direita.
+ * O palco, a laje e o scroll ficam em ApplicationsMethodStory.
+ */
+export function MethodContent({ step, progress }: { step: number; progress: MotionValue<number> }) {
   return (
-    <section
-      ref={ref}
-      id="como-construimos"
-      aria-labelledby="como-construimos-title"
-      className="relative h-[300svh] border-y border-border bg-muted/40"
-    >
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pb-4 pt-[72px] xl:justify-center xl:py-0">
-        {/* disco chapado atrás da folha (outra forma, sem as faixas do hero); ecoa os círculos dos Cases */}
-        <div aria-hidden="true" className="pointer-events-none absolute left-[-22vh] top-1/2 hidden h-[86vh] w-[86vh] -translate-y-1/2 rounded-full bg-brand/[0.07] ring-1 ring-brand/20 xl:block" />
-        <div aria-hidden="true" className="pointer-events-none absolute left-[-6vh] top-1/2 hidden h-[60vh] w-[60vh] -translate-y-1/2 rounded-full bg-brand/[0.06] ring-1 ring-brand/15 xl:block" />
-
-        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
-          {/* texto (à direita no desktop) */}
-          <div className="xl:order-2 xl:col-span-6 xl:pl-16">
-            <p className="text-sm font-semibold text-brand">Como construímos</p>
-            <h2 id="como-construimos-title" className="mt-2 text-[1.65rem] font-semibold leading-[1.05] tracking-[-0.035em] md:text-4xl xl:text-5xl xl:leading-[1.03]">
-              Sem letra miúda: <span className="text-muted-foreground">acessos, custos e código.</span>
-            </h2>
-
-            <div className="mt-4 grid xl:mt-8" aria-live="polite">
-              {STEPS.map((s, i) => (
-                <div key={s.kicker} aria-hidden={i !== step} className={`col-start-1 row-start-1 ${i === step ? '' : 'invisible'}`}>
-                  <p className="text-[13px] font-semibold text-muted-foreground xl:text-sm">{s.kicker}</p>
-                  <p className="mt-1 text-lg font-semibold leading-snug tracking-tight xl:mt-1.5 xl:text-2xl">{s.title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-foreground/70 xl:mt-2 xl:text-base">{s.text}</p>
-                  <ul className="mt-3 space-y-1.5 xl:mt-4 xl:space-y-2">
-                    {s.checks.map((c) => (
-                      <li key={c} className="flex items-start gap-2.5 text-[13px] leading-snug xl:text-[15px]">
-                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand xl:h-[18px] xl:w-[18px]"><Check size={11} strokeWidth={3} aria-hidden="true" /></span>
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-4 w-[min(280px,100%)] xl:mt-8">
-              <ol className="flex justify-between text-[13px] font-semibold" aria-hidden="true">
-                {[
-                  { label: 'Acessos', Icon: ShieldCheck },
-                  { label: 'Custos', Icon: ReceiptText },
-                  { label: 'Entrega', Icon: PackageCheck },
-                ].map(({ label, Icon }, i) => (
-                  <li key={label} className={`flex items-center gap-1.5 ${i === step ? 'text-foreground' : 'text-muted-foreground/70'}`}>
-                    <Icon size={15} className={i === step ? 'text-brand' : ''} aria-hidden="true" />{label}
-                  </li>
-                ))}
-              </ol>
-              <div
-                role="progressbar"
-                aria-label="Progresso das três respostas"
-                aria-valuemin={1}
-                aria-valuemax={3}
-                aria-valuenow={step + 1}
-                className="mt-2 h-1 w-full overflow-hidden rounded-full bg-border"
-              >
-                <motion.div className="h-full origin-left bg-brand" style={{ scaleX: scrollYProgress }} />
-              </div>
-            </div>
-          </div>
-
-          {/* folha de produto (à esquerda no desktop, sobre a laje) */}
-          <div className="hidden xl:order-1 xl:col-span-6 xl:block xl:pr-16">
+    <>
+      <div className="absolute inset-y-0 right-0 hidden w-[52%] xl:block">
+        <div className="absolute inset-0 flex items-center justify-center px-10">
+          <div className="w-[calc(100%/1.25)] origin-center scale-[1.25]">
             <Sheets step={step} />
           </div>
-          <FitBox className="mt-3 xl:hidden">
-            <Sheets step={step} />
-          </FitBox>
         </div>
       </div>
-    </section>
+
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
+        <div className="xl:col-span-6 xl:pr-16">
+          <SectionHeader id="como-construimos-title" eyebrow="Como construímos" title="Sem letra miúda:" muted="acessos, custos e código." />
+
+          <ol className="mt-4 xl:mt-8" aria-label="Como construímos" aria-live="polite">
+            {STEPS.map((s, i) => {
+              const on = i === step;
+              const Icon = ICONS[i];
+              return (
+                <li key={s.title} className={i > 0 ? 'border-t border-border' : ''}>
+                  <div className="flex items-start gap-4 py-3 xl:gap-5 xl:py-4">
+                    <Icon size={22} className={`mt-0.5 shrink-0 ${on ? 'text-brand' : 'text-foreground/35'}`} aria-hidden="true" />
+                    <div className="min-w-0">
+                      <p className={`text-lg font-semibold leading-snug tracking-tight xl:text-2xl ${on ? 'text-foreground' : 'text-foreground/45'}`}>{s.title}</p>
+                      <p className={`mt-1 text-sm leading-relaxed text-foreground/70 xl:text-base ${on ? 'opacity-100' : 'opacity-0'}`} aria-hidden={!on}>{s.text}</p>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+
+          <div
+            role="progressbar"
+            aria-label="Progresso das três respostas"
+            aria-valuemin={1}
+            aria-valuemax={3}
+            aria-valuenow={step + 1}
+            className="mt-4 h-1 w-[min(280px,100%)] overflow-hidden rounded-full bg-border xl:mt-6"
+          >
+            <motion.div className="h-full origin-left bg-brand" style={{ scaleX: progress }} />
+          </div>
+        </div>
+
+        <FitBox className="mt-4 xl:hidden">
+          <Sheets step={step} />
+        </FitBox>
+      </div>
+    </>
   );
 }

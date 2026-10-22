@@ -16,11 +16,27 @@ interface PortfolioCarouselProps {
  * O círculo muda conforme o logo, não conforme o tema: logos escuros ou coloridos ficam sobre branco,
  * logos claros (brancos ou bege) ficam sobre grafite. Cores originais preservadas.
  */
+/** Mesma área de tinta para toda logo (quadradas e largas pesam igual), com teto de largura e altura para não encostar na borda. */
+const INK_AREA = 0.3;
+const MAX_W = 0.72;
+const MAX_H = 0.62;
+function inkSize(aspect: number) {
+  let w = Math.sqrt(INK_AREA * aspect);
+  let h = w / aspect;
+  if (w > MAX_W) { w = MAX_W; h = w / aspect; }
+  if (h > MAX_H) { h = MAX_H; w = h * aspect; }
+  return { w: w * 100, h: h * 100 };
+}
+
 function LogoDisc({ project }: { project: Project }) {
   const tone = project.bright ? 'bg-[#15151a] ring-white/10' : 'bg-white ring-black/[0.07]';
+  const ink = project.logoAspect ? inkSize(project.logoAspect) : null;
   return (
-    <div className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-full p-12 ring-1 ring-inset shadow-[0_24px_60px_-28px_rgba(10,20,40,0.35)] ${tone}`}>
-      <div className="relative h-full w-full transition-transform duration-500 group-hover:scale-105">
+    <div className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-full ring-1 ring-inset shadow-[0_24px_60px_-28px_rgba(10,20,40,0.35)] ${ink ? '' : 'p-12'} ${tone}`}>
+      <div
+        className={`transition-transform duration-500 group-hover:scale-105 ${ink ? 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2' : 'relative h-full w-full'}`}
+        style={ink ? { width: `${ink.w}%`, height: `${ink.h}%` } : undefined}
+      >
         {project.logo ? (
           <Image
             src={project.logo}
@@ -42,12 +58,19 @@ function LogoDisc({ project }: { project: Project }) {
 }
 
 /**
- * Carrossel arrastável de cases (cases e parcerias juntos). Sem autoplay: só se move quando a pessoa arrasta
- * ou usa as setas.
+ * Carrossel arrastável e infinito de cases (cases e parcerias juntos): ao passar do último volta ao primeiro, nos dois
+ * sentidos. Sem autoplay: só se move quando a pessoa arrasta.
  */
 export function PortfolioCarousel({ projects }: PortfolioCarouselProps) {
-  const [emblaRef, embla] = useEmblaCarousel({ loop: false, align: 'start', skipSnaps: false, dragFree: true });
-  const [canPrev, setCanPrev] = useState(false);
+  const [emblaRef, embla] = useEmblaCarousel({
+    loop: true,
+    align: 'center',
+    containScroll: false,
+    startIndex: Math.floor((projects.length - 1) / 2),
+    skipSnaps: false,
+    dragFree: true,
+  });
+  const [canPrev, setCanPrev] = useState(true);
   const [canNext, setCanNext] = useState(true);
 
   const update = useCallback(() => {
@@ -120,15 +143,6 @@ export function PortfolioCarousel({ projects }: PortfolioCarouselProps) {
             );
           })}
         </div>
-      </div>
-
-      <div className="mt-8 flex items-center gap-3">
-        <button type="button" className={arrow} onClick={() => embla?.scrollPrev()} disabled={!canPrev} aria-label="Cases anteriores">
-          <ArrowLeft size={18} aria-hidden="true" />
-        </button>
-        <button type="button" className={arrow} onClick={() => embla?.scrollNext()} disabled={!canNext} aria-label="Próximos cases">
-          <ArrowRight size={18} aria-hidden="true" />
-        </button>
       </div>
     </div>
   );

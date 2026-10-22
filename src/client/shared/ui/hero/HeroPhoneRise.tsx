@@ -108,7 +108,7 @@ export function HeroPhoneRise({ target }: { target: RefObject<HTMLElement | null
         <motion.path d="M 60 860 C 120 760, 250 740, 290 620 S 330 430, 410 360" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" style={{ pathLength: draw }} />
       </motion.svg>
 
-      <div className="absolute inset-x-0 bottom-3 flex justify-center px-6" style={{ perspective: 900 }}>
+      <div className="absolute inset-x-0 bottom-[calc(100lvh-100svh+0.75rem)] flex justify-center px-6" style={{ perspective: 900 }}>
         <motion.div style={phoneStyle} className="">
           <HeroMockups step={step} />
         </motion.div>

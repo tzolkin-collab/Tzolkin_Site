@@ -157,7 +157,20 @@ function CrmPhone({ step }: { step: number }) {
           </div>
         )}
       </div>
-      <div className="m-3 mb-6 flex h-9 items-center rounded-full border border-[#e5e5e5] bg-white px-4 text-[11.5px] text-[#a3a3a3]">Mensagem</div>
+      <div
+        role="progressbar"
+        aria-label="Progresso da demonstração"
+        aria-valuemin={1}
+        aria-valuemax={3}
+        aria-valuenow={step + 1}
+        className="mx-6 mb-3 h-1 shrink-0 overflow-hidden rounded-full bg-[#e5e5e5]"
+      >
+        <div
+          className="h-full origin-left rounded-full bg-brand transition-transform duration-300 motion-reduce:transition-none"
+          style={{ transform: `scaleX(${(step + 1) / 3})` }}
+        />
+      </div>
+      <div className="m-3 mb-6 mt-0 flex h-9 items-center rounded-full border border-[#e5e5e5] bg-white px-4 text-[11.5px] text-[#a3a3a3]">Mensagem</div>
     </div>
   );
 }

@@ -39,6 +39,11 @@ export function captureAttribution(): void {
       const value = query.get(name);
       if (value) found[name] = value.slice(0, 500);
     }
+    // O Sites e os anúncios dele nomeiam os IDs da Meta sem o prefixo; aceita os dois para a origem não se perder.
+    for (const [alias, name] of [['campaign_id', 'meta_campaign_id'], ['adset_id', 'meta_adset_id'], ['ad_id', 'meta_ad_id']] as const) {
+      const value = query.get(alias);
+      if (value && !found[name]) found[name] = value.slice(0, 500);
+    }
     if (Object.keys(found).length === 0 && Object.keys(stored()).length > 0) return;
     const next: Attribution = { ...found, landing_page: window.location.pathname };
     if (document.referrer) {

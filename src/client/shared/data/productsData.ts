@@ -48,8 +48,8 @@ export const productsShowcaseData: ProductShowcaseItem[] = [
     number: '02',
     title: 'E-commerce Global Headless',
     category: 'Comércio Eletrônico',
-    badge: 'ecom.tzolkin.cloud',
-    subdomain: 'ecom.tzolkin.cloud',
+    badge: 'sites.tzolkin.cloud',
+    subdomain: 'sites.tzolkin.cloud',
     headline: 'Lojas virtuais com arquitetura desacoplada e checkout transparente multi-provedor.',
     description: 'Estruturas de alto volume para marcas que não aceitam limites de catálogo, lentidão em picos de venda ou quedas em campanhas de escala nacional e internacional.',
     features: [

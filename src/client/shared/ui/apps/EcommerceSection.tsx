@@ -51,14 +51,10 @@ export function EcommerceSection() {
       ref={ref}
       id="ecommerce-marketplace"
       aria-labelledby="ecommerce-title"
-      className="relative border-t border-border bg-muted/40 h-[300svh]"
+      className="relative bg-background h-[300svh]"
     >
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pb-4 pt-[72px] xl:justify-center xl:py-0">
+      <div className="sticky top-0 flex h-[100lvh] flex-col overflow-hidden pb-[calc(100lvh-100svh+3rem)] pt-[72px] xl:justify-center xl:py-0">
         {/* cunha de cor no fundo da seção, encostada na borda de baixo, em qualquer tela */}
-        <div
-          aria-hidden="true"
-          className="absolute bottom-0 right-0 h-[220px] w-full bg-[linear-gradient(100deg,transparent_0%,rgba(226,59,59,0.5)_55%,#c90000_100%)] [clip-path:polygon(0_100%,100%_30%,100%_100%)] md:h-[300px] md:w-[80%] xl:h-[48%] xl:w-[64%] xl:[clip-path:polygon(0_100%,100%_18%,100%_100%)]"
-        />
         <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
           <div className="xl:col-span-4 xl:pr-10">
             <h2 id="ecommerce-title" className="text-[1.65rem] font-semibold leading-[1.05] tracking-[-0.035em] md:text-4xl xl:text-5xl xl:leading-[1.03]">

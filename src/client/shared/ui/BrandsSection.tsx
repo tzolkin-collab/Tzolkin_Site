@@ -17,6 +17,8 @@ interface IntegrationItem {
   lightTileOnDark?: boolean;
   /** Logo preto de um traço só: inverte no tema escuro. */
   mono?: boolean;
+  /** Escala óptica (1 = normal) para marcas com muito respiro no arquivo. */
+  optical?: number;
   /** Aparece na grade inicial; os demais só em "Ver todas". */
   featured?: boolean;
   icon?: React.ComponentType<{ className?: string; strokeWidth?: number }>;
@@ -24,82 +26,131 @@ interface IntegrationItem {
 
 // Logos: svgl.app e Simple Icons (CC0), exceto Utmify e Ideris (arquivos do projeto). Marcas dos respectivos donos,
 // usadas só para indicar o que pode ser conectado, sem sugerir parceria.
+const I = (n: string) => `/integrations/${n}`;
 const integrations: IntegrationItem[] = [
-  { name: "Meta", group: "Anúncios e dados", svg: "/integrations/meta.svg", featured: true },
-  { name: "Utmify", group: "Anúncios e dados", svg: "/integrations/utmify.png", featured: true },
-  { name: "Google", group: "Anúncios e dados", svg: "/integrations/google.svg", featured: true },
-  { name: "TikTok", group: "Anúncios e dados", svg: "/integrations/tiktok-light.svg", svgDark: "/integrations/tiktok.svg", featured: true },
-  { name: "Google Sheets", group: "Anúncios e dados", svg: "/integrations/google-sheets.svg" },
-  { name: "WhatsApp", group: "Atendimento e mensagens", svg: "/integrations/whatsapp.svg", featured: true },
-  { name: "Instagram", group: "Atendimento e mensagens", svg: "/integrations/instagram.svg" },
-  { name: "Slack", group: "Atendimento e mensagens", svg: "/integrations/slack.svg" },
-  { name: "ChatGPT / OpenAI", group: "IA e LLMs", svg: "/integrations/openai.svg", svgDark: "/integrations/openai-dark.svg", featured: true },
-  { name: "Claude", group: "IA e LLMs", svg: "/integrations/claude.svg", featured: true },
-  { name: "Gemini", group: "IA e LLMs", svg: "/integrations/gemini.svg" },
-  { name: "Shopify", group: "Canais de venda", svg: "/integrations/shopify.svg", featured: true },
-  { name: "Mercado Livre", group: "Canais de venda", svg: "/integrations/mercado-livre.svg" },
-  { name: "Amazon", group: "Canais de venda", svg: "/integrations/amazon.svg", mono: true },
-  { name: "Shopee", group: "Canais de venda", svg: "/integrations/shopee.svg", mono: true },
-  { name: "Ideris", group: "Canais de venda", svg: "/integrations/ideris.png", wide: true, lightTileOnDark: true },
-  { name: "Stripe", group: "Pagamentos e fiscal", svg: "/integrations/stripe.svg", featured: true },
-  { name: "API do Pix", group: "Pagamentos e fiscal", svg: "/integrations/pix.svg", featured: true },
-  { name: "Mercado Pago", group: "Pagamentos e fiscal", svg: "/integrations/mercado-pago.svg" },
+  { name: "Meta", group: "Anúncios e dados", svg: I("meta.svg"), featured: true },
+  { name: "Utmify", group: "Anúncios e dados", svg: I("utmify.png"), featured: true },
+  { name: "Google", group: "Anúncios e dados", svg: I("google.svg"), featured: true },
+  { name: "TikTok", group: "Anúncios e dados", svg: I("tiktok-light.svg"), svgDark: I("tiktok.svg"), featured: true },
+  // Suíte Google, serviço por serviço (bloco próprio na seção)
+  { name: "Gmail", group: "Suíte Google", svg: I("gmail.svg") },
+  { name: "Drive", group: "Suíte Google", svg: I("google-drive.svg") },
+  { name: "Agenda", group: "Suíte Google", svg: I("google-calendar.svg") },
+  { name: "Planilhas", group: "Suíte Google", svg: I("google-sheets.svg") },
+  { name: "Docs", group: "Suíte Google", svg: I("google-docs.svg") },
+  { name: "Apresentações", group: "Suíte Google", svg: I("google-slides.svg") },
+  { name: "Formulários", group: "Suíte Google", svg: I("google-forms.svg") },
+  { name: "Meet", group: "Suíte Google", svg: I("google-meet.svg") },
+  { name: "Chat", group: "Suíte Google", svg: I("google-chat.svg") },
+  { name: "Tarefas", group: "Suíte Google", svg: I("google-tasks.svg") },
+  { name: "Analytics", group: "Suíte Google", svg: I("google-analytics.svg") },
+  { name: "Google Ads", group: "Suíte Google", svg: I("google-ads.svg") },
+  { name: "Tag Manager", group: "Suíte Google", svg: I("google-tag-manager.svg") },
+  { name: "Looker Studio", group: "Suíte Google", svg: I("looker-studio.svg") },
+  { name: "BigQuery", group: "Suíte Google", svg: I("bigquery.svg") },
+  { name: "Search Console", group: "Suíte Google", svg: I("search-console.svg") },
+  { name: "Maps", group: "Suíte Google", svg: I("google-maps.svg") },
+  { name: "YouTube", group: "Suíte Google", svg: I("youtube.svg") },
+  { name: "Google Cloud", group: "Suíte Google", svg: I("google-cloud.svg") },
+  { name: "Firebase", group: "Suíte Google", svg: I("firebase.svg") },
+  { name: "WhatsApp", group: "Atendimento e mensagens", svg: I("whatsapp.svg"), featured: true },
+  { name: "Instagram", group: "Atendimento e mensagens", svg: I("instagram.svg") },
+  { name: "Slack", group: "Atendimento e mensagens", svg: I("slack.svg") },
+  { name: "HubSpot", group: "CRMs", svg: I("hubspot.svg") },
+  { name: "Salesforce", group: "CRMs", svg: I("salesforce.svg") },
+  { name: "Zoho CRM", group: "CRMs", svg: I("zoho.svg") },
+  { name: "ClickUp", group: "CRMs", svg: I("clickup.svg") },
+  { name: "Trello", group: "CRMs", svg: I("trello.svg") },
+  { name: "Asana", group: "CRMs", svg: I("asana.svg") },
+  { name: "Airtable", group: "CRMs", svg: I("airtable.svg") },
+  { name: "ChatGPT / OpenAI", group: "IA e LLMs", svg: I("openai.svg"), svgDark: I("openai-dark.svg"), featured: true },
+  { name: "Claude", group: "IA e LLMs", svg: I("claude.svg"), featured: true },
+  { name: "Gemini", group: "IA e LLMs", svg: I("gemini.svg") },
+  { name: "Shopify", group: "Canais de venda", svg: I("shopify.svg"), featured: true },
+  { name: "Mercado Livre", group: "Canais de venda", svg: I("mercado-livre.svg") },
+  { name: "Amazon", group: "Canais de venda", svg: I("amazon.svg"), mono: true },
+  { name: "Shopee", group: "Canais de venda", svg: I("shopee.svg"), mono: true },
+  { name: "Ideris", group: "Canais de venda", svg: I("ideris.png"), wide: true, lightTileOnDark: true },
+  { name: "Stripe", group: "Pagamentos e fiscal", svg: I("stripe.svg"), featured: true },
+  { name: "API do Pix", group: "Pagamentos e fiscal", svg: I("pix.svg"), featured: true },
+  { name: "Mercado Pago", group: "Pagamentos e fiscal", svg: I("mercado-pago.svg") },
   { name: "API NFe", group: "Pagamentos e fiscal", icon: FileText, featured: true },
-  { name: "n8n", group: "Automação e dados", svg: "/integrations/n8n.svg" },
-  { name: "Zapier", group: "Automação e dados", svg: "/integrations/zapier.svg", mono: true },
-  { name: "Notion", group: "Automação e dados", svg: "/integrations/notion.svg" },
-  { name: "Supabase", group: "Automação e dados", svg: "/integrations/supabase.svg" },
-  { name: "PostgreSQL", group: "Automação e dados", svg: "/integrations/postgresql.svg" },
-  { name: "Redis", group: "Automação e dados", svg: "/integrations/redis.svg" },
-  { name: "GitHub", group: "Infra e código", svg: "/integrations/github.svg", svgDark: "/integrations/github-dark.svg" },
-  { name: "Vercel", group: "Infra e código", svg: "/integrations/vercel.svg", svgDark: "/integrations/vercel-dark.svg" },
-  { name: "Cloudflare", group: "Infra e código", svg: "/integrations/cloudflare.svg" },
-  { name: "Docker", group: "Infra e código", svg: "/integrations/docker.svg" },
+  { name: "n8n", group: "Automação", svg: I("n8n.svg") },
+  { name: "Zapier", group: "Automação", svg: I("zapier.svg"), mono: true },
+  { name: "Notion", group: "Automação", svg: I("notion.svg") },
+  { name: "MySQL", group: "Bancos de dados", svg: I("mysql.svg"), optical: 1.45 },
+  { name: "PostgreSQL", group: "Bancos de dados", svg: I("postgresql.svg") },
+  { name: "MariaDB", group: "Bancos de dados", svg: I("mariadb.svg"), mono: true },
+  { name: "MongoDB", group: "Bancos de dados", svg: I("mongodb.svg") },
+  { name: "SQLite", group: "Bancos de dados", svg: I("sqlite.svg"), mono: true },
+  { name: "Redis", group: "Bancos de dados", svg: I("redis.svg") },
+  { name: "Supabase", group: "Bancos de dados", svg: I("supabase.svg") },
+  { name: "Go", group: "Linguagens e stacks", svg: I("go.svg"), optical: 1.45 },
+  { name: "JavaScript", group: "Linguagens e stacks", svg: I("javascript.svg") },
+  { name: "TypeScript", group: "Linguagens e stacks", svg: I("typescript.svg") },
+  { name: "Python", group: "Linguagens e stacks", svg: I("python.svg") },
+  { name: "Ruby", group: "Linguagens e stacks", svg: I("ruby.svg") },
+  { name: "PHP", group: "Linguagens e stacks", svg: I("php.svg") },
+  { name: "Java", group: "Linguagens e stacks", svg: I("java.svg"), mono: true },
+  { name: "Kotlin", group: "Linguagens e stacks", svg: I("kotlin.svg") },
+  { name: "Rust", group: "Linguagens e stacks", svg: I("rust.svg"), mono: true },
+  { name: "Node.js", group: "Linguagens e stacks", svg: I("nodejs.svg") },
+  { name: "Next.js", group: "Linguagens e stacks", svg: I("nextjs.svg"), mono: true },
+  { name: "React", group: "Linguagens e stacks", svg: I("react.svg") },
+  { name: "Laravel", group: "Linguagens e stacks", svg: I("laravel.svg") },
+  { name: "Rails", group: "Linguagens e stacks", svg: I("rails.svg") },
+  { name: "Django", group: "Linguagens e stacks", svg: I("django.svg"), mono: true },
+  { name: "GitHub", group: "Infra e código", svg: I("github.svg"), svgDark: I("github-dark.svg") },
+  { name: "Vercel", group: "Infra e código", svg: I("vercel.svg"), svgDark: I("vercel-dark.svg") },
+  { name: "Cloudflare", group: "Infra e código", svg: I("cloudflare.svg") },
+  { name: "Docker", group: "Infra e código", svg: I("docker.svg") },
+  { name: "Kubernetes", group: "Infra e código", svg: I("kubernetes.svg") },
+  { name: "Terraform", group: "Infra e código", svg: I("terraform.svg") },
 ];
 
 const featured = integrations.filter((i) => i.featured);
-const groups = Array.from(new Set(integrations.map((i) => i.group)));
+// A Suíte Google abre a lista completa, com todos os serviços; os demais grupos seguem na ordem do arquivo.
+const groups = ['Suíte Google', ...Array.from(new Set(integrations.map((i) => i.group))).filter((g) => g !== 'Suíte Google')];
 
 const tile = 'flex aspect-[4/3] min-w-0 flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card p-4';
 
-/** Logo em um quadrado de `size` px; trata variantes de tema, logos horizontais e de traço único. */
+/**
+ * Todas as logos com a mesma presença, sem chip: cada marca cabe numa caixa de `size` px (as largas, em uma caixa mais
+ * comprida de mesma altura óptica) e é centralizada. Respeita o tema: versão própria para o escuro quando existe, inversão
+ * nas marcas de traço único e fundo claro atrás das escuras que não têm variante.
+ * `optical` corrige marcas com muito respiro interno no arquivo (o desenho ocupa menos que a caixa).
+ */
 function Logo({ item, size }: { item: IntegrationItem; size: number }) {
-  const box = { width: size, height: size };
   if (!item.svg) {
-    return item.icon ? <item.icon className="text-muted-foreground" strokeWidth={1.5} {...({ style: box } as object)} /> : null;
+    const Icon = item.icon;
+    return Icon ? <Icon className="text-brand" strokeWidth={1.6} {...({ style: { width: size, height: size } } as object)} /> : null;
   }
   const alt = `Logo ${item.name}`;
+  const scale = item.optical ?? 1;
+  // Marca larga: largura de 1,7 caixa, para ter o mesmo peso das quadradas (a Ideris era a maior de todas).
+  const w = item.wide ? Math.round(size * 1.7) : size;
+  const h = item.wide ? Math.round(size * 1.7 * 0.285) : size;
+  const box = { width: w, height: h, transform: scale === 1 ? undefined : `scale(${scale})` };
+  const img = (src: string, cls: string) => (
+    <Image src={src} alt={alt} width={w} height={h} unoptimized style={box} className={`object-contain ${cls}`} />
+  );
   if (item.svgDark) {
     return (
-      <>
-        <Image src={item.svg} alt={alt} width={size} height={size} unoptimized style={box} className="object-contain dark:hidden" />
-        <Image src={item.svgDark} alt={alt} width={size} height={size} unoptimized style={box} className="hidden object-contain dark:block" />
-      </>
+      <span className="flex shrink-0 items-center justify-center" style={{ width: w, height: h }}>
+        {img(item.svg, 'dark:hidden')}
+        {img(item.svgDark, 'hidden dark:block')}
+      </span>
     );
   }
-  if (item.wide) {
-    return (
-      <Image
-        src={item.svg}
-        alt={alt}
-        width={size * 2.8}
-        height={size}
-        unoptimized
-        style={{ height: size, width: size * 2.8 }}
-        className={`object-contain ${item.lightTileOnDark ? 'dark:rounded-md dark:bg-white dark:px-2' : ''}`}
-      />
-    );
-  }
+  const extra = [
+    item.mono ? 'dark:invert' : '',
+    item.lightTileOnDark ? 'dark:rounded-md dark:bg-white dark:px-2' : '',
+    item.name === 'Utmify' ? 'rounded-[22%]' : '',
+  ].join(' ');
   return (
-    <Image
-      src={item.svg}
-      alt={alt}
-      width={size}
-      height={size}
-      unoptimized
-      style={box}
-      className={`object-contain ${item.mono ? 'dark:invert' : ''} ${item.name === 'Utmify' ? 'rounded-[22%]' : ''}`}
-    />
+    <span className="flex shrink-0 items-center justify-center" style={{ width: w, height: h }}>
+      {img(item.svg, extra)}
+    </span>
   );
 }
 
@@ -147,7 +198,8 @@ export function BrandsSection() {
               eyebrow="Integrações"
               title="Integrações com as ferramentas que sua operação já usa."
             />
-            <div className="mt-6 max-w-xl space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p className="mt-5 max-w-xl text-xl font-semibold leading-snug tracking-tight text-foreground md:text-2xl">Moldamos o processo para caber na sua operação.</p>
+            <div className="mt-5 max-w-xl space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
               <p>Os produtos que construímos se conectam a CRM, meios de pagamento, nota fiscal, marketplaces, plataformas de anúncios, mensageria e modelos de IA.</p>
               <p>Cada integração é listada na proposta, com o serviço externo envolvido e o custo, quando houver.</p>
             </div>
@@ -214,12 +266,15 @@ export function BrandsSection() {
                     </div>
                   ))}
                 </div>
+                <p className="mt-8 text-sm text-muted-foreground">
+                  Entre outras. Conte o que a sua operação usa e a gente avalia a conexão.
+                </p>
                 <button
                   type="button"
                   aria-expanded
                   aria-controls="integracoes-todas"
                   onClick={() => setShowAll(false)}
-                  className="mt-8 inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <ChevronUp className="h-4 w-4" aria-hidden="true" />
                   Mostrar menos

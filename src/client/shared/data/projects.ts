@@ -1,6 +1,8 @@
 export interface Project {
   name: string;
   logo: string;
+  /** Largura ÷ altura do arquivo da logo (as logos já vêm aparadas). Usada para dar a todas o mesmo peso no círculo. */
+  logoAspect?: number;
   year: string;
   decoration: string;
   rotation: string;
@@ -22,11 +24,12 @@ export interface Project {
 export const projects: Project[] = [
   {
     name: "Powerhouse Brasil",
-    logo: "/logo-powerhouse.png",
+    logo: "/logo-powerhouse-claro.png",
+    logoAspect: 1.783,
     year: "2024",
     decoration: "/bg-institutional.png",
     rotation: "rotate-[12deg]",
-    bright: true,
+    bright: false,
     invert: false,
     category: 'case',
     description: "Aceleradora de negócios e educação corporativa.",
@@ -36,11 +39,12 @@ export const projects: Project[] = [
   },
   {
     name: "Kalidash",
-    logo: "/logo-kalidash.webp",
+    logo: "/logo-kalidash-claro.png",
+    logoAspect: 2.671,
     year: "2024",
     decoration: "/bg-ecommerce.png",
     rotation: "rotate-[30deg]",
-    bright: true,
+    bright: false,
     invert: false,
     category: 'case',
     description: "Gestão e dashboards.",
@@ -50,11 +54,12 @@ export const projects: Project[] = [
   },
   {
     name: "NovoDash",
-    logo: "/logo-novodash.svg",
+    logo: "/logo-novodash-claro.svg",
+    logoAspect: 6.103,
     year: "2024",
     decoration: "/bg-optimization.png",
     rotation: "rotate-[45deg]",
-    bright: true,
+    bright: false,
     invert: false,
     category: 'case',
     description: "Plataforma analítica e de BI.",
@@ -65,6 +70,7 @@ export const projects: Project[] = [
   {
     name: "KidStok",
     logo: "/logo-kidstok.png",
+    logoAspect: 1.218,
     year: "2024",
     decoration: "/bg-ecommerce.png",
     rotation: "rotate-[37deg]",
@@ -81,6 +87,7 @@ export const projects: Project[] = [
   {
     name: "Instituto Vale",
     logo: "/logo-vale.png",
+    logoAspect: 2.56,
     year: "2024",
     decoration: "/bg-institutional.png",
     rotation: "rotate-[21deg]",
@@ -96,6 +103,7 @@ export const projects: Project[] = [
   {
     name: "Mr. Fit",
     logo: "/logo-mr-fit.png",
+    logoAspect: 0.947,
     year: "2024",
     decoration: "/bg-optimization.png",
     rotation: "rotate-[5deg]",
@@ -110,11 +118,12 @@ export const projects: Project[] = [
   },
   {
     name: "Assinatura Marca Própria",
-    logo: "/logo-assinatura-marca-propria.png",
+    logo: "/logo-assinatura-claro.png",
+    logoAspect: 0.984,
     year: "2024",
     decoration: "/bg-institutional.png",
     rotation: "rotate-[25deg]",
-    bright: true,
+    bright: false,
     invert: false,
     category: 'case',
     description: "Projeto de assinatura de marca própria.",

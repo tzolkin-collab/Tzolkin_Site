@@ -1,9 +1,6 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState, type JSX } from 'react';
-import Link from 'next/link';
-import { useMotionValueEvent, useScroll } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import { applications } from '@/client/shared/data/homeData';
 import { SectionHeader } from '@/client/shared/ui/SectionHeader';
 import { AgentsDevices, CrmDevices, FiscalDevices, PilotDevices } from '@/client/shared/ui/apps/ProductDevices';
@@ -23,26 +20,11 @@ const COUNT = applications.length;
 
 
 /**
- * Índice editorial das aplicações, fixo e conduzido pelo scroll em qualquer tela (mesmo padrão do hero):
- * uma aplicação por vez, em um acordeão (a ativa abre) com a demonstração ao lado no desktop e, no celular,
- * escalada para a altura que sobra.
+ * Conteúdo de Aplicações: índice editorial em acordeão (a aplicação ativa abre) com a demonstração na laje à direita
+ * no desktop e, no celular, escalada para a altura que sobra. O palco fixo, o fundo e o scroll ficam em
+ * ApplicationsMethodStory; aqui só o conteúdo, que esse palco faz subir e sumir.
  */
-export function ServicesSection() {
-  const ref = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(0);
-
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
-  useMotionValueEvent(scrollYProgress, 'change', (v) => setActive(Math.min(COUNT - 1, Math.max(0, Math.floor(v * COUNT)))));
-
-  const goTo = (i: number) => {
-    setActive(i);
-    const el = ref.current;
-    if (el) {
-      const total = el.offsetHeight - window.innerHeight;
-      window.scrollTo({ top: el.offsetTop + total * ((i + 0.5) / COUNT), behavior: 'smooth' });
-    }
-  };
-
+export function ServicesContent({ active, onSelect }: { active: number; onSelect: (i: number) => void }) {
   // Acordeão sem layout shift e sem espaço sobrando: os detalhes das cinco aplicações ocupam a mesma célula (a altura
   // é a do maior), e as linhas abaixo da aberta só se movem por transform. O item aberto tem uma linha só, no fim.
   const listRef = useRef<HTMLOListElement>(null);
@@ -68,32 +50,22 @@ export function ServicesSection() {
 
   const app = applications[active];
   const Preview = mocks[app.slug] ?? PilotDevices;
-  const linkClass =
-    'group inline-flex min-h-11 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
   return (
-    <section
-      ref={ref}
-      id="aplicacoes"
-      aria-labelledby="aplicacoes-title"
-      className="relative z-10 h-[360svh] w-full bg-background"
-    >
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden pb-4 pt-[72px] xl:justify-center xl:pb-6 xl:pt-[76px]">
-        {/* desktop: laje à direita (52% da tela, sangrando até a borda) com a demonstração dentro dela */}
-        <div className="absolute inset-y-0 right-0 hidden w-[52%] xl:block">
-          <div aria-hidden="true" className="absolute inset-0 overflow-hidden border-l border-dashed border-border bg-muted/60">
-          </div>
-          <div className="absolute inset-0 flex items-center px-6" aria-live="polite">
-            <FitBox center className="!flex-none h-[min(700px,calc(100svh-120px))] w-full">
-              <div key={app.slug} className="overflow-hidden rounded-lg">
-                <Preview />
-              </div>
-            </FitBox>
-          </div>
+    <>
+      {/* desktop: a demonstração dentro da laje (52% da tela, que é do palco) */}
+      <div className="absolute inset-y-0 right-0 hidden w-[52%] xl:block">
+        <div className="absolute inset-0 flex items-center px-6" aria-live="polite">
+          <FitBox center className="!flex-none h-[min(700px,calc(100svh-120px))] w-full">
+            <div key={app.slug} className="overflow-hidden rounded-lg">
+              <Preview />
+            </div>
+          </FitBox>
         </div>
-        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
+      </div>
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
           <div className="xl:col-span-6 xl:pr-16">
-            <SectionHeader id="aplicacoes-title" eyebrow="Aplicações" title="Software para vender," muted="atender e operar." />
+            <SectionHeader id="aplicacoes-title" eyebrow="Aplicações" title="Softwares que auxiliam na gestão, vendas, marketing e inteligência" />
 
             {/* acordeão: a aplicação ativa abre sem empurrar a página */}
             <ol ref={listRef} className="relative mt-4 xl:mt-8" style={{ paddingBottom: detailH }} aria-label="Aplicações">
@@ -111,7 +83,7 @@ export function ServicesSection() {
                     <button
                       type="button"
                       aria-expanded={on}
-                      onClick={() => goTo(i)}
+                      onClick={() => onSelect(i)}
                       className="flex min-h-11 w-full items-baseline gap-4 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand xl:min-h-12 xl:gap-5 xl:py-3"
                     >
                       <span className={`w-6 shrink-0 text-sm font-semibold tabular-nums ${on ? 'text-brand' : 'text-foreground/35'}`}>{String(i + 1).padStart(2, '0')}</span>
@@ -130,12 +102,6 @@ export function ServicesSection() {
                   <div key={a.slug} aria-hidden={i !== active} className={`col-start-1 row-start-1 ${i === active ? '' : 'invisible'}`}>
                     <p className="text-sm font-medium xl:text-base">{a.forWho}</p>
                     <p className="mt-2 hidden max-w-xl text-[15px] leading-relaxed text-foreground/70 xl:block">{a.delivers}</p>
-                    {!a.href.startsWith('/forms') && (
-                      <Link href={a.href} tabIndex={i === active ? 0 : -1} className={`${linkClass} mt-1 xl:mt-3`}>
-                        {a.ctaText}
-                        <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                      </Link>
-                    )}
                   </div>
                 ))}
               </div>
@@ -149,8 +115,7 @@ export function ServicesSection() {
               <Preview />
             </div>
           </FitBox>
-        </div>
       </div>
-    </section>
+    </>
   );
 }

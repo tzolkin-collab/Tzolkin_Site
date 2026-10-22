@@ -3,11 +3,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, useScroll } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { ModeToggle } from './ModeToggle';
 import Link from 'next/link';
 import { TzolkinLogo } from './TzolkinLogo';
 import { useLockBody } from '@/hooks/useLockBody';
+import { buildAgencyUrl } from '@/client/shared/utils/utm';
+import { readAttribution } from '@/client/shared/utils/attribution';
 
 type MenuItem = { label: string; href: string; badge?: string };
 
@@ -38,11 +40,16 @@ const VISIBLE_LINKS = 3;
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
+  // Único link externo do menu: leva a origem de marketing do visitante e a UTM própria da TZOLKIN. Calculado depois
+  // de montar (a origem vem do sessionStorage), então o servidor entrega só a UTM própria.
+  const [agencyHref, setAgencyHref] = useState(() => buildAgencyUrl());
   const [activeIndex, setActiveIndex] = useState(-1);
   const rafRef = useRef<number | null>(null);
-  const isHome = usePathname() === '/';
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+  useEffect(() => {
+    setAgencyHref(buildAgencyUrl(readAttribution()));
+  }, [pathname]);
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
@@ -55,13 +62,6 @@ export function Header() {
       const threshold = pinned ? pin.offsetHeight - window.innerHeight : BANNER_HEIGHT;
       setScrolled(window.scrollY > Math.max(threshold, BANNER_HEIGHT));
 
-      // Descendo, o header sobe; subindo, volta. Pequenos tremores de scroll não contam.
-      const y = window.scrollY;
-      const dy = y - lastY.current;
-      if (Math.abs(dy) > 6) {
-        setHidden(dy > 0 && y > 120);
-        lastY.current = y;
-      }
 
       if (isHome) {
         const line = window.innerHeight * 0.4;
@@ -104,8 +104,8 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed w-full z-50 transition-[top,padding,background-color,backdrop-filter,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${hidden && !isMenuOpen ? '-translate-y-full' : 'translate-y-0'} ${scrolled
-          ? 'top-0 py-1 pt-2.5 bg-background backdrop-blur-md'
+        className={`fixed w-full z-50 transition-[top,padding,background-color,backdrop-filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${scrolled
+          ? 'top-0 pt-2.5 pb-1 bg-background backdrop-blur-md'
           : 'top-0 bg-transparent py-6'
           }`}
       >
@@ -135,7 +135,7 @@ export function Header() {
                   scrolled && (
                     <>
                       <div
-                        className="w-[30rem] overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]"
+                        className="w-[27rem] overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]"
                         aria-label="Seções da página"
                       >
                         <div
@@ -160,6 +160,15 @@ export function Header() {
                           })}
                         </div>
                       </div>
+                      <a
+                        href={agencyHref}
+                        target="_blank"
+                        rel="noopener"
+                        className="inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-wide text-foreground/70 transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                      >
+                        Agência
+                        <ArrowUpRight size={14} aria-hidden="true" />
+                      </a>
                       <Link
                         href="/forms"
                         className="rounded-full bg-foreground text-background hover:bg-brand hover:text-white transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
@@ -184,6 +193,15 @@ export function Header() {
                         )}
                       </Link>
                     ))}
+                    <a
+                      href={agencyHref}
+                      target="_blank"
+                      rel="noopener"
+                      className="inline-flex items-center gap-1 text-[13px] font-medium uppercase tracking-wide text-foreground/70 transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                    >
+                      Agência
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </a>
                     <Link
                       href="/forms"
                       className="rounded-full bg-foreground text-background hover:bg-brand hover:text-white transition-all duration-300 hover:scale-105 text-xs font-bold uppercase tracking-wider px-5 py-2.5 shadow-sm"
@@ -236,12 +254,23 @@ export function Header() {
               )}
             </Link>
           ))}
+          <a
+            href={agencyHref}
+            target="_blank"
+            rel="noopener"
+            onClick={toggleMenu}
+            className={`text-5xl [@media(max-height:700px)]:text-3xl font-bold tracking-tight text-foreground uppercase hover:text-muted-foreground transition-all duration-500 inline-flex items-center gap-2 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+            style={{ transitionDelay: `${mobileMenuItems.length * 100 + 200}ms` }}
+          >
+            Agência
+            <ArrowUpRight size={28} aria-hidden="true" />
+          </a>
           <Link
             href="/forms"
             onClick={toggleMenu}
             className={`mt-4 rounded-full px-8 py-3.5 bg-foreground text-background hover:bg-foreground/90 text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 shadow-md ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
-            style={{ transitionDelay: `${mobileMenuItems.length * 100 + 200}ms` }}
+            style={{ transitionDelay: `${(mobileMenuItems.length + 1) * 100 + 200}ms` }}
           >
             Iniciar projeto
           </Link>

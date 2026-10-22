@@ -7,9 +7,8 @@ import { Header } from '@/client/shared/ui/Header';
 import { projects } from '@/client/shared/data/projects';
 
 import { PortfolioCarousel } from '@/client/shared/ui/PortfolioCarousel';
-import { ServicesSection } from '@/client/shared/ui/ServicesSection';
+import { ApplicationsMethodStory } from '@/client/shared/ui/ApplicationsMethodStory';
 import { EcommerceSection } from '@/client/shared/ui/apps/EcommerceSection';
-import { MethodTOISection } from '@/client/shared/ui/MethodTOISection';
 import { BrandsSection } from '@/client/shared/ui/BrandsSection';
 import { FounderSection } from '@/client/shared/ui/FounderSection';
 import { PricingSection } from '@/client/shared/ui/PricingSection';
@@ -50,18 +49,18 @@ export function LandingPage() {
 
       {/* ── Hero ── */}
       <section ref={heroRef} data-hero-pin className="relative h-[300svh] bg-background lg:h-[280vh]">
-      <div className="sticky top-0 relative h-[100svh] overflow-clip px-6 pt-24 md:px-12 md:pt-32 lg:flex lg:h-screen lg:items-center lg:pb-10 lg:pt-24">
+      <div className="sticky top-0 relative h-[100lvh] overflow-clip px-6 pt-24 md:px-12 md:pt-32 lg:flex lg:h-screen lg:items-center lg:pb-10 lg:pt-24">
         <HeroBackground />
         <div className="relative mx-auto grid w-full w-full max-w-[1200px] grid-cols-[minmax(0,1fr)] items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
           <div id="hero-copy" className="origin-top will-change-[opacity,transform]">
-            <p className="mb-6 inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
-              Software house · Produtos digitais e IA
+            <p className="mb-6 inline-flex items-center py-1 text-xs font-medium text-muted-foreground">
+             Produtos Digitais e Ia
             </p>
             <h1 className="text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.03em] text-foreground sm:text-6xl lg:text-[4.25rem]">
               Desenhamos, criamos e evoluímos produtos digitais.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-foreground/75 md:text-xl">
-              Da primeira jornada à evolução de um piloto, desenvolvemos software para sua empresa vender, atender e operar. CRMs, agentes de IA, lojas e marketplaces, com integrações e uma base preparada para a próxima etapa.
+              Direto da base ou na evolução de um piloto, desenvolvemos software para sua empresa vender, atender e operar.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
               <Link
@@ -70,13 +69,7 @@ export function LandingPage() {
               >
                 Conversar sobre meu projeto
               </Link>
-              <a href="#aplicacoes" className="text-sm font-semibold text-foreground hover:text-brand">
-                Ver aplicações <span aria-hidden="true">→</span>
-              </a>
             </div>
-            <p className="mt-6 max-w-md text-sm text-muted-foreground">
-              Suítes de dois meses, conforme o escopo. O valor é apresentado na proposta.
-            </p>
           </div>
 
           <div className="hidden lg:block">
@@ -100,10 +93,7 @@ export function LandingPage() {
       </section>
 
       {/* Aplicações */}
-      <ServicesSection />
-
-      {/* Como construímos */}
-      <MethodTOISection />
+      <ApplicationsMethodStory />
 
       {/* E-commerce */}
       <EcommerceSection />

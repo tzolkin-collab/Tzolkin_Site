@@ -38,8 +38,8 @@ export const pricingData: PricingCardProps[] = [
   {
     title: 'E-commerce Headless Next.js',
     slug: 'e-commerces-globais',
-    ctaText: 'Acessar ecom.tzolkin.cloud',
-    ctaHref: appendTzolkinUtm('https://ecom.tzolkin.cloud'),
+    ctaText: 'Acessar sites.tzolkin.cloud',
+    ctaHref: appendTzolkinUtm('https://sites.tzolkin.cloud'),
     dropPrice: 'R$ 10.000',
     price: 'R$ 8.000',
     paymentText: 'Entrada de 50% + 50% na entrega',

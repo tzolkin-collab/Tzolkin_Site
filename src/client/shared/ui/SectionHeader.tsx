@@ -14,8 +14,7 @@ export function SectionHeader({ eyebrow, title, muted, description, align = 'lef
   const centered = align === 'center';
   return (
     <div className={`max-w-3xl ${centered ? 'mx-auto text-center' : ''}`}>
-      {eyebrow && <p className="mb-4 text-sm font-semibold tracking-wide text-brand">{eyebrow}</p>}
-      <h2 id={id} className="text-3xl font-semibold tracking-tight text-foreground md:text-5xl md:leading-[1.08]">
+         <h2 id={id} className="text-3xl font-semibold tracking-tight text-foreground md:text-5xl md:leading-[1.08]">
         {title}
         {muted && <span className="text-muted-foreground"> {muted}</span>}
       </h2>
