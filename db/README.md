@@ -1,8 +1,8 @@
 # Leads comerciais do institucional
 
 > **Mudou em 2026-10-02 (ADR 0011 do `tzolkin-core`).** O lead **não é mais gravado neste banco**. O site manda o lead
-> direto ao intake do Core (`POST /v1/commercial/intake`), que é onde todos os leads vivem. Os arquivos `001`, `002` e
-> `003` abaixo ficam como histórico do desenho antigo; nada novo grava em `institucional.leads`.
+> direto ao intake do Core (`POST /v1/commercial/intake`), que é onde todos os leads vivem.
+> Os arquivos de banco e fila legados (`001–003`, `email-worker.mjs`) foram removidos; nada novo grava em `institucional.leads`.
 
 ## Fluxo atual
 
@@ -29,19 +29,12 @@ Formulário → `POST /api/leads` → validação no servidor → **intake do Co
 
 Sem `CORE_INTAKE_URL`/`CORE_INTAKE_KEY`, nada é entregue ao Core. Nenhuma delas pode ir para o navegador.
 
-## Legado (não alimentado)
-
-`db/001_leads.sql`, `002_lead_delivery.sql`, `003_email_worker.sql` e `scripts/email-worker.mjs` pertencem ao desenho antigo
-(banco do site e fila de e-mail). Seguem no repositório até serem removidos de vez; **a fila nunca é preenchida**.
-O desenho da fila `core_outbox` foi arquivado na branch local `arquivo/outbox-core-descartado`.
-
 ## Verificação
 
-- `npm test`: 34 testes sem banco e sem rede: validação, contrato dos serviços com os formulários (`pricingData`),
+- `npm test`: testes sem banco e sem rede: validação, contrato dos serviços com os formulários (`pricingData`),
   atribuição, formato do envio ao Core, tentativas, e-mail de segurança e orquestração.
 - O formato do envio foi conferido contra `validateIntake` do Core (5 casos). Esse teste cruza dois repositórios e por isso
   não faz parte do `npm test`.
 - `npm run typecheck` e `npm run build`: verificações do projeto.
-- `npm run test:integration`: só o worker de e-mail legado, com banco real.
 
 Nenhum deploy faz parte desta mudança.

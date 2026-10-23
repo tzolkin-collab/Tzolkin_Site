@@ -2,9 +2,26 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "site-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "3203"
+      ],
+      "port": 3203
+    },
+    {
       "name": "kalidash-lp",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["D:\\Códigos\\TZOLKIN\\Projetos\\Carol\\Apresentação Kalidash\\kalidash-lp\\node_modules\\.bin\\next", "dev", "--port", "${PORT}"],
+      "runtimeArgs": [
+        "D:\\Códigos\\TZOLKIN\\Projetos\\Carol\\Apresentação Kalidash\\kalidash-lp\\node_modules\\.bin\\next",
+        "dev",
+        "--port",
+        "${PORT}"
+      ],
       "port": 3000,
       "autoPort": true
     }
