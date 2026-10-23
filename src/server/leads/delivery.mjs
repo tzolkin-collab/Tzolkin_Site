@@ -76,8 +76,10 @@ const esperar = ms => new Promise(resolve => setTimeout(resolve, ms));
 // redirect: 'manual' (e não 'error'): o runtime do Cloudflare Workers só aceita follow e manual, e 'error' faz o fetch lançar TypeError antes de enviar.
 export async function submitToCore(payload, key, { env = process.env, fetchImpl = fetch, sleep = esperar, tentativas = 3, alternate = null } = {}) {
   // Espaço ou quebra de linha colados com o valor (comum ao copiar a chave) deixam o cabeçalho Authorization inválido.
-  const base = env.CORE_INTAKE_URL?.trim(), token = env.CORE_INTAKE_KEY?.trim();
-  if (!base || !token) return { ok: false, reason: 'not_configured' };
+  // O endereço do Core não é segredo e é sempre o mesmo: tem padrão no código. Variável comum (não secreta) do Cloudflare é apagada a cada
+  // `wrangler deploy` quando não está na configuração do repositório, e um endereço sumido derrubava o formulário. Só a chave é obrigatória.
+  const base = env.CORE_INTAKE_URL?.trim() || 'https://core.tzolkin.cloud', token = env.CORE_INTAKE_KEY?.trim();
+  if (!token) return { ok: false, reason: 'not_configured' };
   let url;
   try { url = new URL('/v1/commercial/intake', base); } catch { return { ok: false, reason: 'invalid_url' }; }
   if (url.protocol !== 'https:' && !['127.0.0.1', 'localhost'].includes(url.hostname)) return { ok: false, reason: 'insecure_url' };
