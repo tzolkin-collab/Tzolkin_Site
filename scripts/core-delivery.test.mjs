@@ -137,7 +137,7 @@ test('entrega ao Core: chave, idempotência e corpo corretos', async () => {
   assert.equal(chamadas[0].url, 'https://core.example.invalid/v1/commercial/intake');
   assert.equal(chamadas[0].init.headers.authorization, `Bearer ${ENV.CORE_INTAKE_KEY}`);
   assert.equal(chamadas[0].init.headers['idempotency-key'], KEY);
-  assert.equal(chamadas[0].init.redirect, 'error');
+  assert.equal(chamadas[0].init.redirect, 'manual');
 });
 
 test('tenta de novo em 503 e em falha de rede, e para quando confirma', async () => {

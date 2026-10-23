@@ -73,6 +73,7 @@ const esperar = ms => new Promise(resolve => setTimeout(resolve, ms));
  * crescente. 429 (limite por e-mail), 409 (conteúdo diferente com a mesma chave) e 400/401/403 não se
  * repetem: tentar de novo não muda a resposta.
  */
+// redirect: 'manual' (e não 'error'): o runtime do Cloudflare Workers só aceita follow e manual, e 'error' faz o fetch lançar TypeError antes de enviar.
 export async function submitToCore(payload, key, { env = process.env, fetchImpl = fetch, sleep = esperar, tentativas = 3, alternate = null } = {}) {
   // Espaço ou quebra de linha colados com o valor (comum ao copiar a chave) deixam o cabeçalho Authorization inválido.
   const base = env.CORE_INTAKE_URL?.trim(), token = env.CORE_INTAKE_KEY?.trim();
@@ -85,7 +86,7 @@ export async function submitToCore(payload, key, { env = process.env, fetchImpl 
   for (let tentativa = 1; tentativa <= tentativas; tentativa++) {
     try {
       const resposta = await fetchImpl(url, {
-        method: 'POST', redirect: 'error', signal: AbortSignal.timeout(8000),
+        method: 'POST', redirect: 'manual', signal: AbortSignal.timeout(8000),
         headers: { 'content-type': 'application/json', authorization: `Bearer ${token}`, 'idempotency-key': key },
         body: JSON.stringify(payload),
       });
