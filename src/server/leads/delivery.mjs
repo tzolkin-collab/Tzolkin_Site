@@ -11,9 +11,11 @@
 //
 // Nada daqui registra dado de contato em log.
 
-export const PRODUCT_ID = 'sites';
-/** Espaço do Core que recebe o lead: o da chave de intake. Padrão `sites`; o institucional define CORE_PRODUCT_ID (como Secret: variável comum some a cada deploy). */
-export const produtoDe = (env = process.env) => (env.CORE_PRODUCT_ID?.trim().toLowerCase() || PRODUCT_ID);
+/**
+ * Espaço do lead: quem decide é o Core, pela chave de intake. O site NÃO diz qual é, a não ser que CORE_PRODUCT_ID esteja definido
+ * (então o Core confere se bate com a chave e recusa se não bater). Sem a variável, nada a configurar além da chave.
+ */
+export const produtoDe = (env = process.env) => env.CORE_PRODUCT_ID?.trim().toLowerCase() || null;
 const MAX_MESSAGE = 5000;
 
 // [rótulo, campo do formulário, chave do campo no espaço "sites" do Core (space_fields, migração 043)]
@@ -38,14 +40,14 @@ export function composeMessage(data) {
   return [bloco, mensagem].filter(Boolean).join('\n\n') || undefined;
 }
 
-/** Atribuição aceita pelo site: só o espaço da chave em utm_tzolkin (o prefixo é o espaço). */
-function atribuicao(data, produto = PRODUCT_ID) {
+/** Atribuição aceita pelo site. Com espaço definido, só ele vale em utm_tzolkin (o prefixo é o espaço); sem, o Core decide o funil. */
+function atribuicao(data, produto = null) {
   const a = { ...(data.attribution || {}) };
-  if (a.utm_tzolkin && !a.utm_tzolkin.startsWith(`${produto}.`)) delete a.utm_tzolkin;
+  if (produto && a.utm_tzolkin && !a.utm_tzolkin.startsWith(`${produto}.`)) delete a.utm_tzolkin;
   return a;
 }
 
-export function buildIntakePayload(data, key, now = new Date(), { legacy = false, produto = PRODUCT_ID } = {}) {
+export function buildIntakePayload(data, key, now = new Date(), { legacy = false, produto = null } = {}) {
   const lead = { name: data.fullName };
   if (data.email) lead.email = data.email;
   if (data.whatsapp) lead.whatsapp = data.whatsapp;
@@ -56,7 +58,7 @@ export function buildIntakePayload(data, key, now = new Date(), { legacy = false
     lead,
     organization: data.companyName ? { name: data.companyName, organization_type: 'company' } : { organization_type: 'person' },
     commercial: {
-      product_id: produto,
+      ...(produto ? { product_id: produto } : {}),
       service_model: data.service === 'Educacional TZOLKIN' ? 'education' : 'on_demand',
       label: data.service,
     },

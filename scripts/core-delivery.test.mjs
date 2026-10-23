@@ -63,7 +63,7 @@ test('o envio ao Core tem o formato do intake e marca origem e consentimento sem
   assert.deepEqual(p.lead, { name: 'Ana Teste', email: 'ana@example.invalid', whatsapp: '11999999999', message: 'Quero um site.' });
   assert.equal(p.space_data, undefined, 'sem porte, funcionários, Instagram e site, não manda o bloco');
   assert.deepEqual(p.organization, { name: 'Empresa Teste', organization_type: 'company' });
-  assert.deepEqual(p.commercial, { product_id: 'sites', service_model: 'on_demand', label: 'Sites Institucionais' });
+  assert.deepEqual(p.commercial, { service_model: 'on_demand', label: 'Sites Institucionais' }, 'o espaço é o da chave: o site não diz qual é');
   assert.deepEqual(p.privacy, { contact_allowed: false, source: 'institutional-form-no-preference-recorded' });
   assert.equal(p.attribution.source_system, 'tzolkin-site');
   assert.equal(p.attribution.source_ref, KEY);
@@ -76,7 +76,7 @@ test('o envio ao Core tem o formato do intake e marca origem e consentimento sem
 
 test('pessoa sem empresa vira "person"; Educacional vira "education"; utm_tzolkin de outro espaço é descartado', () => {
   const dados = validateLead({ ...base, companyName: '', service: 'Educacional TZOLKIN', attribution: { utm_tzolkin: 'skiller.x' } });
-  const p = buildIntakePayload(dados, KEY);
+  const p = buildIntakePayload(dados, KEY, new Date(), { produto: 'sites' });
   assert.deepEqual(p.organization, { organization_type: 'person' });
   assert.equal(p.commercial.service_model, 'education');
   assert.equal(p.attribution.utm_tzolkin, undefined);
@@ -215,12 +215,12 @@ test('deliverLead: limite e conflito do Core viram 429 e 409 e não disparam e-m
   }
 });
 
-test('o espaço do lead vem de CORE_PRODUCT_ID (padrão sites) e acompanha a chave', async () => {
-  assert.equal(produtoDe({}), 'sites');
+test('o espaço do lead é o da chave; CORE_PRODUCT_ID só confere (e então o utm_tzolkin acompanha)', async () => {
+  assert.equal(produtoDe({}), null);
   assert.equal(produtoDe({ CORE_PRODUCT_ID: ' Consultorias ' }), 'consultorias');
   const dados = { ...base, attribution: { utm_tzolkin: 'sites.agencia', utm_source: 'meta' } };
   const padrao = buildIntakePayload(dados, KEY);
-  assert.equal(padrao.commercial.product_id, 'sites'); assert.equal(padrao.attribution.utm_tzolkin, 'sites.agencia');
+  assert.equal(padrao.commercial.product_id, undefined); assert.equal(padrao.attribution.utm_tzolkin, 'sites.agencia');
   const outro = buildIntakePayload(dados, KEY, new Date(), { produto: 'consultorias' });
   assert.equal(outro.commercial.product_id, 'consultorias');
   assert.equal(outro.attribution.utm_tzolkin, undefined, 'utm_tzolkin de outro espaço não viaja');
@@ -228,4 +228,6 @@ test('o espaço do lead vem de CORE_PRODUCT_ID (padrão sites) e acompanha a cha
   let enviado;
   await deliverLead(base, KEY, { env: { ...ENV, CORE_PRODUCT_ID: 'consultorias' }, fetchImpl: async (u, init) => { enviado = JSON.parse(init.body); return new Response(JSON.stringify({ lead_id: 'x' }), { status: 200 }); } });
   assert.equal(enviado.commercial.product_id, 'consultorias');
+  await deliverLead(base, KEY, { env: ENV, fetchImpl: async (u, init) => { enviado = JSON.parse(init.body); return new Response(JSON.stringify({ lead_id: 'x' }), { status: 200 }); } });
+  assert.equal('product_id' in enviado.commercial, false, 'sem a variável, o site não diz o espaço');
 });
