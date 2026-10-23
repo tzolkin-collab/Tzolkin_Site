@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { validateLead, sanitizeAttribution, services } from '../src/server/leads/validation.mjs';
 import {
-  buildIntakePayload, composeMessage, composeSpaceData, submitToCore, sendFallbackEmail, composeFallbackEmail, deliverLead,
+  buildIntakePayload, produtoDe, composeMessage, composeSpaceData, submitToCore, sendFallbackEmail, composeFallbackEmail, deliverLead,
 } from '../src/server/leads/delivery.mjs';
 
 const KEY = '2f6b1a0e-5c3d-4e8f-9a1b-7c2d3e4f5a6b';
@@ -213,4 +213,19 @@ test('deliverLead: limite e conflito do Core viram 429 e 409 e não disparam e-m
     const r = await deliverLead(validateLead(base), KEY, { env: { ...ENV, ...ENV_EMAIL }, sleep: semEspera, fetchImpl: async url => String(url).includes('resend') ? assert.fail('não deve mandar e-mail') : resposta(status) });
     assert.equal(r.status, esperado);
   }
+});
+
+test('o espaço do lead vem de CORE_PRODUCT_ID (padrão sites) e acompanha a chave', async () => {
+  assert.equal(produtoDe({}), 'sites');
+  assert.equal(produtoDe({ CORE_PRODUCT_ID: ' Consultorias ' }), 'consultorias');
+  const dados = { ...base, attribution: { utm_tzolkin: 'sites.agencia', utm_source: 'meta' } };
+  const padrao = buildIntakePayload(dados, KEY);
+  assert.equal(padrao.commercial.product_id, 'sites'); assert.equal(padrao.attribution.utm_tzolkin, 'sites.agencia');
+  const outro = buildIntakePayload(dados, KEY, new Date(), { produto: 'consultorias' });
+  assert.equal(outro.commercial.product_id, 'consultorias');
+  assert.equal(outro.attribution.utm_tzolkin, undefined, 'utm_tzolkin de outro espaço não viaja');
+  assert.equal(outro.attribution.utm_source, 'meta');
+  let enviado;
+  await deliverLead(base, KEY, { env: { ...ENV, CORE_PRODUCT_ID: 'consultorias' }, fetchImpl: async (u, init) => { enviado = JSON.parse(init.body); return new Response(JSON.stringify({ lead_id: 'x' }), { status: 200 }); } });
+  assert.equal(enviado.commercial.product_id, 'consultorias');
 });

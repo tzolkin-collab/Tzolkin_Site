@@ -12,6 +12,8 @@
 // Nada daqui registra dado de contato em log.
 
 export const PRODUCT_ID = 'sites';
+/** Espaço do Core que recebe o lead: o da chave de intake. Padrão `sites`; o institucional define CORE_PRODUCT_ID (como Secret: variável comum some a cada deploy). */
+export const produtoDe = (env = process.env) => (env.CORE_PRODUCT_ID?.trim().toLowerCase() || PRODUCT_ID);
 const MAX_MESSAGE = 5000;
 
 // [rótulo, campo do formulário, chave do campo no espaço "sites" do Core (space_fields, migração 043)]
@@ -36,14 +38,14 @@ export function composeMessage(data) {
   return [bloco, mensagem].filter(Boolean).join('\n\n') || undefined;
 }
 
-/** Atribuição aceita pelo site: só espaço "sites" em utm_tzolkin (o prefixo é o espaço). */
-function atribuicao(data) {
+/** Atribuição aceita pelo site: só o espaço da chave em utm_tzolkin (o prefixo é o espaço). */
+function atribuicao(data, produto = PRODUCT_ID) {
   const a = { ...(data.attribution || {}) };
-  if (a.utm_tzolkin && !a.utm_tzolkin.startsWith(`${PRODUCT_ID}.`)) delete a.utm_tzolkin;
+  if (a.utm_tzolkin && !a.utm_tzolkin.startsWith(`${produto}.`)) delete a.utm_tzolkin;
   return a;
 }
 
-export function buildIntakePayload(data, key, now = new Date(), { legacy = false } = {}) {
+export function buildIntakePayload(data, key, now = new Date(), { legacy = false, produto = PRODUCT_ID } = {}) {
   const lead = { name: data.fullName };
   if (data.email) lead.email = data.email;
   if (data.whatsapp) lead.whatsapp = data.whatsapp;
@@ -54,12 +56,12 @@ export function buildIntakePayload(data, key, now = new Date(), { legacy = false
     lead,
     organization: data.companyName ? { name: data.companyName, organization_type: 'company' } : { organization_type: 'person' },
     commercial: {
-      product_id: PRODUCT_ID,
+      product_id: produto,
       service_model: data.service === 'Educacional TZOLKIN' ? 'education' : 'on_demand',
       label: data.service,
     },
     // Os campos fixos vêm depois do spread: o navegador não decide origem nem referência do envio.
-    attribution: { ...atribuicao(data), source_system: 'tzolkin-site', source_ref: key, channel: 'institutional-form', created_at: now.toISOString() },
+    attribution: { ...atribuicao(data, produto), source_system: 'tzolkin-site', source_ref: key, channel: 'institutional-form', created_at: now.toISOString() },
     // O formulário não capta preferência de contato: registra isso como está, sem inventar consentimento.
     privacy: { contact_allowed: false, source: 'institutional-form-no-preference-recorded' },
     ...(spaceData ? { space_data: spaceData } : {}),
@@ -157,8 +159,9 @@ export async function sendFallbackEmail(data, key, { env = process.env, fetchImp
  * por e-mail), 429 limite, 409 conflito, 503 não entregue por nenhum caminho.
  */
 export async function deliverLead(data, key, opcoes = {}) {
-  const payload = buildIntakePayload(data, key, opcoes.now ? opcoes.now() : new Date());
-  const alternate = payload.space_data ? buildIntakePayload(data, key, opcoes.now ? opcoes.now() : new Date(), { legacy: true }) : null;
+  const produto = produtoDe(opcoes.env ?? process.env);
+  const payload = buildIntakePayload(data, key, opcoes.now ? opcoes.now() : new Date(), { produto });
+  const alternate = payload.space_data ? buildIntakePayload(data, key, opcoes.now ? opcoes.now() : new Date(), { legacy: true, produto }) : null;
   const core = await submitToCore(payload, key, { ...opcoes, alternate });
   if (core.ok) return { status: 200, via: 'core' };
   if (core.reason === 'rate_limited') return { status: 429, reason: core.reason };
