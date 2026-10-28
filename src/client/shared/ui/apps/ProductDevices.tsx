@@ -21,7 +21,7 @@ import {
   Sparkles,
   Users,
 } from 'lucide-react';
-import { DeviceStage, MacShell, PhoneShell, Screen } from './EcommerceDevices';
+import { DeviceStage, MacShell, PhoneShell, Screen, STAGE_H, STAGE_W, useFit } from './EcommerceDevices';
 
 /*
  * Demonstrações de produto (CRM, agentes, fiscal, piloto) no mesmo vocabulário do e-commerce:
@@ -130,7 +130,7 @@ function CrmMac({ step }: { step: number }) {
   );
 }
 
-function CrmPhone({ step }: { step: number }) {
+export function CrmPhone({ step }: { step: number }) {
   return (
     <div className={`flex h-full flex-col bg-[#f6f6f7] ${INK}`}>
       <PhoneStatus />
@@ -189,51 +189,9 @@ export function CrmDevices({ step = 1 }: { step?: number }) {
  * Agentes de IA (mensagens e voz)
  * ===================================================================================== */
 
-function AgentsMac() {
-  const convs: Array<[string, string, string, string]> = [
-    ['Marina Costa', 'Este produto está disponível…', 'Agente', 'bg-[#e7f6ec] text-[#15803d]'],
-    ['Rafael Teixeira', 'Quero cancelar o pedido', 'Pessoa', 'bg-[#fef3c7] text-[#92400e]'],
-    ['Juliana M.', 'Chamada · 02:14', 'Voz', 'bg-[#e0f2fe] text-[#075985]'],
-    ['Bruno A.', 'Obrigado!', 'Resolvida', 'bg-[#f4f4f5] text-[#52525b]'],
-  ];
-  return (
-    <div className={`flex h-full ${INK}`}>
-      <div className="w-[190px] shrink-0 border-r border-[#ececec] bg-[#fafafa]">
-        <p className="px-4 pb-2 pt-4 text-[12px] font-semibold">Conversas</p>
-        {convs.map(([n, m, tag, tone], i) => (
-          <div key={n} className={`border-l-2 px-4 py-2.5 ${i === 0 ? 'border-brand bg-white' : 'border-transparent'}`}>
-            <div className="flex items-center justify-between"><p className="text-[12px] font-medium">{n}</p><span className={`rounded px-1.5 py-0.5 text-[9px] font-semibold ${tone}`}>{tag}</span></div>
-            <p className={`mt-0.5 truncate text-[10.5px] ${MUTED}`}>{m}</p>
-          </div>
-        ))}
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-11 shrink-0 items-center justify-between border-b border-[#ececec] px-5">
-          <p className="text-[13px] font-semibold">Marina Costa <span className={`font-normal ${MUTED}`}>· WhatsApp</span></p>
-          <span className="flex h-7 items-center rounded-md border border-[#d4d4d4] px-3 text-[11px] font-medium">Assumir conversa</span>
-        </div>
-        <div className="flex flex-1 flex-col gap-2.5 bg-[#fafafa] p-5 text-[12px] leading-snug">
-          <div className="max-w-[70%] self-start rounded-2xl rounded-tl-sm border border-[#e5e5e5] bg-white px-3.5 py-2">Este produto está disponível para entrega?</div>
-          <p className={`flex items-center gap-1.5 self-end text-[10px] ${MUTED}`}><Sparkles size={11} className="text-brand" />Contexto consultado: catálogo e estoque</p>
-          <div className="max-w-[72%] self-end rounded-2xl rounded-tr-sm bg-[#171717] px-3.5 py-2 text-white">O catálogo mostra 12 unidades. Posso reunir os dados para confirmar a entrega com a equipe?</div>
-          <div className="max-w-[70%] self-start rounded-2xl rounded-tl-sm border border-[#e5e5e5] bg-white px-3.5 py-2">Pode sim, preciso para sexta.</div>
-          <div className="max-w-[72%] self-end rounded-2xl rounded-tr-sm bg-[#171717] px-3.5 py-2 text-white">Anotado. Vou encaminhar para uma pessoa do atendimento confirmar o prazo.</div>
-        </div>
-      </div>
-      <div className="w-[200px] shrink-0 border-l border-[#ececec] p-4">
-        <p className="text-[11px] font-semibold">Agente de pré-venda</p>
-        <p className={`mt-2 text-[10px] ${MUTED}`}>Acessa</p>
-        <ul className="mt-1 space-y-1 text-[11.5px]">{['WhatsApp e voz', 'Catálogo', 'Estoque', 'CRM'].map((t) => <li key={t} className="flex items-center gap-1.5"><Check size={11} className="text-[#15803d]" strokeWidth={3} />{t}</li>)}</ul>
-        <p className={`mt-4 text-[10px] ${MUTED}`}>Passa a uma pessoa quando</p>
-        <ul className="mt-1 space-y-1 text-[11.5px] leading-snug">{['Pedir cancelamento', 'Valor acima de R$ 1.000', 'Cliente pedir atendente'].map((t) => <li key={t} className="flex gap-1.5"><span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand" />{t}</li>)}</ul>
-      </div>
-    </div>
-  );
-}
-
 const WAVE = [6, 12, 20, 9, 26, 14, 30, 18, 10, 24, 32, 16, 8, 22, 28, 12, 18, 30, 10, 14, 24, 8];
 
-function AgentsPhone() {
+export function AgentsPhone() {
   return (
     <div className={`flex h-full flex-col bg-[#101114] text-white`}>
       <div className="flex h-9 shrink-0 items-end px-6 pb-1 text-[11px] font-semibold">9:41</div>
@@ -257,13 +215,83 @@ function AgentsPhone() {
   );
 }
 
-export function AgentsDevices() {
+export function SalesCallPhone() {
+  const steps: Array<[string, boolean, boolean]> = [['Apresentação', true, false], ['Qualificação', false, true], ['Agendar reunião', false, false]];
   return (
-    <DeviceStage
-      label="Agentes de IA no computador e no celular: painel de conversas com contexto consultado e uma chamada de voz"
-      mac={<MacShell><AgentsMac /></MacShell>}
-      phone={<PhoneShell><AgentsPhone /></PhoneShell>}
-    />
+    <div className={`flex h-full flex-col bg-[#f6f6f7] ${INK}`}>
+      <PhoneStatus />
+      <div className="mt-3 flex flex-col items-center">
+        <p className="flex items-center gap-1.5 text-[10.5px] font-semibold text-brand"><PhoneCall size={12} />Agente de vendas · ligação ativa</p>
+        <Avatar tone="bg-[#171717] text-white">CM</Avatar>
+        <p className="mt-1.5 text-[15px] font-semibold">Carlos Mendes</p>
+        <p className={`text-[11px] ${MUTED}`}>Ligando · 00:48</p>
+      </div>
+      <div className="mt-4 flex h-8 items-center justify-center gap-[3px] px-6" aria-hidden="true">
+        {WAVE.map((h, i) => <span key={i} className="w-[3px] rounded-full bg-brand" style={{ height: Math.max(4, h * 0.8) }} />)}
+      </div>
+      <div className="mx-4 mt-4 space-y-2 text-[11.5px] leading-snug">
+        <p className="rounded-xl bg-white px-3 py-2 shadow-sm"><span className={`block text-[9.5px] ${MUTED}`}>Agente</span>Olá, Carlos! Falo da Tzolkin. Tem um minuto para conversar?</p>
+        <p className="rounded-xl bg-[#ececec] px-3 py-2"><span className={`block text-[9.5px] ${MUTED}`}>Cliente</span>Pode falar.</p>
+      </div>
+      <ol className="mx-4 mt-4 space-y-1.5 text-[11.5px]">
+        {steps.map(([t, done, now]) => (
+          <li key={t} className="flex items-center gap-2">
+            <span className={`flex h-4 w-4 items-center justify-center rounded-full ${done ? 'bg-brand text-white' : now ? 'border-2 border-brand bg-white' : 'border border-[#d4d4d4] bg-white'}`}>{done && <Check size={10} strokeWidth={3} />}</span>
+            <span className={done || now ? 'font-medium' : 'text-[#a3a3a3]'}>{t}</span>
+          </li>
+        ))}
+      </ol>
+      <div className="mt-auto flex items-center justify-center gap-3 pb-9">
+        <span className="flex h-10 items-center gap-1.5 rounded-full border border-[#d4d4d4] bg-white px-4 text-[11.5px]"><Mic size={13} />Mudo</span>
+        <span className="flex h-10 items-center rounded-full bg-[#171717] px-4 text-[11.5px] font-semibold text-white">Encerrar</span>
+      </div>
+    </div>
+  );
+}
+
+export function WhatsAppAgentPhone() {
+  const me = 'max-w-[82%] self-end rounded-lg rounded-tr-sm bg-[#d9fdd3] px-2.5 py-1.5 shadow-sm';
+  const them = 'max-w-[82%] self-start rounded-lg rounded-tl-sm bg-white px-2.5 py-1.5 shadow-sm';
+  return (
+    <div className="flex h-full flex-col bg-[#efeae2] text-[#171717]">
+      <div className="flex shrink-0 flex-col bg-[#0b4f45] text-white">
+        <PhoneStatusLight />
+        <div className="flex h-12 items-center gap-2.5 px-4">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-[10px] font-semibold">IA</span>
+          <div className="leading-tight"><p className="text-[13px] font-semibold">Atendimento</p><p className="text-[10px] text-white/70">agente de IA · online</p></div>
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col gap-2 px-3 py-4 text-[12px] leading-snug">
+        <p className="self-center rounded-full bg-white/70 px-2.5 py-0.5 text-[10px] text-[#737373]">Hoje</p>
+        <div className={me}>Oi! Vocês entregam em Belo Horizonte?<span className={`block text-right text-[9.5px] ${MUTED}`}>14:02</span></div>
+        <div className={them}>Entregamos sim! O prazo é de 3 a 5 dias úteis. Quer que eu monte o pedido?<span className={`block text-right text-[9.5px] ${MUTED}`}>14:02</span></div>
+        <div className={me}>Quero. Tem na cor preta?<span className={`block text-right text-[9.5px] ${MUTED}`}>14:03</span></div>
+        <div className={them}>Tem! Qual tamanho você usa?
+          <span className="mt-1.5 flex gap-1.5">{['P', 'M', 'G'].map((t) => <span key={t} className="rounded-full border border-[#0b4f45]/30 px-2.5 py-0.5 text-[11px] font-medium text-[#0b4f45]">{t}</span>)}</span>
+        </div>
+      </div>
+      <div className="m-3 mb-6 mt-0 flex h-9 items-center rounded-full bg-white px-4 text-[11.5px] text-[#a3a3a3]">Mensagem</div>
+    </div>
+  );
+}
+
+function PhoneStatusLight() {
+  return <div className="flex h-9 shrink-0 items-end px-6 pb-1 text-[11px] font-semibold text-white">9:41</div>;
+}
+
+/** Três celulares lado a lado (atendimento por voz, vendas por ligação e WhatsApp), na largura do palco. */
+export function AgentsDevices() {
+  const { ref, scale } = useFit(STAGE_W);
+  return (
+    <div role="group" aria-label="Agentes de IA em três celulares: atendimento por voz, ligação de vendas e conversa de WhatsApp">
+      <div ref={ref} className="w-full" style={{ aspectRatio: `${STAGE_W} / ${STAGE_H}`, maxWidth: STAGE_W }}>
+        <div className="relative origin-top-left" style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${scale})` }}>
+          {[<AgentsPhone key="a" />, <SalesCallPhone key="b" />, <WhatsAppAgentPhone key="c" />].map((screen, i) => (
+            <div key={i} className="absolute top-[40px]" style={{ left: i * 339 }}><PhoneShell>{screen}</PhoneShell></div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -320,7 +348,7 @@ function FiscalMac() {
 
 const BARS = Array.from({ length: 46 }, (_, i) => (i % 5 === 0 ? 22 : i % 3 === 0 ? 16 : 12));
 
-function FiscalPhone() {
+export function FiscalPhone() {
   return (
     <div className={`flex h-full flex-col bg-[#f3f3f5] ${INK}`}>
       <PhoneStatus />
@@ -426,7 +454,7 @@ function PilotMac() {
   );
 }
 
-function PilotPhone() {
+export function PilotPhone() {
   const stages: Array<[string, string, boolean]> = [['Piloto atual', 'v0.1 · criado com IA', true], ['Revisão', 'Pontos críticos corrigidos', true], ['Próxima versão', 'v1.0 · repositório e testes', false], ['Handoff', 'Documentação e acessos', false]];
   return (
     <div className={`flex h-full flex-col bg-[#f6f6f7] ${INK}`}>

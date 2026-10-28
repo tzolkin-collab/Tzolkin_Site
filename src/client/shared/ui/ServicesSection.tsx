@@ -6,6 +6,7 @@ import { SectionHeader } from '@/client/shared/ui/SectionHeader';
 import { AgentsDevices, CrmDevices, FiscalDevices, PilotDevices } from '@/client/shared/ui/apps/ProductDevices';
 import { EcommerceDevices } from '@/client/shared/ui/apps/EcommerceDevices';
 import { FitBox } from '@/client/shared/ui/apps/FitBox';
+import { MobileDevices } from '@/client/shared/ui/apps/MobileDevices';
 
 const mocks: Record<string, () => JSX.Element> = {
   'crm-com-ia': () => <CrmDevices step={1} />,
@@ -64,7 +65,7 @@ export function ServicesContent({ active, onSelect }: { active: number; onSelect
         </div>
       </div>
       <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1200px] flex-1 flex-col px-6 md:px-12 xl:grid xl:flex-none xl:grid-cols-12 xl:items-center xl:gap-0">
-          <div className="xl:col-span-6 xl:pr-16">
+          <div className="max-md:[&_h2]:text-[24px] max-md:[&_h2]:leading-[1.15] xl:col-span-6 xl:pr-16">
             <SectionHeader id="aplicacoes-title" eyebrow="Aplicações" title="Softwares que auxiliam na gestão, vendas, marketing e inteligência" />
 
             {/* acordeão: a aplicação ativa abre sem empurrar a página */}
@@ -110,7 +111,11 @@ export function ServicesContent({ active, onSelect }: { active: number; onSelect
 
           </div>
 
-          <FitBox className="mt-6 xl:hidden">
+          {/* celular: carrossel com um aparelho por vez; tablet: o palco inteiro escalado */}
+          <div className="relative -mx-6 mt-3 flex min-h-0 flex-1 flex-col md:hidden">
+            <MobileDevices key={app.slug} slug={app.slug} />
+          </div>
+          <FitBox className="mt-6 hidden md:block xl:hidden">
             <div key={app.slug} className="overflow-hidden rounded-lg">
               <Preview />
             </div>

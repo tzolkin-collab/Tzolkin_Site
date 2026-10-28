@@ -196,7 +196,7 @@ function PhoneBar() {
   );
 }
 
-function PhoneStore() {
+export function PhoneStore() {
   return (
     <div className={`flex h-full flex-col ${INK}`}>
       <PhoneBar />
@@ -213,7 +213,7 @@ function PhoneStore() {
   );
 }
 
-function PhoneCheckout() {
+export function PhoneCheckout() {
   return (
     <div className={`flex h-full flex-col ${INK}`}>
       <PhoneBar />
