@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>TZOLKIN — Synthetic Creative Engineering</title>
+    <meta
+      name="description"
+      content="High-velocity synthetic ad assets engineered for sub-$15 CPAs and infinite creative testing."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Outfit:wght@200;300;400;500&family=Source+Sans+3:wght@300;400;500&display=swap"
+    />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script src="assets/frames/manifest.js" defer></script>
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body class="is-intro-active">
+    <!-- Persistent Dual-Mode 60FPS Background Canvas (ffmpeg frames OR WebGL) -->
+    <div class="bg-stage" id="bg-stage" aria-hidden="true">
+      <canvas class="bg-canvas" id="bg-canvas"></canvas>
+      <div class="bg-vignette"></div>
+    </div>
+
+    <!-- BEAT 0: Automatic Opening Intro (TZOLKIN rises into top nav) -->
+    <div class="hero-intro" id="hero-intro" aria-hidden="true">
+      <span class="intro-wordmark" id="intro-wordmark">TZOLKIN</span>
+    </div>
+
+    <!-- Transparent Floating Navigation Bar (SpaceX / Tesla style) -->
+    <header class="nav" id="site-nav">
+      <div class="nav-inner">
+        <a href="#show" class="nav-brand tz-focus">TZOLKIN</a>
+
+        <nav aria-label="Primary navigation" class="nav-menu-desktop">
+          <ul class="nav-links">
+            <li><a class="lnk tz-focus" href="#tunnel">Lab</a></li>
+            <li><a class="lnk tz-focus" href="#verticals">Verticals</a></li>
+            <li><a class="lnk tz-focus" href="#offers">Offers</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <a href="#offers" class="btn-nav tz-focus">Book Test Batch</a>
+          <button
+            type="button"
+            class="nav-menu-btn tz-focus"
+            id="nav-menu-btn"
+            aria-expanded="false"
+            aria-controls="nav-drawer"
+          >
+            Menu
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-drawer" id="nav-drawer" hidden>
+        <a class="drawer-lnk tz-focus" href="#show">01 // Show</a>
+        <a class="drawer-lnk tz-focus" href="#tunnel">02 // 3D Telemetry Lab</a>
+        <a class="drawer-lnk tz-focus" href="#verticals">03 // US Verticals</a>
+        <a class="drawer-lnk tz-focus" href="#offers">04 // Offers</a>
+        <a class="btn drawer-cta tz-focus" href="#offers">Book Test Batch</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- BEAT 1 & BEAT 2: Pinned 2-State Hero Stage -->
+      <section
+        class="section-hero"
+        id="show"
+        aria-labelledby="hero-headline-a"
+      >
+        <div class="hero-sticky">
+          <div class="hero-content-shell">
+            <!-- Hero State A (00% - 44%) -->
+            <article class="card" id="hero-state-a">
+              <p class="t3">SYNTHETIC CREATIVE ENGINEERING // US MARKET</p>
+              <h1 class="h1" id="hero-headline-a">
+                ENGINEERED FOR SUB-$15 CPAS
+              </h1>
+              <p class="t1">
+                Direct-response synthetic ad assets for US media buyers
+                saturated with generic AI slop.
+              </p>
+              <div class="hero-actions">
+                <a href="#offers" class="btn tz-focus">Book Test Batch</a>
+                <a href="#tunnel" class="btn2 tz-focus">Enter 3D Tunnel</a>
+              </div>
+            </article>
+
+            <!-- Hero State B (44% - 100%, still pinned before scroll unlocks) -->
+            <article class="card2" id="hero-state-b" aria-hidden="true">
+
+              <h2 class="h2">MEDIA BUYERS DO NOT BUY PRETTY AI VIDEOS.</h2>
+              <p class="t1">
+                They buy lower CPA, higher 3-second hook rates, and infinite
+                creative testing without fatigue.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- STAGE 03: 3D Helical Video Tunnel (Axes X, Y, Z) -->
+      <section
+        class="section-tunnel"
+        id="tunnel"
+        aria-label="3D creative reel tunnel"
+      >
+        <div class="tunnel-sticky">
+          <div class="tunnel-layout">
+            <!-- GPU CSS 3D Perspective Stage -->
+            <div class="tunnel-viewport" aria-label="3D creative reel tunnel">
+              <div class="helix-stage" id="helix-stage">
+                <!-- Slot 01 -->
+                <article
+                  class="card3"
+                  data-index="0"
+                  data-creative-type="MACRO PRODUCT DEMO"
+                  data-creative-desc="Hyper-detailed synthetic liquid and texture visuals engineered to stop the scroll in skincare and wellness feeds."
+                >
+                  <video
+                    class="reel-video"
+                    src="assets/reels/reel-01.mp4"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                  ></video>
+                  <div class="reel-placeholder">
+                    <div class="reel-frame" aria-hidden="true"></div>
+                    <div class="reel-meta-top">
+                      <span class="tz-tabular">SLOT 01</span>
+                      <span>9:16</span>
+                    </div>
+                    <div class="reel-center-group">
+                      <svg class="reel-play-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="46" height="46" stroke="currentColor" stroke-width="1.25" />
+                        <polygon points="20,16 33,24 20,32" fill="currentColor" />
+                      </svg>
+                      <div class="reel-center-mark">VIDEO PLACEHOLDER 01</div>
+                      <span class="reel-path">assets/reels/reel-01.mp4</span>
+                    </div>
+                    <div class="reel-meta-bottom">
+                      <span>REPLACE WITH VIDEO</span>
+                      <span class="tz-tabular">1080×1920</span>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Slot 02 -->
+                <article
+                  class="card3"
+                  data-index="1"
+                  data-creative-type="HIGH-SPEED ACTION HOOK"
+                  data-creative-desc="Zero-shoot kinetic product sequences built to trigger instant pattern interruption in the first 3 seconds."
+                >
+                  <video
+                    class="reel-video"
+                    src="assets/reels/reel-02.mp4"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                  ></video>
+                  <div class="reel-placeholder">
+                    <div class="reel-frame" aria-hidden="true"></div>
+                    <div class="reel-meta-top">
+                      <span class="tz-tabular">SLOT 02</span>
+                      <span>9:16</span>
+                    </div>
+                    <div class="reel-center-group">
+                      <svg class="reel-play-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="46" height="46" stroke="currentColor" stroke-width="1.25" />
+                        <polygon points="20,16 33,24 20,32" fill="currentColor" />
+                      </svg>
+                      <div class="reel-center-mark">VIDEO PLACEHOLDER 02</div>
+                      <span class="reel-path">assets/reels/reel-02.mp4</span>
+                    </div>
+                    <div class="reel-meta-bottom">
+                      <span>REPLACE WITH VIDEO</span>
+                      <span class="tz-tabular">1080×1920</span>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Slot 03 -->
+                <article
+                  class="card3"
+                  data-index="2"
+                  data-creative-type="SENSORY POUR VISUAL"
+                  data-creative-desc="Tactile slow-motion beverage and texture cinematography designed for high-retention paid social ads."
+                >
+                  <video
+                    class="reel-video"
+                    src="assets/reels/reel-03.mp4"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                  ></video>
+                  <div class="reel-placeholder">
+                    <div class="reel-frame" aria-hidden="true"></div>
+                    <div class="reel-meta-top">
+                      <span class="tz-tabular">SLOT 03</span>
+                      <span>9:16</span>
+                    </div>
+                    <div class="reel-center-group">
+                      <svg class="reel-play-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="46" height="46" stroke="currentColor" stroke-width="1.25" />
+                        <polygon points="20,16 33,24 20,32" fill="currentColor" />
+                      </svg>
+                      <div class="reel-center-mark">VIDEO PLACEHOLDER 03</div>
+                      <span class="reel-path">assets/reels/reel-03.mp4</span>
+                    </div>
+                    <div class="reel-meta-bottom">
+                      <span>REPLACE WITH VIDEO</span>
+                      <span class="tz-tabular">1080×1920</span>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Slot 04 -->
+                <article
+                  class="card3"
+                  data-index="3"
+                  data-creative-type="IMPOSSIBLE 3D MECHANISM"
+                  data-creative-desc="Microscopic ingredient and formulation renders that demonstrate product efficacy beyond live-action cameras."
+                >
+                  <video
+                    class="reel-video"
+                    src="assets/reels/reel-04.mp4"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                  ></video>
+                  <div class="reel-placeholder">
+                    <div class="reel-frame" aria-hidden="true"></div>
+                    <div class="reel-meta-top">
+                      <span class="tz-tabular">SLOT 04</span>
+                      <span>9:16</span>
+                    </div>
+                    <div class="reel-center-group">
+                      <svg class="reel-play-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="46" height="46" stroke="currentColor" stroke-width="1.25" />
+                        <polygon points="20,16 33,24 20,32" fill="currentColor" />
+                      </svg>
+                      <div class="reel-center-mark">VIDEO PLACEHOLDER 04</div>
+                      <span class="reel-path">assets/reels/reel-04.mp4</span>
+                    </div>
+                    <div class="reel-meta-bottom">
+                      <span>REPLACE WITH VIDEO</span>
+                      <span class="tz-tabular">1080×1920</span>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Slot 05 -->
+                <article
+                  class="card3"
+                  data-index="4"
+                  data-creative-type="INDUSTRIAL DESIGN HERO"
+                  data-creative-desc="Precision hardware lighting and optical refraction frames tailored for consumer tech and SaaS launches."
+                >
+                  <video
+                    class="reel-video"
+                    src="assets/reels/reel-05.mp4"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                  ></video>
+                  <div class="reel-placeholder">
+                    <div class="reel-frame" aria-hidden="true"></div>
+                    <div class="reel-meta-top">
+                      <span class="tz-tabular">SLOT 05</span>
+                      <span>9:16</span>
+                    </div>
+                    <div class="reel-center-group">
+                      <svg class="reel-play-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="46" height="46" stroke="currentColor" stroke-width="1.25" />
+                        <polygon points="20,16 33,24 20,32" fill="currentColor" />
+                      </svg>
+                      <div class="reel-center-mark">VIDEO PLACEHOLDER 05</div>
+                      <span class="reel-path">assets/reels/reel-05.mp4</span>
+                    </div>
+                    <div class="reel-meta-bottom">
+                      <span>REPLACE WITH VIDEO</span>
+                      <span class="tz-tabular">1080×1920</span>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Slot 06 -->
+                <article
+                  class="card3"
+                  data-index="5"
+                  data-creative-type="CINEMATIC B-ROLL VSL"
+                  data-creative-desc="Atmospheric architectural and lifestyle backdrops crafted for high-ticket lead generation and VSL funnels."
+                >
+                  <video
+                    class="reel-video"
+                    src="assets/reels/reel-06.mp4"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                  ></video>
+                  <div class="reel-placeholder">
+                    <div class="reel-frame" aria-hidden="true"></div>
+                    <div class="reel-meta-top">
+                      <span class="tz-tabular">SLOT 06</span>
+                      <span>9:16</span>
+                    </div>
+                    <div class="reel-center-group">
+                      <svg class="reel-play-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="46" height="46" stroke="currentColor" stroke-width="1.25" />
+                        <polygon points="20,16 33,24 20,32" fill="currentColor" />
+                      </svg>
+                      <div class="reel-center-mark">VIDEO PLACEHOLDER 06</div>
+                      <span class="reel-path">assets/reels/reel-06.mp4</span>
+                    </div>
+                    <div class="reel-meta-bottom">
+                      <span>REPLACE WITH VIDEO</span>
+                      <span class="tz-tabular">1080×1920</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <aside class="reel-type-panel" id="reel-type-panel" aria-live="polite">
+              <div class="reel-type-stack">
+                <div class="reel-type-item" data-index="0" aria-hidden="false">
+                  
+                  <h2 class="reel-type-title">MACRO PRODUCT DEMO</h2>
+                  <p class="t2 reel-type-desc">
+                    Hyper-detailed synthetic liquid and texture visuals engineered to stop the scroll in skincare and wellness feeds.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="1" aria-hidden="true">
+                
+                  <h2 class="reel-type-title">HIGH-SPEED ACTION HOOK</h2>
+                  <p class="t2 reel-type-desc">
+                    Zero-shoot kinetic product sequences built to trigger instant pattern interruption in the first 3 seconds.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="2" aria-hidden="true">
+                 
+                  <h2 class="reel-type-title">SENSORY POUR VISUAL</h2>
+                  <p class="t2 reel-type-desc">
+                    Tactile slow-motion beverage and texture cinematography designed for high-retention paid social ads.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="3" aria-hidden="true">
+        
+                  <h2 class="reel-type-title">IMPOSSIBLE 3D MECHANISM</h2>
+                  <p class="t2 reel-type-desc">
+                    Microscopic ingredient and formulation renders that demonstrate product efficacy beyond live-action cameras.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="4" aria-hidden="true">
+    
+                  <h2 class="reel-type-title">INDUSTRIAL DESIGN HERO</h2>
+                  <p class="t2 reel-type-desc">
+                    Precision hardware lighting and optical refraction frames tailored for consumer tech and SaaS launches.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="5" aria-hidden="true">
+          
+                  <h2 class="reel-type-title">CINEMATIC B-ROLL VSL</h2>
+                  <p class="t2 reel-type-desc">
+                    Atmospheric architectural and lifestyle backdrops crafted for high-ticket lead generation and VSL funnels.
+                  </p>
+                </div>
+              </div>
+            </aside>
+
+            <aside class="reel-type-panel" id="reel-type-panel" aria-live="polite">
+              <div class="reel-type-stack">
+                <div class="reel-type-item" data-index="0" aria-hidden="false">
+                  <p class="t3 tz-tabular">01 / 06 // CREATIVE TYPE</p>
+                  <h2 class="reel-type-title">MACRO PRODUCT DEMO</h2>
+                  <p class="t2 reel-type-desc">
+                    Hyper-detailed synthetic liquid and texture visuals engineered to stop the scroll in skincare and wellness feeds.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="1" aria-hidden="true">
+                  <p class="t3 tz-tabular">02 / 06 // CREATIVE TYPE</p>
+                  <h2 class="reel-type-title">HIGH-SPEED ACTION HOOK</h2>
+                  <p class="t2 reel-type-desc">
+                    Zero-shoot kinetic product sequences built to trigger instant pattern interruption in the first 3 seconds.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="2" aria-hidden="true">
+                  <p class="t3 tz-tabular">03 / 06 // CREATIVE TYPE</p>
+                  <h2 class="reel-type-title">SENSORY POUR VISUAL</h2>
+                  <p class="t2 reel-type-desc">
+                    Tactile slow-motion beverage and texture cinematography designed for high-retention paid social ads.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="3" aria-hidden="true">
+                  <p class="t3 tz-tabular">04 / 06 // CREATIVE TYPE</p>
+                  <h2 class="reel-type-title">IMPOSSIBLE 3D MECHANISM</h2>
+                  <p class="t2 reel-type-desc">
+                    Microscopic ingredient and formulation renders that demonstrate product efficacy beyond live-action cameras.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="4" aria-hidden="true">
+                  <p class="t3 tz-tabular">05 / 06 // CREATIVE TYPE</p>
+                  <h2 class="reel-type-title">INDUSTRIAL DESIGN HERO</h2>
+                  <p class="t2 reel-type-desc">
+                    Precision hardware lighting and optical refraction frames tailored for consumer tech and SaaS launches.
+                  </p>
+                </div>
+
+                <div class="reel-type-item" data-index="5" aria-hidden="true">
+                  <p class="t3 tz-tabular">06 / 06 // CREATIVE TYPE</p>
+                  <h2 class="reel-type-title">CINEMATIC B-ROLL VSL</h2>
+                  <p class="t2 reel-type-desc">
+                    Atmospheric architectural and lifestyle backdrops crafted for high-ticket lead generation and VSL funnels.
+                  </p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- STAGE 04: Landing Console (4 US ICP Verticals + Productized Offers) -->
+      <section class="section-landing" aria-label="Verticals and offers">
+        <div class="landing-band" id="verticals">
+          <div class="band-head" data-reveal>
+            <p class="t3">03 // BUILT FOR 4 HIGH-VELOCITY US VERTICALS</p>
+            <h2 class="h2">WHO SCALES WITH TZOLKIN</h2>
+          </div>
+
+          <div class="verticals-grid">
+            <article class="card4" data-reveal>
+              <p class="t3">01 // DTC E-COMMERCE ($1M – $20M)</p>
+              <h3 class="h3">Supplements, Skincare &amp; Wellness</h3>
+              <p class="t2">
+                Hybrid AI UGC and impossible microscopic ingredient demos —
+                48-hour hook packs to eliminate Meta and TikTok Shop fatigue.
+              </p>
+            </article>
+
+            <article class="card4" data-reveal>
+              <p class="t3">02 // MOBILE APPS &amp; CONSUMER SAAS</p>
+              <h3 class="h3">Aggressive B2C User Acquisition</h3>
+              <p class="t2">
+                Pattern-interrupt 2-second hooks wired straight into product UI
+                demos to feed Advantage+ and TikTok Smart+ algorithms.
+              </p>
+            </article>
+
+            <article class="card4" data-reveal>
+              <p class="t3">03 // PERFORMANCE MARKETING AGENCIES</p>
+              <h3 class="h3">White-Label Creative Sprints</h3>
+              <p class="t2">
+                Predictable weekly ad batches ready to upload across client
+                accounts — expand agency margin without US full-time payroll.
+              </p>
+            </article>
+
+            <article class="card4" data-reveal>
+              <p class="t3">04 // HIGH-TICKET VSL &amp; LEAD GEN</p>
+              <h3 class="h3">Finance, Real Estate, Solar &amp; Health</h3>
+              <p class="t2">
+                On-demand cinematic B-roll and localized AI spokespersons
+                testing winning direct-response scripts across demographics.
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div class="landing-band" id="offers">
+          <div class="band-head" data-reveal>
+            <p class="t3">04 // PRODUCTIZED ENGAGEMENT</p>
+            <h2 class="h2">FIXED SCOPE. GUARANTEED TURNAROUND.</h2>
+          </div>
+
+          <div class="offers-grid">
+            <article class="card5" data-reveal>
+              <div>
+                <p class="t3">01 // ENTRY — LOW FRICTION</p>
+                <h3 class="offer-title">Test Batch</h3>
+                <p class="t1">
+                  10 complete creatives × 3 hook variations = 30 ready-to-launch
+                  ad assets delivered in 5 business days.
+                </p>
+                <ul class="offer-specs">
+                  <li>Delivered in 9:16 Vertical &amp; 4:5 Feed masters</li>
+                  <li>Engineered specifically to validate sub-$15 CPA</li>
+                  <li>Zero open-ended agency retainers or hidden fees</li>
+                </ul>
+              </div>
+              <a
+                href="mailto:hello@tzolkin.studio?subject=TZOLKIN%20Test%20Batch"
+                class="btn tz-focus"
+              >
+                Book Test Batch
+              </a>
+            </article>
+
+            <article class="card5" data-reveal>
+              <div>
+                <p class="t3">02 // MONTHLY RETAINER</p>
+                <h3 class="offer-title">Scale Engine</h3>
+                <p class="t1">
+                  40 to 60 monthly synthetic ad assets with weekly iteration
+                  driven by live ROAS, Thumbstop, and CTR telemetry.
+                </p>
+                <ul class="offer-specs">
+                  <li>Weekly creative sprints aligned to ad-account winners</li>
+                  <li>Dedicated synthetic avatar &amp; product render lock</li>
+                  <li>Built for scaling Advantage+ &amp; TikTok Smart+ spend</li>
+                </ul>
+              </div>
+              <a
+                href="mailto:hello@tzolkin.studio?subject=TZOLKIN%20Scale%20Engine"
+                class="btn2 tz-focus"
+              >
+                Apply for Scale Engine
+              </a>
+            </article>
+          </div>
+        </div>
+
+        <footer class="nav-footer">
+          <div class="footer-inner">
+            <span class="t3">TZOLKIN // SYNTHETIC CREATIVE ENGINEERING</span>
+            <div class="footer-links">
+              <button
+                type="button"
+                class="lnk-btn tz-focus"
+                id="replay-intro"
+              >
+                Replay Intro
+              </button>
+              <a
+                class="lnk tz-focus"
+                href="mailto:hello@tzolkin.studio?subject=TZOLKIN%20Inquiry"
+              >
+                Book Call
+              </a>
+            </div>
+          </div>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>
