@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 3400" fill="none">
+  <rect width="390" height="3400" fill="#f0f0f0"/>
+
+  <!-- Safe Area Top: Dynamic Island -->
+  <rect x="16" y="8" width="358" height="36" stroke="#888" stroke-width="1"/>
+  <text x="28" y="22" fill="#666" font-family="sans-serif" font-size="9">section</text>
+  <text x="28" y="36" fill="#555" font-family="sans-serif" font-size="10">[t3: SAFE AREA TOP // DYNAMIC ISLAND 48PX]</text>
+
+  <!-- nav: compact floating bar -->
+  <rect x="16" y="52" width="358" height="48" stroke="#666" stroke-width="1.25"/>
+  <text x="28" y="68" fill="#666" font-family="sans-serif" font-size="9">nav</text>
+  <text x="28" y="88" fill="#222" font-family="sans-serif" font-size="12">[t1: TZOLKIN]</text>
+  <text x="206" y="88" fill="#222" font-family="sans-serif" font-size="11">[btn: Batch]</text>
+  <text x="292" y="88" fill="#333" font-family="sans-serif" font-size="11">[btn2: [ico:menu]]</text>
+
+  <!-- STAGE 01: Opening Show (Sticky 100svh Vertical 3D Canvas) -->
+  <rect x="16" y="112" width="358" height="700" stroke="#666" stroke-width="1.25"/>
+  <text x="28" y="130" fill="#666" font-family="sans-serif" font-size="10">hero</text>
+
+  <rect x="24" y="138" width="342" height="662" stroke="#888" stroke-width="1"/>
+  <text x="36" y="156" fill="#666" font-family="sans-serif" font-size="10">media</text>
+  <text x="36" y="182" fill="#555" font-family="sans-serif" font-size="10">[img: Sticky 9:16 3D canvas - ffmpeg frames 001-080]</text>
+  <text x="36" y="318" fill="#555" font-family="sans-serif" font-size="10">[t3: STAGE 01 // SCROLL 00% - 25%]</text>
+  <text x="36" y="376" fill="#222" font-family="sans-serif" font-size="36">[h1: T Z O L K I N]</text>
+  <text x="36" y="424" fill="#222" font-family="sans-serif" font-size="22">[h2: Sub-$15 CPA Assets]</text>
+  <text x="36" y="468" fill="#444" font-family="sans-serif" font-size="13">[t1: Direct-response creative engineering.]</text>
+  <text x="36" y="490" fill="#444" font-family="sans-serif" font-size="13">[t1: Zero generic AI slop.]</text>
+  <text x="36" y="556" fill="#222" font-family="sans-serif" font-size="13">[btn: Book Test Batch]</text>
+  <text x="36" y="776" fill="#555" font-family="sans-serif" font-size="10">[t3: SCROLL TO START 3D SHOW // 001/240]</text>
+
+  <!-- STAGE 02: Kinetic Rupture (Opposing X-Drift Planes) -->
+  <rect x="16" y="828" width="358" height="640" stroke="#666" stroke-width="1.25"/>
+  <text x="28" y="846" fill="#666" font-family="sans-serif" font-size="10">section</text>
+
+  <rect x="24" y="854" width="342" height="602" stroke="#888" stroke-width="1"/>
+  <text x="36" y="872" fill="#666" font-family="sans-serif" font-size="10">media</text>
+  <text x="36" y="896" fill="#555" font-family="sans-serif" font-size="10">[img: Sticky 3D canvas - ffmpeg frames 081-150]</text>
+  <text x="36" y="918" fill="#555" font-family="sans-serif" font-size="10">[t3: STAGE 02 // 25% - 45% // X-Y DRIFT]</text>
+
+  <rect x="36" y="944" width="292" height="206" stroke="#888" stroke-width="1.25"/>
+  <text x="48" y="964" fill="#666" font-family="sans-serif" font-size="9">rail</text>
+  <text x="48" y="990" fill="#555" font-family="sans-serif" font-size="10">[t3: PLANE A // DRIFT -X]</text>
+  <text x="48" y="1038" fill="#222" font-family="sans-serif" font-size="22">[h2: Media buyers do not]</text>
+  <text x="48" y="1068" fill="#222" font-family="sans-serif" font-size="22">[h2: buy pretty AI videos]</text>
+
+  <rect x="62" y="1194" width="292" height="206" stroke="#888" stroke-width="1.25"/>
+  <text x="74" y="1214" fill="#666" font-family="sans-serif" font-size="9">rail</text>
+  <text x="74" y="1240" fill="#555" font-family="sans-serif" font-size="10">[t3: PLANE B // DRIFT +X]</text>
+  <text x="74" y="1286" fill="#333" font-family="sans-serif" font-size="15">[t1: Lower CPA.]</text>
+  <text x="74" y="1312" fill="#333" font-family="sans-serif" font-size="15">[t1: Higher 3s hook rate.]</text>
+  <text x="74" y="1354" fill="#555" font-family="sans-serif" font-size="10">[t3: ENTERING 3D HELIX ->]</text>
+
+  <!-- STAGE 03: Vertical Helical Z-Tunnel (X, Y, Z Video Carousel) -->
+  <rect x="16" y="1484" width="358" height="860" stroke="#666" stroke-width="1.25"/>
+  <text x="28" y="1502" fill="#666" font-family="sans-serif" font-size="10">section</text>
+
+  <rect x="24" y="1510" width="342" height="822" stroke="#888" stroke-width="1"/>
+  <text x="36" y="1528" fill="#666" font-family="sans-serif" font-size="10">media</text>
+  <text x="36" y="1552" fill="#555" font-family="sans-serif" font-size="10">[img: Z-tunnel canvas - ffmpeg frames 151-210]</text>
+  <text x="36" y="1572" fill="#555" font-family="sans-serif" font-size="10">[t3: STAGE 03 // 45% - 82% // 3D HELIX X-Y-Z]</text>
+
+  <!-- Entering reel top-right (Z -600) -->
+  <rect x="218" y="1584" width="136" height="80" stroke="#888" stroke-width="1"/>
+  <text x="228" y="1600" fill="#666" font-family="sans-serif" font-size="9">card2</text>
+  <text x="228" y="1620" fill="#555" font-family="sans-serif" font-size="9">[t3: REEL 04 // Z -600]</text>
+  <text x="228" y="1642" fill="#444" font-family="sans-serif" font-size="9">[img: entering spiral]</text>
+
+  <!-- Center Focal 9:16 Video Card (Z 0, Sole Color) -->
+  <rect x="69" y="1674" width="252" height="390" stroke="#444" stroke-width="1.5"/>
+  <text x="84" y="1694" fill="#666" font-family="sans-serif" font-size="10">card</text>
+  <text x="84" y="1720" fill="#333" font-family="sans-serif" font-size="10">[t3: REEL 03 // Z 0 FOCAL]</text>
+  <text x="84" y="1858" fill="#222" font-family="sans-serif" font-size="12">[img: 9:16 full-color synthetic ad]</text>
+  <text x="84" y="1880" fill="#444" font-family="sans-serif" font-size="10">[t3: SOLE COLOR ON SCREEN]</text>
+  <text x="84" y="2038" fill="#222" font-family="sans-serif" font-size="11">[btn2: [ico:play] Hooks A-B-C]</text>
+
+  <!-- Compact X-Ray HUD -->
+  <rect x="36" y="2076" width="318" height="178" stroke="#888" stroke-width="1.25"/>
+  <text x="48" y="2092" fill="#666" font-family="sans-serif" font-size="9">rail</text>
+
+  <rect x="48" y="2100" width="294" height="44" stroke="#888" stroke-width="1"/>
+  <text x="58" y="2114" fill="#666" font-family="sans-serif" font-size="8">card3</text>
+  <text x="58" y="2132" fill="#333" font-family="sans-serif" font-size="10">[t3: 01 HOOK] [t2: First 3s scroll-stop]</text>
+
+  <rect x="48" y="2150" width="294" height="44" stroke="#888" stroke-width="1"/>
+  <text x="58" y="2164" fill="#666" font-family="sans-serif" font-size="8">card3</text>
+  <text x="58" y="2182" fill="#333" font-family="sans-serif" font-size="10">[t3: 02 RENDER] [t2: Locked avatar/product]</text>
+
+  <rect x="48" y="2200" width="294" height="44" stroke="#888" stroke-width="1"/>
+  <text x="58" y="2214" fill="#666" font-family="sans-serif" font-size="8">card3</text>
+  <text x="58" y="2232" fill="#222" font-family="sans-serif" font-size="11">[h3: 03 HOOK 44.2% | ROAS 4.1x]</text>
+
+  <!-- Exiting reel peeking bottom-left (Z +220) -->
+  <rect x="36" y="2264" width="210" height="58" stroke="#888" stroke-width="1"/>
+  <text x="48" y="2280" fill="#666" font-family="sans-serif" font-size="9">card2</text>
+  <text x="48" y="2304" fill="#555" font-family="sans-serif" font-size="9">[t3: REEL 01 // Z +220 EXIT] [img: exit]</text>
+
+  <!-- STAGE 04: Landing Console (4 Verticals + 2 Offers) -->
+  <rect x="16" y="2360" width="358" height="972" stroke="#666" stroke-width="1.25"/>
+  <text x="28" y="2380" fill="#666" font-family="sans-serif" font-size="10">section</text>
+  <text x="28" y="2404" fill="#555" font-family="sans-serif" font-size="10">[t3: STAGE 04 // 82% - 100% // LANDING]</text>
+
+  <rect x="28" y="2420" width="334" height="64" stroke="#888" stroke-width="1"/>
+  <text x="40" y="2436" fill="#666" font-family="sans-serif" font-size="9">card4</text>
+  <text x="40" y="2456" fill="#555" font-family="sans-serif" font-size="10">[t3: 01 DTC E-COMMERCE]</text>
+  <text x="40" y="2474" fill="#333" font-family="sans-serif" font-size="11">[t2: Supplements, Skincare, Wellness]</text>
+
+  <rect x="28" y="2494" width="334" height="64" stroke="#888" stroke-width="1"/>
+  <text x="40" y="2510" fill="#666" font-family="sans-serif" font-size="9">card4</text>
+  <text x="40" y="2530" fill="#555" font-family="sans-serif" font-size="10">[t3: 02 MOBILE APPS AND SAAS]</text>
+  <text x="40" y="2548" fill="#333" font-family="sans-serif" font-size="11">[t2: Pattern-Interrupt UA Hooks]</text>
+
+  <rect x="28" y="2568" width="334" height="64" stroke="#888" stroke-width="1"/>
+  <text x="40" y="2584" fill="#666" font-family="sans-serif" font-size="9">card4</text>
+  <text x="40" y="2604" fill="#555" font-family="sans-serif" font-size="10">[t3: 03 PERFORMANCE AGENCIES]</text>
+  <text x="40" y="2622" fill="#333" font-family="sans-serif" font-size="11">[t2: White-Label Creative Sprints]</text>
+
+  <rect x="28" y="2642" width="334" height="64" stroke="#888" stroke-width="1"/>
+  <text x="40" y="2658" fill="#666" font-family="sans-serif" font-size="9">card4</text>
+  <text x="40" y="2678" fill="#555" font-family="sans-serif" font-size="10">[t3: 04 VSL AND LEAD GEN]</text>
+  <text x="40" y="2696" fill="#333" font-family="sans-serif" font-size="11">[t2: Cinematic B-Roll and Avatars]</text>
+
+  <rect x="28" y="2726" width="334" height="284" stroke="#888" stroke-width="1.25"/>
+  <text x="44" y="2748" fill="#666" font-family="sans-serif" font-size="10">card5</text>
+  <text x="44" y="2778" fill="#555" font-family="sans-serif" font-size="10">[t3: 01 ENTRY // LOW FRICTION]</text>
+  <text x="44" y="2818" fill="#222" font-family="sans-serif" font-size="22">[h2: Test Batch]</text>
+  <text x="44" y="2858" fill="#333" font-family="sans-serif" font-size="13">[t1: 10 creatives x 3 hooks = 30 assets]</text>
+  <text x="44" y="2886" fill="#444" font-family="sans-serif" font-size="12">[t2: 5 business days CPA validation]</text>
+  <text x="44" y="2978" fill="#222" font-family="sans-serif" font-size="13">[btn: Book Test Batch]</text>
+
+  <rect x="28" y="3026" width="334" height="284" stroke="#888" stroke-width="1.25"/>
+  <text x="44" y="3048" fill="#666" font-family="sans-serif" font-size="10">card5</text>
+  <text x="44" y="3078" fill="#555" font-family="sans-serif" font-size="10">[t3: 02 MONTHLY RETAINER]</text>
+  <text x="44" y="3118" fill="#222" font-family="sans-serif" font-size="22">[h2: Scale Engine]</text>
+  <text x="44" y="3158" fill="#333" font-family="sans-serif" font-size="13">[t1: 40-60 monthly ad assets]</text>
+  <text x="44" y="3186" fill="#444" font-family="sans-serif" font-size="12">[t2: Weekly ROAS and CTR iteration]</text>
+  <text x="44" y="3278" fill="#333" font-family="sans-serif" font-size="13">[btn2: Apply for Scale Engine]</text>
+
+  <!-- Safe Area Bottom: Home Indicator -->
+  <rect x="16" y="3348" width="358" height="40" stroke="#888" stroke-width="1"/>
+  <text x="28" y="3364" fill="#666" font-family="sans-serif" font-size="9">section</text>
+  <text x="28" y="3378" fill="#555" font-family="sans-serif" font-size="10">[t3: SAFE AREA BOTTOM // HOME INDICATOR 34PX]</text>
+</svg>
